@@ -379,7 +379,12 @@ The Phase 1 assessment and the emergency Media Integrity Recovery (P0) for `/ser
   - `GET /api/media-library?service=paisajismo`: **HTTP 200 OK** (398 deployable assets)
 
 ### 16.5 Deployment Implications & Safety
+* **Hotfix Commit:** `8e70aec` (`fix(media): restore landscaping assets and harden public gallery delivery`)
+* **Previous Rollback Target:** `eeff1ef` (`fix(middleware): isolate clerk middleware matcher exclusively to admin routes`)
+* **Repository Remote:** `git@github-matamoros:matamorosnavas69-cloud/proyectos-y-montajes.git` (Branch `main`)
 * **Zero New Dependencies:** No external libraries or heavy tools were installed.
 * **Vercel Hobby Safety (<1GB):** Image-only policy preserves the lightweight repository footprint.
-* **Production Status:** The above fixes have been compiled and verified **locally only**. No changes have been pushed to remote Git or deployed to production Vercel.
+* **Production Status:** `P0 COMMITTED & PUSHED TO GITHUB — PENDING VERCEL DASHBOARD REDEPLOY`
+  Commit `8e70aec` has been pushed to `origin main`. In the Vercel dashboard (`copo69`'s projects $\to$ `proyectos-y-montajes`), click **"Redeploy"** to trigger the build with the new environment variables and hotfix code.
+
 
