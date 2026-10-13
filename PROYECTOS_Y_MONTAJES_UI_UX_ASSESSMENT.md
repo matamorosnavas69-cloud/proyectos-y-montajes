@@ -387,4 +387,56 @@ The Phase 1 assessment and the emergency Media Integrity Recovery (P0) for `/ser
 * **Production Status:** `P0 COMMITTED & PUSHED TO GITHUB — PENDING VERCEL DASHBOARD REDEPLOY`
   Commit `8e70aec` has been pushed to `origin main`. In the Vercel dashboard (`copo69`'s projects $\to$ `proyectos-y-montajes`), click **"Redeploy"** to trigger the build with the new environment variables and hotfix code.
 
+---
+
+## 17. Addendum: Serverless Media Archival & Technical Sheet Resolution (Commit `f5773db`)
+
+### 17.1 Problem Diagnosis
+1. **Gallery Image Archival Failure in Production (`/admin/biblioteca-media`):**
+   * **Observed Error:** `ENOENT: no such file or directory, mkdir '/var/task/public/images/drive organice/.archive/canchas'` $\to$ HTTP 400 Bad Request.
+   * **Root Cause:** Next.js on Vercel runs in AWS Lambda serverless execution containers where `process.cwd()` is `/var/task`. The filesystem under `/var/task` is strictly **read-only / immutable**. Any direct disk mutation (`mkdir`, `rename`, `unlink`) fails with `ENOENT` or `EROFS`.
+2. **Missing Technical Sheet (`/Ficha_Tecnica_Proyectos_y_Montajes.pdf`):**
+   * **Observed Error:** HTTP 404 on preloading `/Ficha_Tecnica_Proyectos_y_Montajes.pdf` from the admin layout navigation.
+   * **Root Cause:** The PDF file was positioned at the package root rather than within Next.js's static `public/` directory.
+3. **Clerk Development Warning:**
+   * **Observed Log:** `Clerk: Clerk has been loaded with development keys.`
+   * **Assessment:** Benign informational notification during pre-production development (`pk_test_...`). Will transition automatically when production keys are provisioned in Vercel.
+
+### 17.2 Architectural Remediation
+1. **Database-Backed Persistent Archival State Machine (`ArchivedMediaAsset`):**
+   * Registered `ArchivedMediaAsset` model in Prisma schema (`schemas: ["proyectos_y_montajes"]`):
+     ```prisma
+     model ArchivedMediaAsset {
+       id         String   @id @default(cuid())
+       category   String   // canchas, parques, piscina, golf, residencial
+       filename   String
+       archivedAt DateTime @default(now())
+       archivedBy String?
+       reason     String?
+       @@unique([category, filename])
+       @@schema("proyectos_y_montajes")
+     }
+     ```
+   * Synced to Supabase PostgreSQL database via `npx prisma db push`.
+2. **Resilient Serverless Media Library (`lib/media-library.ts`):**
+   * **`archiveLibraryAsset`:** Performs upsert to `prisma.archivedMediaAsset`. Gracefully catches and ignores read-only disk mutations on Vercel without failing the request.
+   * **`restoreLibraryAsset`:** Removes the asset from `ArchivedMediaAsset`, instantly returning it to active status.
+   * **Query-Time Exclusion:** Both public service galleries (`getServiceGallery`) and admin queries (`listCategoryAssets`) dynamically filter out any archived filenames.
+   * **Supabase Cloud Upload Fallback:** If local filesystem write fails in serverless, uploads fallback directly to Supabase Storage bucket `proyectos`.
+3. **Enhanced Admin UI (`app/admin/biblioteca-media/page.tsx`):**
+   * Added segmented pill toggle: **Activas** vs. **Archivadas**.
+   * Added full recovery capabilities: Admins can view archived assets and click **"Restaurar"** to return them to the public gallery with a single click.
+4. **Static PDF Relocation:**
+   * Moved `Ficha_Tecnica_Proyectos_y_Montajes.pdf` (156 KB) into `public/Ficha_Tecnica_Proyectos_y_Montajes.pdf`, guaranteeing instant HTTP 200 delivery.
+
+### 17.3 Verification & Testing
+* **End-to-End Lifecycle Test (`scripts/test-archive-lifecycle.ts`):**
+  - Archived `19dafd34-0868-427c-a602-0bd0893c99f2.jpg` (Active count decreased from 166 $\to$ 165).
+  - Verified presence in `ArchivedMediaAsset` registry and absence from public view.
+  - Executed `restoreLibraryAsset` $\to$ Active count restored to 166.
+  - Result: **100% Pass** without requiring filesystem write access.
+* **Production Build Validation:** `npm run build` compiled 25 static and dynamic pages with 0 errors.
+* **Deployment Commit:** `f5773db` pushed to `origin main` on `git@github-matamoros:matamorosnavas69-cloud/proyectos-y-montajes.git`.
+
+
 
