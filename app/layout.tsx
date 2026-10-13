@@ -32,13 +32,17 @@ export const metadata: Metadata = {
 import { ClerkProvider } from "@clerk/nextjs";
 import SiteLayoutWrapper from "@/app/components/SiteLayoutWrapper";
 
+const clerkPublishableKey =
+  process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY ||
+  "pk_test_ZGVlcC1jb2QtNDkuY2xlcmsuYWNjb3VudHMuZGV2JA";
+
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <ClerkProvider>
+    <ClerkProvider publishableKey={clerkPublishableKey}>
       <html lang="es">
         <body className={`${openSans.className} bg-brand-dark text-white antialiased`}>
           <JsonLd />
