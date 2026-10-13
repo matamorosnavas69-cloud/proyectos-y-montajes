@@ -1,6 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { AuthError, requireAdmin } from '@/lib/auth/rbac';
-import { addLibraryAsset, archiveLibraryAsset, listLibraryAssets, renameLibraryAsset } from '@/lib/media-library';
+import {
+  addLibraryAsset,
+  archiveLibraryAsset,
+  listArchivedLibraryAssets,
+  listLibraryAssets,
+  renameLibraryAsset,
+  restoreLibraryAsset,
+} from '@/lib/media-library';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -15,6 +22,11 @@ export async function GET(request: NextRequest) {
   try {
     await requireAdmin();
     const category = request.nextUrl.searchParams.get('category') || undefined;
+    const view = request.nextUrl.searchParams.get('view');
+    if (view === 'archived') {
+      const archived = await listArchivedLibraryAssets(category);
+      return NextResponse.json({ archived });
+    }
     return NextResponse.json({ categories: await listLibraryAssets(category, true) });
   } catch (error) {
     return errorResponse(error);
@@ -42,8 +54,15 @@ export async function PATCH(request: NextRequest) {
   try {
     await requireAdmin();
     const body = await request.json();
-    if (typeof body.category !== 'string' || typeof body.filename !== 'string' || typeof body.newName !== 'string') {
-      return NextResponse.json({ error: 'Categoría, archivo y nuevo nombre son obligatorios.' }, { status: 400 });
+    if (typeof body.category !== 'string' || typeof body.filename !== 'string') {
+      return NextResponse.json({ error: 'Categoría y archivo son obligatorios.' }, { status: 400 });
+    }
+    if (body.action === 'restore') {
+      const result = await restoreLibraryAsset(body.category, body.filename);
+      return NextResponse.json({ success: true, message: 'La imagen fue restaurada a la galería activa.', result });
+    }
+    if (typeof body.newName !== 'string') {
+      return NextResponse.json({ error: 'El nuevo nombre es obligatorio.' }, { status: 400 });
     }
     const asset = await renameLibraryAsset(body.category, body.filename, body.newName);
     return NextResponse.json({ success: true, asset });
@@ -54,12 +73,12 @@ export async function PATCH(request: NextRequest) {
 
 export async function DELETE(request: NextRequest) {
   try {
-    await requireAdmin();
+    const user = await requireAdmin();
     const body = await request.json();
     if (typeof body.category !== 'string' || typeof body.filename !== 'string') {
       return NextResponse.json({ error: 'Categoría y archivo son obligatorios.' }, { status: 400 });
     }
-    await archiveLibraryAsset(body.category, body.filename);
+    await archiveLibraryAsset(body.category, body.filename, user.email || undefined);
     return NextResponse.json({ success: true, message: 'La imagen fue retirada y archivada de forma recuperable.' });
   } catch (error) {
     return errorResponse(error);

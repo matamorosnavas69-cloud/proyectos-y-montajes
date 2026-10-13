@@ -1,5 +1,8 @@
 import path from 'node:path';
 import { mkdir, readdir, rename, stat, writeFile } from 'node:fs/promises';
+import { prisma } from '@/lib/prisma';
+import { createClient } from '@/lib/supabase/client';
+import { DEFAULT_BUCKET, uploadProjectImage } from '@/lib/supabase/storage';
 
 export const MEDIA_CATEGORIES = [
   { slug: 'canchas', label: 'Canchas', description: 'Infraestructura deportiva y superficies de juego' },
@@ -118,6 +121,46 @@ export function invalidateMediaCache() {
   cache.clear();
 }
 
+/**
+ * Retrieve set of archived/withdrawn filenames across database and disk
+ */
+export async function getArchivedFilenames(category?: string): Promise<Set<string>> {
+  const archived = new Set<string>();
+
+  // 1. Query PostgreSQL database via Prisma (canonical for serverless & local)
+  try {
+    const records = await prisma.archivedMediaAsset.findMany({
+      where: category ? { category } : undefined,
+      select: { filename: true },
+    });
+    for (const r of records) {
+      archived.add(r.filename);
+      archived.add(r.filename.toLowerCase());
+    }
+  } catch (dbErr) {
+    console.warn('[MediaLibrary] DB archived lookup skipped/fallback:', dbErr instanceof Error ? dbErr.message : dbErr);
+  }
+
+  // 2. Query local disk .archive if accessible
+  try {
+    const targetDir = category ? path.join(ARCHIVE_ROOT, category) : ARCHIVE_ROOT;
+    const entries = await readdir(targetDir, { withFileTypes: true });
+    for (const e of entries) {
+      if (e.isFile()) {
+        const rawName = e.name.replace(/^\d+-/, '');
+        archived.add(rawName);
+        archived.add(rawName.toLowerCase());
+        archived.add(e.name);
+        archived.add(e.name.toLowerCase());
+      }
+    }
+  } catch {
+    // Normal in serverless (immutable /var/task)
+  }
+
+  return archived;
+}
+
 function classifyAsset(
   filename: string,
   url: string,
@@ -211,14 +254,21 @@ async function readDirectoryAssets(
   category: string,
   urlBuilder: (fname: string) => string,
   serviceHint?: ServiceSlug,
-  includeVideos = true
+  includeVideos = true,
+  archivedSet?: Set<string>
 ): Promise<LibraryAsset[]> {
   try {
+    const archived = archivedSet ?? (await getArchivedFilenames(category));
     const entries = await readdir(dir, { withFileTypes: true });
     const fileEntries = entries.filter((e) => e.isFile());
 
     const assets = await Promise.all(
       fileEntries.map(async (entry) => {
+        // Exclude archived/withdrawn assets
+        if (archived.has(entry.name) || archived.has(entry.name.toLowerCase())) {
+          return null;
+        }
+
         const ext = path.extname(entry.name).toLowerCase();
         const isImg = IMAGE_EXTENSIONS.has(ext);
         const isVid = includeVideos && VIDEO_EXTENSIONS.has(ext);
@@ -249,14 +299,47 @@ async function readDirectoryAssets(
 
 export async function listCategoryAssets(category: MediaCategory, includeVideos = false): Promise<LibraryAsset[]> {
   const directory = getCategoryDirectory(category);
-  const assets = await readDirectoryAssets(
+  const archived = await getArchivedFilenames(category);
+
+  // 1. Read static repository assets
+  const staticAssets = await readDirectoryAssets(
     directory,
     category,
     (fname) => toPublicUrl(category, fname),
     category === 'canchas' || category === 'golf' ? 'canchas' : category === 'parques' ? 'parques' : 'paisajismo',
-    includeVideos
+    includeVideos,
+    archived
   );
-  return assets.sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
+
+  // 2. Read dynamic cloud assets from Supabase Storage if available
+  const cloudAssets: LibraryAsset[] = [];
+  try {
+    const supabase = createClient();
+    const folder = `gallery/${category}`;
+    const { data: cloudFiles } = await supabase.storage.from(DEFAULT_BUCKET).list(folder, { limit: 100 });
+    if (cloudFiles && cloudFiles.length > 0) {
+      for (const cf of cloudFiles) {
+        if (!cf.name || cf.name === '.emptyFolderPlaceholder') continue;
+        if (archived.has(cf.name) || archived.has(cf.name.toLowerCase())) continue;
+        const { data: pubData } = supabase.storage.from(DEFAULT_BUCKET).getPublicUrl(`${folder}/${cf.name}`);
+        cloudAssets.push(
+          classifyAsset(
+            cf.name,
+            pubData.publicUrl,
+            category,
+            cf.metadata?.size || 0,
+            cf.updated_at || new Date().toISOString(),
+            category === 'canchas' || category === 'golf' ? 'canchas' : category === 'parques' ? 'parques' : 'paisajismo'
+          )
+        );
+      }
+    }
+  } catch {
+    // Optional cloud storage integration
+  }
+
+  const combined = [...cloudAssets, ...staticAssets];
+  return combined.sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
 }
 
 export async function listLibraryAssets(category?: string, includeVideos = false) {
@@ -280,40 +363,41 @@ export async function listServiceAssets(serviceSlug: ServiceSlug) {
   const service = SERVICES_CONFIG[serviceSlug];
   if (!service) throw new Error(`Servicio desconocido: ${serviceSlug}`);
 
+  const archived = await getArchivedFilenames();
   let collected: LibraryAsset[] = [];
 
   if (serviceSlug === 'canchas') {
-    // 1. Primary canchas directory (deployable images only)
     const canchasAssets = await readDirectoryAssets(
       getCategoryDirectory('canchas'),
       'canchas',
       (fname) => toPublicUrl('canchas', fname),
       'canchas',
-      false
+      false,
+      archived
     );
-    // 2. Golf directory (deployable images only)
     const golfAssets = await readDirectoryAssets(
       getCategoryDirectory('golf'),
       'golf',
       (fname) => toPublicUrl('golf', fname),
       'canchas',
-      false
+      false,
+      archived
     );
-    // 3. Dedicated padel images
     const padelAssets = await readDirectoryAssets(
       path.join(process.cwd(), 'public', 'images', 'padel'),
       'canchas',
       (fname) => `/images/padel/${encodeURIComponent(fname)}`,
       'canchas',
-      false
+      false,
+      archived
     );
-    // 4. Dedicated futbol images
     const futbolAssets = await readDirectoryAssets(
       path.join(process.cwd(), 'public', 'images', 'futbol'),
       'canchas',
       (fname) => `/images/futbol/${encodeURIComponent(fname)}`,
       'canchas',
-      false
+      false,
+      archived
     );
 
     collected = [...padelAssets, ...futbolAssets, ...canchasAssets, ...golfAssets];
@@ -323,7 +407,8 @@ export async function listServiceAssets(serviceSlug: ServiceSlug) {
       'parques',
       (fname) => toPublicUrl('parques', fname),
       'parques',
-      false
+      false,
+      archived
     );
     collected = parquesAssets;
   } else if (serviceSlug === 'paisajismo') {
@@ -332,14 +417,16 @@ export async function listServiceAssets(serviceSlug: ServiceSlug) {
       'residencial',
       (fname) => toPublicUrl('residencial', fname),
       'paisajismo',
-      false
+      false,
+      archived
     );
     const piscinaAssets = await readDirectoryAssets(
       getCategoryDirectory('piscina'),
       'piscina',
       (fname) => toPublicUrl('piscina', fname),
       'paisajismo',
-      false
+      false,
+      archived
     );
     collected = [...residencialAssets, ...piscinaAssets];
   }
@@ -354,7 +441,6 @@ export async function listServiceAssets(serviceSlug: ServiceSlug) {
 
   // Prioritize high-quality curated shots at the front, followed by recent updates
   const sorted = uniqueAssets.sort((a, b) => {
-    // Images before videos in default view so hero is photo
     if (a.type !== b.type) return a.type === 'image' ? -1 : 1;
     return b.updatedAt.localeCompare(a.updatedAt);
   });
@@ -368,14 +454,37 @@ export async function addLibraryAsset(category: string, file: File, preferredNam
   if (!isCategory(category)) throw new Error('Categoría de imagen no permitida.');
   if (!ALLOWED_IMAGE_TYPES.has(file.type)) throw new Error('Formato no permitido. Use JPG, PNG, WebP o AVIF.');
   if (file.size > MAX_MEDIA_BYTES) throw new Error('La imagen supera el límite de 10 MB.');
-  const directory = getCategoryDirectory(category);
+
   const extension = path.extname(file.name).toLowerCase();
   const baseName = preferredName?.trim() ? sanitizeFilename(`${preferredName}${extension}`) : sanitizeFilename(file.name);
   const filename = `${path.basename(baseName, extension)}-${Date.now()}${extension}`;
-  await writeFile(dynamicPath(directory, filename), Buffer.from(await file.arrayBuffer()), { flag: 'wx' });
-  const info = await stat(dynamicPath(directory, filename));
-  invalidateMediaCache();
-  return { filename, url: toPublicUrl(category, filename), bytes: info.size, updatedAt: info.mtime.toISOString() };
+
+  // 1. Try local disk write if environment allows (local development)
+  try {
+    const directory = getCategoryDirectory(category);
+    await writeFile(dynamicPath(directory, filename), Buffer.from(await file.arrayBuffer()), { flag: 'wx' });
+    const info = await stat(dynamicPath(directory, filename));
+    invalidateMediaCache();
+    return { filename, url: toPublicUrl(category, filename), bytes: info.size, updatedAt: info.mtime.toISOString() };
+  } catch (fsErr) {
+    // 2. Serverless / read-only filesystem: Upload directly to Supabase Storage
+    try {
+      const { url } = await uploadProjectImage(file, `gallery/${category}`);
+      invalidateMediaCache();
+      return {
+        filename,
+        url,
+        bytes: file.size,
+        updatedAt: new Date().toISOString(),
+      };
+    } catch (storageErr) {
+      throw new Error(
+        `Error al guardar la imagen: ${
+          storageErr instanceof Error ? storageErr.message : 'No fue posible escribir en disco ni en la nube.'
+        }`
+      );
+    }
+  }
 }
 
 export async function renameLibraryAsset(category: string, filename: string, newName: string) {
@@ -386,18 +495,125 @@ export async function renameLibraryAsset(category: string, filename: string, new
   const safeNew = sanitizeFilename(`${newName}${extension}`);
   const source = dynamicPath(directory, safeOriginal);
   const destination = dynamicPath(directory, safeNew);
-  await rename(source, destination);
-  const info = await stat(destination);
-  invalidateMediaCache();
-  return { filename: safeNew, url: toPublicUrl(category, safeNew), bytes: info.size, updatedAt: info.mtime.toISOString() };
+
+  try {
+    await rename(source, destination);
+    const info = await stat(destination);
+    invalidateMediaCache();
+    return { filename: safeNew, url: toPublicUrl(category, safeNew), bytes: info.size, updatedAt: info.mtime.toISOString() };
+  } catch {
+    throw new Error(
+      'En el entorno serverless de producción, los archivos estáticos empaquetados no pueden ser renombrados directamente en disco. Para cambiar la imagen, retírela o suba una nueva.'
+    );
+  }
 }
 
-export async function archiveLibraryAsset(category: string, filename: string) {
-  const directory = getCategoryDirectory(category);
+/**
+ * Archives an asset: registers it in the persistent database registry so it is
+ * removed from public view and admin active view. Also moves on disk if writable.
+ */
+export async function archiveLibraryAsset(category: string, filename: string, actorEmail?: string) {
+  if (!isCategory(category)) throw new Error('Categoría de imagen no permitida.');
   const safeFilename = path.basename(filename);
   if (safeFilename !== filename) throw new Error('Archivo no válido.');
-  const archiveDirectory = path.join(ARCHIVE_ROOT, category);
-  await mkdir(archiveDirectory, { recursive: true });
-  await rename(dynamicPath(directory, safeFilename), dynamicPath(archiveDirectory, `${Date.now()}-${safeFilename}`));
+
+  let dbPersisted = false;
+
+  // 1. Persist to database (canonical for serverless & local)
+  try {
+    await prisma.archivedMediaAsset.upsert({
+      where: {
+        category_filename: {
+          category,
+          filename: safeFilename,
+        },
+      },
+      create: {
+        category,
+        filename: safeFilename,
+        archivedBy: actorEmail || null,
+      },
+      update: {
+        archivedAt: new Date(),
+        archivedBy: actorEmail || null,
+      },
+    });
+    dbPersisted = true;
+  } catch (dbErr) {
+    console.warn('[MediaLibrary] Database archival warning:', dbErr instanceof Error ? dbErr.message : dbErr);
+  }
+
+  // 2. Try disk move if local filesystem is writable (optional in dev, safely skipped in serverless)
+  try {
+    const directory = getCategoryDirectory(category);
+    const archiveDirectory = path.join(ARCHIVE_ROOT, category);
+    await mkdir(archiveDirectory, { recursive: true });
+    await rename(dynamicPath(directory, safeFilename), dynamicPath(archiveDirectory, `${Date.now()}-${safeFilename}`));
+  } catch (fsErr) {
+    // Expected on Vercel / serverless (read-only filesystem)
+    if (!dbPersisted) {
+      throw new Error('No fue posible archivar la imagen ni en base de datos ni en disco.');
+    }
+  }
+
   invalidateMediaCache();
+  return { success: true, category, filename: safeFilename };
+}
+
+/**
+ * Restores a previously archived asset back to active galleries
+ */
+export async function restoreLibraryAsset(category: string, filename: string) {
+  if (!isCategory(category)) throw new Error('Categoría de imagen no permitida.');
+  const safeFilename = path.basename(filename);
+  if (safeFilename !== filename) throw new Error('Archivo no válido.');
+
+  try {
+    await prisma.archivedMediaAsset.deleteMany({
+      where: {
+        category,
+        filename: safeFilename,
+      },
+    });
+  } catch (dbErr) {
+    console.warn('[MediaLibrary] Database restore warning:', dbErr);
+  }
+
+  // If local disk archive contains the file, attempt moving back
+  try {
+    const directory = getCategoryDirectory(category);
+    const archiveDirectory = path.join(ARCHIVE_ROOT, category);
+    const entries = await readdir(archiveDirectory, { withFileTypes: true });
+    const match = entries.find((e) => e.isFile() && (e.name === safeFilename || e.name.endsWith(`-${safeFilename}`)));
+    if (match) {
+      await rename(dynamicPath(archiveDirectory, match.name), dynamicPath(directory, safeFilename));
+    }
+  } catch {
+    // Normal in serverless
+  }
+
+  invalidateMediaCache();
+  return { success: true, category, filename: safeFilename };
+}
+
+/**
+ * Lists archived assets for admin audit and recovery
+ */
+export async function listArchivedLibraryAssets(category?: string) {
+  try {
+    const records = await prisma.archivedMediaAsset.findMany({
+      where: category ? { category } : undefined,
+      orderBy: { archivedAt: 'desc' },
+    });
+    return records.map((r) => ({
+      id: r.id,
+      category: r.category,
+      filename: r.filename,
+      url: toPublicUrl(r.category, r.filename),
+      archivedAt: r.archivedAt.toISOString(),
+      archivedBy: r.archivedBy,
+    }));
+  } catch {
+    return [];
+  }
 }

@@ -385,3 +385,17 @@ model ClientAccessInvitation {
 
   @@schema("proyectos_y_montajes")
 }
+
+// Media library exclusion / archival registry for serverless and cloud deployments
+model ArchivedMediaAsset {
+  id         String   @id @default(cuid())
+  category   String   // canchas, parques, piscina, golf, residencial
+  filename   String
+  archivedAt DateTime @default(now())
+  archivedBy String?
+  reason     String?
+
+  @@unique([category, filename])
+  @@schema("proyectos_y_montajes")
+}
+
