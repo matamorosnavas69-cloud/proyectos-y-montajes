@@ -236,6 +236,14 @@ function Slider({ project }: { project: BeforeAfterProject }) {
 export default function BeforeAfter() {
   const [activeIndex, setActiveIndex] = useState(0);
 
+  // Gracefully isolate component from public render until authentic paired photos are provided
+  const hasRealAssets = PROJECTS.some(
+    (p) => !p.beforeImage.includes('cancha-futbol-01-before.jpg')
+  );
+  if (!hasRealAssets) {
+    return null;
+  }
+
   return (
     <section id="antes-despues" className="w-full py-24 md:py-32 bg-brand-dark font-sans overflow-hidden">
       <div className="max-w-7xl mx-auto px-6">

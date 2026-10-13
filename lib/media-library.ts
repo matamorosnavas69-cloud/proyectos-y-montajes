@@ -47,7 +47,6 @@ export const SERVICES_CONFIG = {
       { id: 'padel', label: 'Pádel Panorámico' },
       { id: 'futbol', label: 'Fútbol Sintético' },
       { id: 'golf', label: 'Greens de Golf' },
-      { id: 'videos', label: 'Videos y Tomas Aéreas' },
     ],
   },
   parques: {
@@ -61,7 +60,6 @@ export const SERVICES_CONFIG = {
       { id: 'modulos', label: 'Módulos y Castillos' },
       { id: 'caucho', label: 'Pisos de Caucho EPDM' },
       { id: 'inclusivos', label: 'Juegos Inclusivos' },
-      { id: 'videos', label: 'Videos de Montaje' },
     ],
   },
   paisajismo: {
@@ -75,7 +73,6 @@ export const SERVICES_CONFIG = {
       { id: 'terrazas', label: 'Terrazas y Áticos' },
       { id: 'jardines', label: 'Jardines Residenciales' },
       { id: 'piscinas', label: 'Piscinas y Wet Decks' },
-      { id: 'videos', label: 'Videos de Recorrido' },
     ],
   },
 } as const;
@@ -262,13 +259,13 @@ export async function listCategoryAssets(category: MediaCategory, includeVideos 
   return assets.sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
 }
 
-export async function listLibraryAssets(category?: string) {
+export async function listLibraryAssets(category?: string, includeVideos = false) {
   const categories = category ? MEDIA_CATEGORIES.filter((item) => item.slug === category) : MEDIA_CATEGORIES;
   if (category && categories.length === 0) throw new Error('Categoría de imagen no permitida.');
   return Promise.all(
     categories.map(async (item) => ({
       ...item,
-      assets: await listCategoryAssets(item.slug, false),
+      assets: await listCategoryAssets(item.slug, includeVideos),
     }))
   );
 }
@@ -286,21 +283,21 @@ export async function listServiceAssets(serviceSlug: ServiceSlug) {
   let collected: LibraryAsset[] = [];
 
   if (serviceSlug === 'canchas') {
-    // 1. Primary canchas directory (images + videos)
+    // 1. Primary canchas directory (deployable images only)
     const canchasAssets = await readDirectoryAssets(
       getCategoryDirectory('canchas'),
       'canchas',
       (fname) => toPublicUrl('canchas', fname),
       'canchas',
-      true
+      false
     );
-    // 2. Golf directory (images + videos)
+    // 2. Golf directory (deployable images only)
     const golfAssets = await readDirectoryAssets(
       getCategoryDirectory('golf'),
       'golf',
       (fname) => toPublicUrl('golf', fname),
       'canchas',
-      true
+      false
     );
     // 3. Dedicated padel images
     const padelAssets = await readDirectoryAssets(
@@ -308,7 +305,7 @@ export async function listServiceAssets(serviceSlug: ServiceSlug) {
       'canchas',
       (fname) => `/images/padel/${encodeURIComponent(fname)}`,
       'canchas',
-      true
+      false
     );
     // 4. Dedicated futbol images
     const futbolAssets = await readDirectoryAssets(
@@ -316,7 +313,7 @@ export async function listServiceAssets(serviceSlug: ServiceSlug) {
       'canchas',
       (fname) => `/images/futbol/${encodeURIComponent(fname)}`,
       'canchas',
-      true
+      false
     );
 
     collected = [...padelAssets, ...futbolAssets, ...canchasAssets, ...golfAssets];
@@ -326,7 +323,7 @@ export async function listServiceAssets(serviceSlug: ServiceSlug) {
       'parques',
       (fname) => toPublicUrl('parques', fname),
       'parques',
-      true
+      false
     );
     collected = parquesAssets;
   } else if (serviceSlug === 'paisajismo') {
@@ -335,14 +332,14 @@ export async function listServiceAssets(serviceSlug: ServiceSlug) {
       'residencial',
       (fname) => toPublicUrl('residencial', fname),
       'paisajismo',
-      true
+      false
     );
     const piscinaAssets = await readDirectoryAssets(
       getCategoryDirectory('piscina'),
       'piscina',
       (fname) => toPublicUrl('piscina', fname),
       'paisajismo',
-      true
+      false
     );
     collected = [...residencialAssets, ...piscinaAssets];
   }

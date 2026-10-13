@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
   try {
     await requireAdmin();
     const category = request.nextUrl.searchParams.get('category') || undefined;
-    return NextResponse.json({ categories: await listLibraryAssets(category) });
+    return NextResponse.json({ categories: await listLibraryAssets(category, true) });
   } catch (error) {
     return errorResponse(error);
   }

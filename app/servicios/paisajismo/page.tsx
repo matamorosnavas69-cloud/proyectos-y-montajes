@@ -15,12 +15,13 @@ export default function PaisajismoPage() {
       <section className="relative w-full py-32 md:py-48 bg-brand-dark overflow-hidden flex items-center justify-center">
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-brand-dark/80 mix-blend-multiply z-10" />
-          <div
-            className="w-full h-full bg-cover bg-center"
-            style={{
-              backgroundImage:
-                "url('/images/drive%20organice/residencial/IMG_5449.JPEG')",
-            }}
+          <Image
+            src="/images/drive%20organice/residencial/IMG_4638.JPG"
+            alt="Paisajismo Residencial y Comercial"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover"
           />
         </div>
         
@@ -67,7 +68,7 @@ export default function PaisajismoPage() {
           <div className="grid grid-cols-2 gap-4">
             <div className="relative h-64 w-full rounded-xl overflow-hidden shadow-lg">
               <Image
-                src="/images/drive%20organice/residencial/IMG_5451.JPEG"
+                src="/images/drive%20organice/residencial/IMG_1271.PNG"
                 alt="Terraza residencial con grama sintética"
                 fill
                 sizes="(max-width: 768px) 50vw, 25vw"
@@ -76,7 +77,7 @@ export default function PaisajismoPage() {
             </div>
             <div className="relative h-64 w-full rounded-xl overflow-hidden shadow-lg mt-8">
               <Image
-                src="/images/drive%20organice/piscina/IMG_0062.JPG"
+                src="/images/drive%20organice/piscina/IMG_8075.JPG"
                 alt="Zona de piscina y deck con césped decorativo"
                 fill
                 sizes="(max-width: 768px) 50vw, 25vw"
