@@ -1,0 +1,387 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  schemas  = ["proyectos_y_montajes"]
+}
+
+model Project {
+  id                String   @id @default(cuid())
+  title             String
+  slug              String   @unique
+  category          String   // Pistas de Pádel, Canchas Sintéticas (Fútbol), Parques Infantiles, Grama Sintética & Paisajismo, Polideportivos, etc.
+  client            String?
+  mainImage         String?
+  gallery           String[]
+  sqMeters          Int?
+  duration          String?
+  description       String?  @db.Text
+  shortDescription  String?  @db.Text
+  
+  // Status & Location
+  status            String   @default("IN_PROGRESS") // DRAFT, QUOTE, PLANNING, IN_PROGRESS, COMPLETED, ARCHIVED
+  location          String?
+  city              String?
+  
+  // Portfolio Presentation Controls
+  published         Boolean  @default(true)
+  featured          Boolean  @default(false)
+  portfolioOrder    Int      @default(0)
+  
+  // Private Engineering Administration (Never exposed to public portfolio)
+  budget            Float?
+  startDate         DateTime?
+  deliveryDate      DateTime?
+  director          String?
+  commercialRep     String?
+  internalCode      String?
+  
+  // Testimonial embedded fields
+  testimonialQuote  String?  @db.Text
+  testimonialAuthor String?
+  testimonialRole   String?
+
+  // Concurrency & Versioning
+  version           Int      @default(1)
+
+  // Business Pipeline Lifecycle (Separate from Technical Sheet state)
+  // LEAD, OPPORTUNITY, QUOTATION, APPROVED, PLANNING, IN_EXECUTION, QUALITY_CONTROL, DELIVERED, WARRANTY, CLOSED
+  businessStatus    String   @default("IN_EXECUTION")
+
+  // Optional Origin Lead
+  leadId            String?
+  lead              Lead?    @relation(fields: [leadId], references: [id], onDelete: SetNull)
+
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  // Relational Modules
+  technicalSheet    TechnicalSheet?
+  images            ProjectImage[]
+  proposals         Proposal[]
+
+  @@schema("proyectos_y_montajes")
+}
+
+model TechnicalSheet {
+  id                String    @id @default(cuid())
+  projectId         String    @unique
+  project           Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  
+  // Independent Engineering Status
+  sheetStatus       String    @default("DRAFT") // DRAFT, IN_PROGRESS, READY_FOR_REVIEW, APPROVED, ISSUED, ARCHIVED
+
+  // Specifications JSON according to category (surface, subbase, lighting, drainage, irrigation, etc.)
+  specifications    Json?
+  
+  // Observations & Punch List
+  observations      String?   @db.Text
+  pendingItems      String?   @db.Text
+  
+  // Handover Acceptance Certificate (Acta de Entrega)
+  deliveryDate      DateTime?
+  deliveryNotes     String?   @db.Text
+  deliveryClient    String?
+  deliveryDirector  String?
+  deliveryInspector String?
+  deliveryStatus    String    @default("PENDIENTE") // APROBADO, OBSERVACIONES, PENDIENTE
+  
+  // Versioning & Formal Issuance
+  revision          String    @default("R01")
+  currentRevision   String    @default("R01")
+  generatedAt       DateTime?
+  generatedBy       String?
+  approvedAt        DateTime?
+  approvedBy        String?
+  issuedAt          DateTime?
+  issuedBy          String?
+
+  // Concurrency Version
+  version           Int       @default(1)
+
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  materials         Material[]
+  milestones        Milestone[]
+  qualityChecks     QualityCheck[]
+  revisions         TechnicalSheetRevision[]
+
+  @@schema("proyectos_y_montajes")
+}
+
+model Material {
+  id               String         @id @default(cuid())
+  technicalSheetId String
+  technicalSheet   TechnicalSheet @relation(fields: [technicalSheetId], references: [id], onDelete: Cascade)
+  name             String
+  supplier         String?
+  reference        String?
+  quantity         Float?
+  unit             String?        // m², unidades, kg, ml, etc.
+  status           String         @default("PENDIENTE") // SOLICITADO, EN_TRANSITO, RECIBIDO, INSTALADO
+  notes            String?
+  order            Int            @default(0)
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+
+  @@schema("proyectos_y_montajes")
+}
+
+model Milestone {
+  id               String         @id @default(cuid())
+  technicalSheetId String
+  technicalSheet   TechnicalSheet @relation(fields: [technicalSheetId], references: [id], onDelete: Cascade)
+  name             String
+  description      String?        @db.Text
+  plannedDate      DateTime?
+  actualDate       DateTime?
+  responsible      String?
+  status           String         @default("PENDIENTE") // PENDIENTE, EN_PROGRESO, COMPLETADO, RETRASADO
+  order            Int            @default(0)
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+
+  @@schema("proyectos_y_montajes")
+}
+
+model QualityCheck {
+  id               String         @id @default(cuid())
+  technicalSheetId String
+  technicalSheet   TechnicalSheet @relation(fields: [technicalSheetId], references: [id], onDelete: Cascade)
+  item             String         // e.g., "Verificación de área", "Nivelación y pendientes", etc.
+  status           String         @default("PENDIENTE") // PENDIENTE, CONFORME, NO_CONFORME, SUBSANADO
+  observation      String?        @db.Text
+  checkDate        DateTime?
+  responsible      String?
+  order            Int            @default(0)
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+
+  @@schema("proyectos_y_montajes")
+}
+
+model TechnicalSheetRevision {
+  id               String         @id @default(cuid())
+  technicalSheetId String
+  technicalSheet   TechnicalSheet @relation(fields: [technicalSheetId], references: [id], onDelete: Cascade)
+  revisionNumber   String         // R01, R02, R03...
+  pdfUrl           String?
+  notes            String?
+  generatedBy      String?
+  approvedBy       String?
+  issuedBy         String?
+  issuedAt         DateTime?
+  
+  // Immutable Cryptographic Snapshot (SHA-256)
+  snapshotData     Json?
+  sha256Hash       String?
+
+  createdAt        DateTime       @default(now())
+
+  @@schema("proyectos_y_montajes")
+}
+
+model ProjectImage {
+  id            String   @id @default(cuid())
+  projectId     String
+  project       Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  url           String
+  alt           String?
+  caption       String?
+  order         Int      @default(0)
+  isCover       Boolean  @default(false)
+  
+  // Visual Project Timeline Stage
+  // BEFORE, PREPARATION, INSTALLATION, PROGRESS, QUALITY, FINAL
+  stage         String   @default("FINAL")
+  clientVisible Boolean  @default(true)
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@schema("proyectos_y_montajes")
+}
+
+model Lead {
+  id                 String         @id @default(cuid())
+  name               String
+  company            String?
+  email              String?
+  phone              String?
+  projectType        String         // Pistas de Pádel, Canchas Sintéticas, Parques Infantiles, Paisajismo, etc.
+  location           String?
+  city               String?
+  estimatedBudget    Float?
+  desiredStart       DateTime?
+  source             String         @default("WEBSITE") // WEBSITE, WHATSAPP, INSTAGRAM, REFERRAL, GOOGLE, DIRECTO, OTRO
+  
+  // 9-Stage Commercial Lifecycle
+  // NUEVO, CONTACTADO, CALIFICADO, VISITA_DIAGNOSTICO, OPORTUNIDAD, PROPUESTA_EN_PREPARACION, PROPUESTA_ENVIADA, NEGOCIACION, GANADO, PERDIDO
+  status             String         @default("NUEVO")
+  priority           String         @default("MEDIA") // ALTA, MEDIA, BAJA
+  assignedTo         String?
+  notes              String?        @db.Text
+  quotedAmount       Float?
+
+  // Revenue Intelligence & Forecasting
+  estimatedValue     Float?         // Commercial estimated amount ($ COP)
+  closeProbability   Int            @default(50) // 0 - 100%
+  estimatedCloseDate DateTime?
+  nextAction         String?
+  nextActionDate     DateTime?
+  competitor         String?
+  lostReason         String?
+  estimatedMargin    Float?         // e.g. 28.5%
+
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
+
+  projects           Project[]
+  activities         LeadActivity[]
+  proposals          Proposal[]
+
+  @@schema("proyectos_y_montajes")
+}
+
+model LeadActivity {
+  id          String   @id @default(cuid())
+  leadId      String
+  lead        Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  type        String   @default("NOTE") // NOTE, CALL, EMAIL, MEETING, STATUS_CHANGE
+  description String   @db.Text
+  author      String?
+  createdAt   DateTime @default(now())
+
+  @@schema("proyectos_y_montajes")
+}
+
+model Proposal {
+  id              String    @id @default(cuid())
+  code            String    @unique // Official code e.g. PM-2026-0042
+  version         String    @default("V01") // V01, V02, V03 (Immutable revisions)
+  
+  leadId          String?
+  lead            Lead?     @relation(fields: [leadId], references: [id], onDelete: SetNull)
+  projectId       String?
+  project         Project?  @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  
+  title           String
+  category        String
+  clientName      String
+  clientCompany   String?
+  clientEmail     String?
+  clientPhone     String?
+  location        String?
+  city            String?
+  
+  // Status: DRAFT, INTERNAL_REVIEW, SENT, VIEWED, NEGOTIATION, ACCEPTED, REJECTED, EXPIRED
+  status          String    @default("DRAFT")
+  
+  // Commercial Scope
+  scopeText       String?   @db.Text
+  deliverables    String[]
+  estimatedDays   Int?
+  warrantyMonths  Int       @default(12)
+  
+  // Financial Structure (Internal vs Client)
+  directCost      Float?
+  laborCost       Float?
+  materialsCost   Float?
+  transportCost   Float?
+  overheadCost    Float?
+  contingencyCost Float?
+  expectedMargin  Float?    // Expected percentage margin e.g. 28.0
+  totalPrice      Float     // Official Client Total Investment ($ COP)
+  currency        String    @default("COP")
+  paymentTerms    String?   @db.Text
+  
+  // Parametric Configuration JSON
+  estimatorData   Json?
+  
+  // Immutable Verification Snapshot (Business Integrity Layer)
+  snapshotData    Json?
+  sha256Hash      String?
+  pdfUrl          String?
+  
+  // Commercial Audit & Contractual Evidence
+  sentAt          DateTime?
+  viewedAt        DateTime?
+  acceptedAt      DateTime?
+  acceptedBy      String?
+  acceptedIp      String?
+  acceptedUserAgent String?
+  rejectedAt      DateTime?
+  rejectionReason String?   @db.Text
+  
+  createdBy       String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  auditLogs       CommercialAuditLog[]
+
+  @@schema("proyectos_y_montajes")
+}
+
+// Concurrency-Safe Sequence Allocator (PM-YYYY-XXXX)
+model ProposalSequence {
+  year       Int      @id
+  lastNumber Int      @default(0)
+  updatedAt  DateTime @updatedAt
+
+  @@schema("proyectos_y_montajes")
+}
+
+// Versioned Estimator Cost Configurations
+model EstimatorConfiguration {
+  id          String   @id @default(cuid())
+  category    String   // Pistas de Pádel, Canchas Sintéticas, etc.
+  versionName String   // e.g. "Tarifario 2026-Q1"
+  isActive    Boolean  @default(true)
+  unitRates   Json     // Unit rates: glass, turf, labor, transport rates
+  createdBy   String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@schema("proyectos_y_montajes")
+}
+
+// Immutable Commercial Audit Trail
+model CommercialAuditLog {
+  id            String   @id @default(cuid())
+  entityType    String   // PROPOSAL, LEAD, PROJECT
+  entityId      String
+  action        String   // CREATED, VERSION_BUMP, STATUS_CHANGE, PRICE_OVERRIDE, ACCEPTED, REJECTED
+  fromStatus    String?
+  toStatus      String?
+  actorId       String?
+  actorEmail    String?
+  actorRole     String?
+  ipAddress     String?
+  userAgent     String?
+  reason        String?  @db.Text
+  metadata      Json?
+  createdAt     DateTime @default(now())
+
+  proposal      Proposal? @relation(fields: [proposalId], references: [id], onDelete: Cascade)
+  proposalId    String?
+
+  @@schema("proyectos_y_montajes")
+}
+
+// Secure Client Portal Access Tokens
+model ClientAccessInvitation {
+  id          String    @id @default(cuid())
+  token       String    @unique // Secure cryptographically generated token
+  projectId   String
+  clientEmail String
+  clientName  String?
+  expiresAt   DateTime
+  revokedAt   DateTime?
+  usedAt      DateTime?
+  createdAt   DateTime  @default(now())
+
+  @@schema("proyectos_y_montajes")
+}

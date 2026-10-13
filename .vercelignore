@@ -1,0 +1,6 @@
+# Source videos are retained locally for the media archive. The deployed gallery
+# intentionally consumes only image formats from the managed media library.
+**/*.mp4
+**/*.MP4
+**/*.mov
+**/*.MOV

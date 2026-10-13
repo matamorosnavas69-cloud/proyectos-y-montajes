@@ -1,0 +1,143 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    @apply bg-brand-light text-brand-dark antialiased;
+  }
+}
+
+/* ── Before / After Slider ────────────────────────── */
+.before-after-container {
+  position: relative;
+  overflow: hidden;
+  cursor: col-resize;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.before-after-divider {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: linear-gradient(180deg, #d4af37 0%, #fff 50%, #d4af37 100%);
+  z-index: 30;
+  pointer-events: none;
+  box-shadow: 0 0 12px rgba(212, 175, 55, 0.4);
+}
+
+.before-after-handle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #d4af37;
+  border: 3px solid #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  z-index: 31;
+  pointer-events: none;
+}
+
+/* ── Scroll Reveal Utility ────────────────────────── */
+.reveal-on-scroll {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+}
+
+.reveal-on-scroll.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Image Fallback Placeholder ───────────────────── */
+.image-fallback {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #1b5e20 0%, #0b120d 100%);
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.image-fallback svg {
+  width: 48px;
+  height: 48px;
+  opacity: 0.3;
+}
+
+.image-fallback span {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* ── Authority Card Hover ─────────────────────────── */
+.authority-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.authority-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    transparent 40%,
+    rgba(11, 18, 13, 0.85) 100%
+  );
+  z-index: 10;
+  transition: opacity 0.5s ease;
+}
+
+.authority-card:hover::after {
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    transparent 30%,
+    rgba(11, 18, 13, 0.95) 100%
+  );
+}
+
+/* ── Premium Gradient Text ────────────────────────── */
+.text-gradient-gold {
+  background: linear-gradient(135deg, #d4af37 0%, #f5e6a3 50%, #d4af37 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Shimmer Loading ──────────────────────────────── */
+.shimmer-bg {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.05) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-size: 200% 100%;
+}
+
+/* ── Premium Badge Glow ───────────────────────────── */
+.badge-glow {
+  box-shadow: 0 0 0 1px rgba(212, 175, 55, 0.3),
+    0 0 20px rgba(212, 175, 55, 0.1);
+}
