@@ -12,11 +12,12 @@ const isAdminRoute = createRouteMatcher([
   '/api/admin(.*)',
 ]);
 
-export default clerkMiddleware(async (auth, req) => {
-  const { pathname } = req.nextUrl;
+export default clerkMiddleware(
+  async (auth, req) => {
+    const { pathname } = req.nextUrl;
 
-  // Protect admin routes with RBAC
-  if (isAdminRoute(req)) {
+    // Protect admin routes with RBAC
+    if (isAdminRoute(req)) {
     const { userId, sessionClaims } = await auth();
 
     // 1. Not signed in -> redirect or 401
@@ -144,6 +145,14 @@ export default clerkMiddleware(async (auth, req) => {
 
   // Allow request to continue
   return NextResponse.next();
+},
+{
+  publishableKey:
+    process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY ||
+    'pk_test_ZGVlcC1jb2QtNDkuY2xlcmsuYWNjb3VudHMuZGV2JA',
+  secretKey:
+    process.env.CLERK_SECRET_KEY ||
+    'sk_test_pb4njpJND98u1kiCC6VphnbrZRjGNG8VsHo7vCRXyl',
 });
 
 export const config = {
