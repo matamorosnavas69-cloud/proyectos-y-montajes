@@ -1,5 +1,18 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
+# Ensure brand and logo assets are tracked
+!public/
+public/*
+!public/brand/
+!public/images/
+!public/favicon.ico
+!public/apple-touch-icon.png
+!public/icon-192.png
+!public/icon-512.png
+public/images/*
+!public/images/logo/
+!public/images/og-image.jpg
+
 # dependencies
 /node_modules
 /.pnp
@@ -52,3 +65,5 @@ next-env.d.ts
 
 # backups and scratch
 *.bak
+qa-previews/
+public/brand/qa-previews/

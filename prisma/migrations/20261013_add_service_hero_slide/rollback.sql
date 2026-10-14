@@ -1,0 +1,19 @@
+-- ==============================================================================
+-- PROYECTOS Y MONTAJES — ROLLBACK POLICY & STRATEGY
+-- ==============================================================================
+--
+-- 1. STANDARD NON-DESTRUCTIVE APPLICATION ROLLBACK (RECOMMENDED):
+--    To roll back the Visual Hero CMS without losing editorial records:
+--    a) Revert the frontend code to commit 8c4bf78 or disable dynamic hero fetching.
+--    b) The application immediately uses the in-memory FALLBACK_SERVICE_HEROES.
+--    c) ZERO DATABASE WRITES OCCUR. The "ServiceHeroSlide" table remains intact,
+--       preserving all custom titles, slide order, focal points, and associations.
+--
+-- 2. DISASTER RECOVERY SCHEMA TEARDOWN (HIGH-RISK / DESTRUCTIVE):
+--    ONLY run the SQL below if permanent removal of the schema is strictly required.
+--    WARNING: This permanently drops all editorial configurations!
+--
+-- ==============================================================================
+
+-- EMERGENCY SCHEMA REMOVAL ONLY (DO NOT RUN FOR NORMAL APPLICATION ROLLBACK):
+-- DROP TABLE IF EXISTS "proyectos_y_montajes"."ServiceHeroSlide" CASCADE;

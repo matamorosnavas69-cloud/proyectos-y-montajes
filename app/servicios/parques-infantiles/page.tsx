@@ -1,88 +1,199 @@
-import Link from "next/link";
 import Image from "next/image";
 import QuoteSimulator from "@/app/components/QuoteSimulator";
 import ServiceShowcaseGallery from "@/app/components/ServiceShowcaseGallery";
+import ServiceHeroSlider, { HeroSlide } from "@/app/components/ServiceHeroSlider";
+import BrandIcon from "@/app/components/icons/BrandIcon";
+import ParquesLinearIcon from "@/app/components/icons/ParquesLinearIcon";
+import { getPublishedHeroSlides } from "@/lib/hero-management";
 
 export const metadata = {
   title: "Parques Infantiles de Alta Seguridad y Pisos EPDM | Proyectos y Montajes",
   description: "Diseño e instalación de parques infantiles para conjuntos residenciales, colegios y parques públicos. Seguridad europea EN-1177 y durabilidad garantizada.",
 };
 
-export default function ParquesInfantilesPage() {
+const PARQUES_HERO_SLIDES: HeroSlide[] = [
+  {
+    src: "/images/drive organice/parques/15d81928-0e73-46bd-b651-897cd955e52b.jpg",
+    alt: "Parque infantil modular multitorre instalado en conjunto residencial",
+    title: "Parque Infantil Modular Multitorre",
+    location: "Conjunto Residencial Campestre",
+    tag: "Módulos Lúdicos",
+  },
+  {
+    src: "/images/drive organice/parques/1f33c515-446d-4452-81d3-ed1df4d15211.JPG",
+    alt: "Piso amortiguante de caucho EPDM vaciado continuo de alta seguridad",
+    title: "Piso Amortiguante EPDM Continuo",
+    location: "Área Recreativa Infantil",
+    tag: "Seguridad EN-1177",
+  },
+  {
+    src: "/images/drive organice/parques/207e5725-8eb2-4049-8a03-5ab905d1b1ee.jpg",
+    alt: "Circuito recreativo infantil con madera inmunizada y tobogán",
+    title: "Estructura Recreativa en Madera Inmunizada",
+    location: "Urbanización Cerrada",
+    tag: "Módulos de Madera",
+  },
+  {
+    src: "/images/drive organice/parques/IMG_4629.JPG",
+    alt: "Zona de juegos infantiles con estimulación motriz y destreza",
+    title: "Zona de Estimulación Motriz y Juegos",
+    location: "Club Social e Institucional",
+    tag: "Equipamiento Lúdico",
+  },
+];
+
+const PARQUES_STATS = [
+  { value: "20+ Años", label: "Experiencia en Obras" },
+  { value: "EN-1177", label: "Criterio HIC de Caída" },
+  { value: "EPDM", label: "Caucho Vaciado Continuo" },
+];
+
+const SOLUCIONES_RECREATIVAS = [
+  {
+    id: "modulares",
+    name: "Parques Modulares",
+    icon: "playground-modular-castle" as const,
+    subtitle: "Desarrollo Motor & Juego",
+    description: "Torres multinivel, toboganes de espiral, pasarelas colgantes y rampas fabricadas en acero galvanizado y polietileno HDPE de alta densidad.",
+  },
+  {
+    id: "epdm",
+    name: "Pisos Amortiguantes EPDM",
+    icon: "playground-safety-floor" as const,
+    subtitle: "Seguridad Continua Anti-Impacto",
+    description: "Superficie continua vaciada in-situ con base amortiguante SBR y capa de desgaste EPDM en color. Elimina juntas peligrosas y absorbe caídas críticas.",
+  },
+  {
+    id: "biosaludables",
+    name: "Gimnasios Biosaludables",
+    icon: "outdoor-fitness-gym" as const,
+    subtitle: "Acondicionamiento al Aire Libre",
+    description: "Equipamiento cardiovascular y de movilidad articular para adultos y jóvenes, con pintura electrostática resistente a la intemperie.",
+  },
+  {
+    id: "calistenia",
+    name: "Estaciones de Calistenia",
+    icon: "calisthenics-frame" as const,
+    subtitle: "Fitness Urbano de Alto Desempeño",
+    description: "Estructuras de barras paralelas, dominadas y anillas con soldadura reforzada para entrenamiento funcional en parques urbanos y clubes.",
+  },
+];
+
+export default async function ParquesInfantilesPage() {
+  const heroSlides = await getPublishedHeroSlides("parques");
+
   return (
     <div className="flex flex-col w-full bg-brand-light">
-      {/* Service Hero */}
-      <section className="relative w-full py-32 md:py-48 bg-brand-dark overflow-hidden flex items-center justify-center">
-        <div className="absolute inset-0 z-0">
-          <div className="absolute inset-0 bg-brand-dark/80 mix-blend-multiply z-10" />
-          <div
-            className="w-full h-full bg-cover bg-center"
-            style={{
-              backgroundImage:
-                "url('/images/drive%20organice/parques/15d81928-0e73-46bd-b651-897cd955e52b.jpg')",
-            }}
-          />
-        </div>
-        
-        <div className="relative z-20 max-w-5xl mx-auto px-6 text-center text-white">
-          <Link href="/#servicios" className="inline-flex items-center text-brand-gold hover:text-white transition-colors mb-8 font-bold text-sm tracking-widest uppercase">
-            &larr; Volver a Servicios
-          </Link>
-          <h1 className="text-5xl md:text-7xl font-black mb-6 leading-tight">
-            Parques <span className="text-brand-gold">Infantiles</span> Integrales
-          </h1>
-          <p className="text-xl md:text-2xl font-light text-gray-300 max-w-3xl mx-auto">
-            Módulos recreativos diseñados para el desarrollo motor, priorizando la seguridad total y la resistencia a la intemperie.
+      {/* High-End Unobstructed Rotating Hero */}
+      <ServiceHeroSlider
+        badge="Ingeniería Recreativa y Seguridad Infantil"
+        title="Parques Infantiles y"
+        titleAccent="Pisos de Seguridad"
+        description="Creamos entornos recreativos que estimulan la imaginación y protegen a los más pequeños. Módulos lúdicos certificados, pisos amortiguantes EPDM y circuitos saludables."
+        stats={PARQUES_STATS}
+        slides={heroSlides}
+      />
+
+      {/* Four Solutions Architectural Grid */}
+      <section className="py-16 md:py-24 max-w-7xl mx-auto px-6 w-full">
+        <div className="text-center max-w-3xl mx-auto mb-14">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-gold/20 text-brand-dark text-xs font-bold uppercase tracking-widest mb-3">
+            Infraestructura Recreativa Integral
+          </div>
+          <h2 className="text-3xl md:text-4xl font-black text-brand-dark tracking-tight">
+            Cuatro Soluciones para Espacios Públicos y Residenciales
+          </h2>
+          <p className="text-gray-600 text-base md:text-lg mt-3">
+            Más que suministrar juegos, diseñamos e instalamos sistemas completos de bienestar que valorizan las áreas comunes de su copropiedad o institución.
           </p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+          {SOLUCIONES_RECREATIVAS.map((sol) => (
+            <div
+              key={sol.id}
+              className="bg-white rounded-xl p-6 border border-gray-200/80 shadow-flat hover:shadow-xl transition-all duration-300 flex flex-col group hover:border-brand-gold/50"
+            >
+              <div className="w-full h-36 rounded-xl bg-brand-dark/95 border border-brand-green/20 flex items-center justify-center p-3 mb-5 shadow-sm group-hover:scale-102 transition-transform overflow-hidden">
+                <BrandIcon name={sol.icon} size={110} className="w-full h-full object-contain" />
+              </div>
+              <span className="text-xs font-bold text-brand-gold uppercase tracking-wider block mb-1">
+                {sol.subtitle}
+              </span>
+              <h3 className="text-lg font-black text-brand-dark group-hover:text-brand-gold transition-colors mb-2.5">
+                {sol.name}
+              </h3>
+              <p className="text-gray-600 text-sm leading-relaxed flex-grow">
+                {sol.description}
+              </p>
+            </div>
+          ))}
         </div>
       </section>
 
-      {/* Details Section */}
-      <section className="py-24 max-w-6xl mx-auto px-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
-          <div className="order-2 md:order-1 grid grid-cols-2 gap-4">
-            <div className="relative h-64 w-full rounded-xl overflow-hidden shadow-lg">
-              <Image
-                src="/images/drive%20organice/parques/1f33c515-446d-4452-81d3-ed1df4d15211.JPG"
-                alt="Parque infantil modular con piso de caucho"
-                fill
-                sizes="(max-width: 768px) 50vw, 25vw"
-                className="object-cover"
-              />
+      {/* Details Section: Child Safety & Technical Criteria */}
+      <section className="py-16 md:py-20 bg-white border-y border-gray-200/70">
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16 items-center">
+            <div className="order-2 md:order-1 grid grid-cols-2 gap-4">
+              <div className="relative h-64 w-full rounded-xl overflow-hidden shadow-lg border border-gray-100">
+                <Image
+                  src="/images/drive organice/parques/1f33c515-446d-4452-81d3-ed1df4d15211.JPG"
+                  alt="Parque infantil modular con piso de caucho"
+                  fill
+                  sizes="(max-width: 768px) 50vw, 25vw"
+                  className="object-cover"
+                />
+              </div>
+              <div className="relative h-64 w-full rounded-xl overflow-hidden shadow-lg mt-8 border border-gray-100">
+                <Image
+                  src="/images/drive organice/parques/207e5725-8eb2-4049-8a03-5ab905d1b1ee.jpg"
+                  alt="Estructura de juego para conjunto residencial"
+                  fill
+                  sizes="(max-width: 768px) 50vw, 25vw"
+                  className="object-cover"
+                />
+              </div>
             </div>
-            <div className="relative h-64 w-full rounded-xl overflow-hidden shadow-lg mt-8">
-              <Image
-                src="/images/drive%20organice/parques/207e5725-8eb2-4049-8a03-5ab905d1b1ee.jpg"
-                alt="Estructura de juego para conjunto residencial"
-                fill
-                sizes="(max-width: 768px) 50vw, 25vw"
-                className="object-cover"
-              />
+
+            <div className="order-1 md:order-2">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-green/10 text-brand-green text-xs font-bold uppercase tracking-wider mb-4">
+                Seguridad &amp; Tranquilidad
+              </div>
+              <h2 className="text-3xl md:text-4xl font-black text-brand-dark mb-6 leading-tight">
+                Protección para Niños y Respaldo para Copropiedades
+              </h2>
+              <p className="text-gray-600 text-base md:text-lg leading-relaxed mb-6">
+                Nos especializamos en proyectos recreativos de alta durabilidad para constructoras y conjuntos residenciales. Cada instalación se dimensiona considerando las alturas críticas de caída (criterio HIC), garantizando amortiguación real y máxima higiene.
+              </p>
+
+              <ul className="space-y-4 mb-8">
+                <li className="flex items-center">
+                  <ParquesLinearIcon size={26} className="mr-3 shrink-0 text-brand-green" />
+                  <span className="text-brand-dark font-medium text-sm md:text-base">
+                    Estructuras en acero galvanizado termoesmaltado y plásticos rotomoldeados HDPE con filtro UV.
+                  </span>
+                </li>
+                <li className="flex items-center">
+                  <BrandIcon name="playground-safety-floor" size={32} className="mr-3 shrink-0" />
+                  <span className="text-brand-dark font-medium text-sm md:text-base">
+                    Pisos de caucho EPDM vaciado in-situ sin uniones ni filos cortantes para absorción de impacto.
+                  </span>
+                </li>
+                <li className="flex items-center">
+                  <ParquesLinearIcon size={26} className="mr-3 shrink-0 text-brand-gold" />
+                  <span className="text-brand-dark font-medium text-sm md:text-base">
+                    Módulos inclusivos y accesibles diseñados para diferentes grupos de edad y motricidad.
+                  </span>
+                </li>
+                <li className="flex items-center">
+                  <BrandIcon name="playground-modular-castle" size={32} className="mr-3 shrink-0" />
+                  <span className="text-brand-dark font-medium text-sm md:text-base">
+                    Configuraciones modulares personalizables al metraje y presupuesto de cada proyecto.
+                  </span>
+                </li>
+              </ul>
             </div>
-          </div>
-          <div className="order-1 md:order-2">
-            <h2 className="text-3xl font-black text-brand-dark mb-6">Tranquilidad para Padres y Administradores</h2>
-            <p className="text-gray-600 text-lg leading-relaxed mb-6">
-              Nos especializamos en soluciones integrales para constructoras y copropiedades. Cada proyecto incluye bases en caucho EPDM anti-impacto (Pisos de Caucho Continuo) para garantizar absorción de caídas, cumpliendo estrictamente con la normativa europea EN-1177.
-            </p>
-            <ul className="space-y-4 mb-8">
-              <li className="flex items-start">
-                <span className="text-brand-gold mr-3">✓</span>
-                <span className="text-brand-dark font-medium">Estructuras en acero galvanizado recubierto y plásticos de alta densidad (HDPE).</span>
-              </li>
-              <li className="flex items-start">
-                <span className="text-brand-gold mr-3">✓</span>
-                <span className="text-brand-dark font-medium">Pisos de caucho EPDM (vaciado continuo) para absorción de impactos.</span>
-              </li>
-              <li className="flex items-start">
-                <span className="text-brand-gold mr-3">✓</span>
-                <span className="text-brand-dark font-medium">Módulos inclusivos accesibles para niños con movilidad reducida.</span>
-              </li>
-              <li className="flex items-start">
-                <span className="text-brand-gold mr-3">✓</span>
-                <span className="text-brand-dark font-medium">Diseños temáticos modulares y personalizables.</span>
-              </li>
-            </ul>
           </div>
         </div>
       </section>

@@ -2,7 +2,8 @@
 
 import Image from 'next/image';
 import { ChangeEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Archive, CheckCircle2, FileImage, FolderOpen, ImagePlus, Loader2, Pencil, RotateCcw, Search, UploadCloud, X } from 'lucide-react';
+import { Archive, CheckCircle2, FileImage, FolderOpen, ImagePlus, Loader2, Pencil, RotateCcw, Search, Sliders, UploadCloud, X } from 'lucide-react';
+import HeroManagementSection from './HeroManagementSection';
 
 type Asset = { filename: string; url: string; bytes: number; updatedAt: string };
 type Category = { slug: string; label: string; description: string; assets: Asset[] };
@@ -15,6 +16,18 @@ function formatBytes(value: number) {
 
 export default function MediaLibraryPage() {
   const inputRef = useRef<HTMLInputElement>(null);
+  const [topTab, setTopTab] = useState<'library' | 'heroes' | 'archived'>('library');
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const tabParam = params.get('tab');
+      if (tabParam === 'heroes' || tabParam === 'archived' || tabParam === 'library') {
+        setTopTab(tabParam);
+      }
+    }
+  }, []);
+
   const [categories, setCategories] = useState<Category[]>([]);
   const [selectedCategory, setSelectedCategory] = useState('canchas');
   const [viewMode, setViewMode] = useState<'active' | 'archived'>('active');
@@ -179,7 +192,66 @@ export default function MediaLibraryPage() {
         </div>
       </section>
 
-      <div className="grid grid-cols-1 lg:grid-cols-[260px_minmax(0,1fr)] gap-6">
+      {/* Primary Section Tabs */}
+      <div className="flex flex-wrap items-center gap-2 border-b border-white/10 pb-4">
+        <button
+          onClick={() => {
+            setTopTab('library');
+            setViewMode('active');
+          }}
+          className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold transition-all ${
+            topTab === 'library'
+              ? 'bg-brand-green text-white shadow-lg shadow-brand-green/20'
+              : 'bg-white/5 text-gray-400 hover:text-white hover:bg-white/10'
+          }`}
+        >
+          <FolderOpen className="w-4 h-4 text-brand-gold" />
+          <span>Biblioteca</span>
+          <span className="text-[10px] font-black px-1.5 py-0.5 rounded bg-black/30 text-emerald-200">
+            {totalAssets}
+          </span>
+        </button>
+
+        <button
+          onClick={() => setTopTab('heroes')}
+          className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold transition-all ${
+            topTab === 'heroes'
+              ? 'bg-brand-gold text-brand-dark shadow-lg shadow-brand-gold/20 font-black'
+              : 'bg-white/5 text-gray-400 hover:text-white hover:bg-white/10'
+          }`}
+        >
+          <Sliders className="w-4 h-4" />
+          <span>Heroes de Servicios</span>
+          <span className="text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded bg-black/40 text-brand-gold">
+            CMS Visual
+          </span>
+        </button>
+
+        <button
+          onClick={() => {
+            setTopTab('archived');
+            setViewMode('archived');
+          }}
+          className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold transition-all ${
+            topTab === 'archived'
+              ? 'bg-amber-600 text-white shadow-lg'
+              : 'bg-white/5 text-gray-400 hover:text-white hover:bg-white/10'
+          }`}
+        >
+          <Archive className="w-4 h-4" />
+          <span>Archivadas</span>
+          {totalArchived > 0 && (
+            <span className="text-[10px] font-black px-1.5 py-0.5 rounded bg-black/30 text-amber-200">
+              {totalArchived}
+            </span>
+          )}
+        </button>
+      </div>
+
+      {topTab === 'heroes' ? (
+        <HeroManagementSection />
+      ) : (
+        <div className="grid grid-cols-1 lg:grid-cols-[260px_minmax(0,1fr)] gap-6">
         <aside className="rounded-2xl border border-white/10 bg-[#131d16] p-3 h-fit">
           <p className="px-3 pt-2 pb-3 text-[10px] uppercase font-black tracking-[0.16em] text-gray-500">Especialidad</p>
           <div className="space-y-1">
@@ -383,6 +455,7 @@ export default function MediaLibraryPage() {
           )}
         </section>
       </div>
+      )}
 
       <p className="flex items-center gap-2 text-[11px] text-gray-500">
         <UploadCloud className="w-3.5 h-3.5 text-brand-gold" />

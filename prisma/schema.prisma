@@ -399,3 +399,30 @@ model ArchivedMediaAsset {
   @@schema("proyectos_y_montajes")
 }
 
+// Visual CMS: Dynamic Slide Management for Service Heroes & Homepage sections
+model ServiceHeroSlide {
+  id          String   @id @default(cuid())
+  serviceSlug String   // 'canchas' | 'parques' | 'paisajismo'
+  section     String   @default("hero") // 'hero' (extensible to 'cards', 'showcase')
+  assetId     String?  // Reference to media library ID
+  mediaSource String   @default("LOCAL") // 'LOCAL' | 'SUPABASE'
+  src         String   // URL or path e.g. '/images/padel/...' or cloud URL
+  alt         String   // Accessible alt text
+  title       String   // Project title / heading
+  location    String?  // Location or provenance e.g. 'Complejo Deportivo Club'
+  tag         String?  // Category badge e.g. 'Pádel Panorámico'
+  focalX      Int      @default(50) // 0-100% focal point X
+  focalY      Int      @default(50) // 0-100% focal point Y
+  sortOrder   Int      @default(0)  // 0, 1, 2, 3...
+  isActive    Boolean  @default(true) // publication / visibility flag
+  
+  version     Int      @default(1)
+  createdBy   String?
+  updatedBy   String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([serviceSlug, section, isActive, sortOrder])
+  @@schema("proyectos_y_montajes")
+}
+

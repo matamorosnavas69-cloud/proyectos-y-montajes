@@ -1,94 +1,235 @@
-import Link from "next/link";
 import Image from "next/image";
 import QuoteSimulator from "@/app/components/QuoteSimulator";
 import ServiceShowcaseGallery from "@/app/components/ServiceShowcaseGallery";
+import ServiceHeroSlider, { HeroSlide } from "@/app/components/ServiceHeroSlider";
+import BrandIcon from "@/app/components/icons/BrandIcon";
+import { getPublishedHeroSlides } from "@/lib/hero-management";
 
 export const metadata = {
   title: "Construcción de Canchas Deportivas y Pistas de Pádel | Proyectos y Montajes",
   description: "Especialistas en diseño y construcción de pistas de Pádel, canchas de fútbol sintéticas y campos de golf con estándares profesionales y materiales europeos certificados.",
 };
 
-export default function CanchasDeportivasPage() {
+const CANCHAS_HERO_SLIDES: HeroSlide[] = [
+  {
+    src: "/images/padel/7ad44112-8715-477f-a253-8cd0c796ba8b.jpg",
+    alt: "Pista de pádel panorámica profesional con cerramientos de cristal templado",
+    title: "Pista de Pádel Panorámica de Competición",
+    location: "Complejo Deportivo Club",
+    tag: "Pádel Panorámico",
+  },
+  {
+    src: "/images/futbol/IMG_7552.JPG",
+    alt: "Cancha de fútbol sintética profesional de 11 jugadores",
+    title: "Campo de Fútbol Sintético Profesional",
+    location: "Santander, Colombia",
+    tag: "Fútbol Césped Pro",
+  },
+  {
+    src: "/images/futbol/806ebee3-c75b-4dcf-8e3b-eae1d864d211.jpg",
+    alt: "Cancha de fútbol con sistema de iluminación deportiva LED",
+    title: "Cancha Comunitaria con Iluminación LED",
+    location: "Bucaramanga",
+    tag: "Iluminación",
+  },
+  {
+    src: "/images/padel/IMG_3346.PNG",
+    alt: "Complejo de pádel cubierto Club Smash",
+    title: "Club Pádel Smash de Competición",
+    location: "Sede Deportiva Cubierta",
+    tag: "Club Deportivo",
+  },
+];
+
+const CANCHAS_STATS = [
+  { value: "20+ Años", label: "Experiencia Constructiva" },
+  { value: "FIP / WPT", label: "Medidas Reglamentarias" },
+  { value: "Hasta 8 Años", label: "Garantía de Fábrica UV" },
+];
+
+const DISCIPLINAS = [
+  {
+    id: "padel",
+    name: "Pistas de Pádel",
+    icon: "court-padel-badge-isometric" as const,
+    subtitle: "Medidas FIP & WPT",
+    description: "Cristal templado de 12mm, estructura galvanizada y césped texturizado monofilamento de 12mm.",
+  },
+  {
+    id: "futbol",
+    name: "Canchas de Fútbol",
+    icon: "court-futbol-isometric" as const,
+    subtitle: "Fútbol 5, 7, 8 y 11",
+    description: "Grama monofilamento certificada FIFA con absorción de impacto y drenaje técnico sub-base.",
+  },
+  {
+    id: "tenis",
+    name: "Pistas de Tenis",
+    icon: "court-tenis-isometric" as const,
+    subtitle: "Rápidas & Sintéticas",
+    description: "Superficies sintéticas con bote controlado, cerramiento perimetral y postes de tensión micrométrica.",
+  },
+  {
+    id: "golf",
+    name: "Putting Greens",
+    icon: "court-golf-isometric" as const,
+    subtitle: "Golf Residencial & Club",
+    description: "Césped ultradenso con nivelación milimétrica por láser y velocidad de rodadura profesional Stimp 10-12.",
+  },
+  {
+    id: "multideporte",
+    name: "Pistas Múltiples",
+    icon: "court-multideporte-isometric" as const,
+    subtitle: "Baloncesto & Microfútbol",
+    description: "Polideportivos versátiles con demarcación reglamentaria de múltiples disciplinas y tableros antivandálicos.",
+  },
+  {
+    id: "voleibol",
+    name: "Voleibol & Arena",
+    icon: "court-volleyball-isometric" as const,
+    subtitle: "Vóley Playa & Sintético",
+    description: "Canchas de arena de sílice lavada o piso sintético con redes de alta resistencia a la tracción.",
+  },
+];
+
+export default async function CanchasDeportivasPage() {
+  const heroSlides = await getPublishedHeroSlides("canchas");
+
   return (
     <div className="flex flex-col w-full bg-brand-light">
-      {/* Service Hero — Real padel court image */}
-      <section className="relative w-full py-32 md:py-48 bg-brand-dark overflow-hidden flex items-center justify-center">
-        <div className="absolute inset-0 z-0">
-          <div className="absolute inset-0 bg-brand-dark/75 mix-blend-multiply z-10" />
-          <div
-            className="w-full h-full bg-cover bg-center"
-            style={{
-              backgroundImage:
-                "url('/images/padel/7ad44112-8715-477f-a253-8cd0c796ba8b.jpg')",
-            }}
-          />
-        </div>
-        
-        <div className="relative z-20 max-w-5xl mx-auto px-6 text-center text-white">
-          <Link href="/#servicios" className="inline-flex items-center text-brand-gold hover:text-white transition-colors mb-8 font-bold text-sm tracking-widest uppercase">
-            &larr; Volver a Servicios
-          </Link>
-          <h1 className="text-5xl md:text-7xl font-black mb-6 leading-tight">
-            Canchas <span className="text-brand-green">Deportivas</span> y Pistas de Pádel
-          </h1>
-          <p className="text-xl md:text-2xl font-light text-gray-300 max-w-3xl mx-auto">
-            Infraestructura deportiva de alto rendimiento diseñada para maximizar la durabilidad y rentabilidad de tu inversión.
+      {/* High-End Unobstructed Rotating Hero */}
+      <ServiceHeroSlider
+        badge="Ingeniería Deportiva de Competición"
+        title="Canchas Deportivas y"
+        titleAccent="Pistas de Pádel"
+        description="Diseñamos y construimos infraestructura deportiva de alto rendimiento bajo estándares WPT y FIFA. Geometría exacta, drenaje profundo y máxima durabilidad."
+        stats={CANCHAS_STATS}
+        slides={heroSlides}
+      />
+
+      {/* Six Isometric Disciplines Grid */}
+      <section className="py-16 md:py-24 max-w-7xl mx-auto px-6 w-full">
+        <div className="text-center max-w-3xl mx-auto mb-14">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-green/10 text-brand-green text-xs font-bold uppercase tracking-widest mb-3">
+            Especialidades de Construcción
+          </div>
+          <h2 className="text-3xl md:text-4xl font-black text-brand-dark tracking-tight">
+            Seis Disciplinas, Una Sola Exigencia Técnica
+          </h2>
+          <p className="text-gray-600 text-base md:text-lg mt-3">
+            Cada deporte exige una respuesta biomecánica, un drenaje y un coeficiente de fricción específico. Conozca nuestras soluciones especializadas.
           </p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+          {DISCIPLINAS.map((disc) => (
+            <div
+              key={disc.id}
+              className="bg-white rounded-xl p-6 border border-gray-200/80 shadow-flat hover:shadow-xl transition-all duration-300 flex flex-col group hover:border-brand-green/40"
+            >
+              <div className="flex items-center gap-4 mb-4">
+                <div className="w-16 h-16 rounded-xl bg-brand-dark/95 border border-brand-green/30 flex items-center justify-center shrink-0 p-2 shadow-sm group-hover:scale-105 transition-transform">
+                  <BrandIcon name={disc.icon} size={48} className="w-full h-full object-contain" />
+                </div>
+                <div>
+                  <span className="text-xs font-bold text-brand-green uppercase tracking-wider block">
+                    {disc.subtitle}
+                  </span>
+                  <h3 className="text-xl font-black text-brand-dark group-hover:text-brand-green transition-colors">
+                    {disc.name}
+                  </h3>
+                </div>
+              </div>
+              <p className="text-gray-600 text-sm leading-relaxed flex-grow">
+                {disc.description}
+              </p>
+            </div>
+          ))}
         </div>
       </section>
 
-      {/* Details Section */}
-      <section className="py-24 max-w-6xl mx-auto px-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
-          <div>
-            <h2 className="text-3xl font-black text-brand-dark mb-6">Especificaciones de Clase Mundial</h2>
-            <p className="text-gray-600 text-lg leading-relaxed mb-6">
-              Construimos canchas y pistas deportivas bajo las normativas internacionales (WPT para Pádel, FIFA para Fútbol). Utilizamos grama sintética de última generación con monofilamentos texturizados que garantizan un rebote perfecto y previenen lesiones.
-            </p>
-            <ul className="space-y-4 mb-8">
-              <li className="flex items-start">
-                <span className="text-brand-green mr-3">✓</span>
-                <span className="text-brand-dark font-medium">Pistas de Pádel con cristal templado de 12mm y estructura galvanizada.</span>
-              </li>
-              <li className="flex items-start">
-                <span className="text-brand-green mr-3">✓</span>
-                <span className="text-brand-dark font-medium">Canchas de Fútbol 5, 7 y 11 con drenaje optimizado.</span>
-              </li>
-              <li className="flex items-start">
-                <span className="text-brand-green mr-3">✓</span>
-                <span className="text-brand-dark font-medium">Greens de Golf residenciales y comerciales.</span>
-              </li>
-              <li className="flex items-start">
-                <span className="text-brand-green mr-3">✓</span>
-                <span className="text-brand-dark font-medium">Iluminación LED deportiva anti-deslumbrante.</span>
-              </li>
-            </ul>
-          </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="relative h-64 w-full rounded-xl overflow-hidden shadow-lg">
-              <Image
-                src="/images/futbol/806ebee3-c75b-4dcf-8e3b-eae1d864d211.jpg"
-                alt="Cancha de fútbol con iluminación"
-                fill
-                sizes="(max-width: 768px) 50vw, 25vw"
-                className="object-cover"
-              />
+      {/* Details Section: World Class Specs & Technical Showcase */}
+      <section className="py-16 md:py-20 bg-white border-y border-gray-200/70">
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16 items-center">
+            <div>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-gold/15 text-brand-dark text-xs font-bold uppercase tracking-wider mb-4">
+                Criterios Constructivos
+              </div>
+              <h2 className="text-3xl md:text-4xl font-black text-brand-dark mb-6 leading-tight">
+                Especificaciones de Clase Mundial
+              </h2>
+              <p className="text-gray-600 text-base md:text-lg leading-relaxed mb-6">
+                Construimos canchas y pistas deportivas siguiendo especificaciones técnicas de federaciones internacionales (FIP para Pádel, especificaciones de césped sintético FIFA Quality). Utilizamos grama de última generación con monofilamentos texturizados que garantizan un rebote homogéneo y cuidan las articulaciones de los deportistas.
+              </p>
+
+              <ul className="space-y-4 mb-8">
+                <li className="flex items-center">
+                  <BrandIcon name="court-padel-badge-isometric" size={32} className="mr-3 shrink-0" />
+                  <span className="text-brand-dark font-medium text-sm md:text-base">
+                    Pistas de Pádel con cristal templado de 12mm y estructura autoportante galvanizada.
+                  </span>
+                </li>
+                <li className="flex items-center">
+                  <BrandIcon name="futbol-linear" size={28} className="mr-3 shrink-0" />
+                  <span className="text-brand-dark font-medium text-sm md:text-base">
+                    Canchas de Fútbol 5, 7 y 11 con sistema de drenaje continuo de alta capacidad.
+                  </span>
+                </li>
+                <li className="flex items-center">
+                  <BrandIcon name="golf-linear" size={28} className="mr-3 shrink-0" />
+                  <span className="text-brand-dark font-medium text-sm md:text-base">
+                    Putting greens de golf residenciales y comerciales con velocidad controlada.
+                  </span>
+                </li>
+                <li className="flex items-center">
+                  <BrandIcon name="cancha-isometric-linear" size={28} className="mr-3 shrink-0" />
+                  <span className="text-brand-dark font-medium text-sm md:text-base">
+                    Ingeniería de sub-base, shockpad elástico e iluminación LED deportiva anti-deslumbrante.
+                  </span>
+                </li>
+              </ul>
+
+              {/* Architectural Engineering Feature Callout */}
+              <div className="p-5 bg-brand-dark rounded-xl border border-brand-green/30 flex items-center gap-5 shadow-flat">
+                <BrandIcon name="padel-court-isometric" size={96} priority className="shrink-0 hidden sm:flex" />
+                <div>
+                  <span className="text-brand-gold text-xs font-bold uppercase tracking-wider block mb-1">
+                    Ingeniería Certificada
+                  </span>
+                  <p className="text-gray-200 text-sm leading-snug">
+                    Cálculo estructural de muros de vidrio, absorción biomecánica y canalización hídrica para operación ininterrumpida los 365 días del año.
+                  </p>
+                </div>
+              </div>
             </div>
-            <div className="relative h-64 w-full rounded-xl overflow-hidden shadow-lg mt-8">
-              <Image
-                src="/images/futbol/5083d30f-983b-4c09-8fb5-f973e703ac1d.jpg"
-                alt="Cancha de fútbol comunitaria"
-                fill
-                sizes="(max-width: 768px) 50vw, 25vw"
-                className="object-cover"
-              />
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="relative h-64 w-full rounded-xl overflow-hidden shadow-lg border border-gray-100">
+                <Image
+                  src="/images/futbol/806ebee3-c75b-4dcf-8e3b-eae1d864d211.jpg"
+                  alt="Cancha de fútbol con iluminación"
+                  fill
+                  sizes="(max-width: 768px) 50vw, 25vw"
+                  className="object-cover"
+                />
+              </div>
+              <div className="relative h-64 w-full rounded-xl overflow-hidden shadow-lg mt-8 border border-gray-100">
+                <Image
+                  src="/images/futbol/5083d30f-983b-4c09-8fb5-f973e703ac1d.jpg"
+                  alt="Cancha de fútbol comunitaria"
+                  fill
+                  sizes="(max-width: 768px) 50vw, 25vw"
+                  className="object-cover"
+                />
+              </div>
             </div>
           </div>
         </div>
       </section>
 
       {/* Material Authority */}
-      <section className="py-16 max-w-6xl mx-auto px-6">
+      <section className="py-16 md:py-20 max-w-6xl mx-auto px-6 w-full">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           <div className="relative h-80 w-full rounded-2xl overflow-hidden shadow-lg border border-gray-100">
             <Image

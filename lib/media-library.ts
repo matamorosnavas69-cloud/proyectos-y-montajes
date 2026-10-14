@@ -517,6 +517,15 @@ export async function archiveLibraryAsset(category: string, filename: string, ac
   const safeFilename = path.basename(filename);
   if (safeFilename !== filename) throw new Error('Archivo no válido.');
 
+  // Protect Hero integrity: Prevent archiving images active in public hero slides
+  const { checkAssetActiveInHeroes } = await import('@/lib/hero-management');
+  const heroCheck = await checkAssetActiveInHeroes(safeFilename);
+  if (heroCheck.isUsed) {
+    throw new Error(
+      `No es posible archivar "${safeFilename}" porque está activa en el Hero de: ${heroCheck.services.join(', ')}. Retire o sustituya la imagen en la pestaña "Heroes de Servicios" antes de archivar.`
+    );
+  }
+
   let dbPersisted = false;
 
   // 1. Persist to database (canonical for serverless & local)

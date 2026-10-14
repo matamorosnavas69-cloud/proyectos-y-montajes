@@ -1,88 +1,198 @@
-import Link from "next/link";
 import Image from "next/image";
 import QuoteSimulator from "@/app/components/QuoteSimulator";
 import ServiceShowcaseGallery from "@/app/components/ServiceShowcaseGallery";
+import ServiceHeroSlider, { HeroSlide } from "@/app/components/ServiceHeroSlider";
+import BrandIcon from "@/app/components/icons/BrandIcon";
+import PaisajismoLinearIcon from "@/app/components/icons/PaisajismoLinearIcon";
+import { getPublishedHeroSlides } from "@/lib/hero-management";
 
 export const metadata = {
   title: "Paisajismo y Terrazas con Grama Sintética | Proyectos y Montajes",
   description: "Transformamos espacios. Instalación de grama sintética decorativa para jardines, terrazas y zonas comunes. Máxima estética y cero mantenimiento.",
 };
 
-export default function PaisajismoPage() {
+const PAISAJISMO_HERO_SLIDES: HeroSlide[] = [
+  {
+    src: "/images/drive organice/residencial/IMG_4638.JPG",
+    alt: "Terraza residencial zen con grama sintética premium y jardín perimetral",
+    title: "Terraza Zen y Jardín de Alto Confort",
+    location: "Residencia Campestre",
+    tag: "Paisajismo Residencial",
+  },
+  {
+    src: "/images/drive organice/piscina/IMG_8074.JPG",
+    alt: "Solárium de grama sintética atérmica y antideslizante en zona húmeda",
+    title: "Solárium y Entorno de Piscina Atérmico",
+    location: "Áreas Húmedas de Lujo",
+    tag: "Piscina & Solárium",
+  },
+  {
+    src: "/images/drive organice/residencial/IMG_5679.JPEG",
+    alt: "Jardín perimetral con pérgola arquitectónica y acabado de césped",
+    title: "Jardín Perimetral con Pérgola y Deck",
+    location: "Condominio Campestre",
+    tag: "Deck & Terraza",
+  },
+  {
+    src: "/images/drive organice/piscina/IMG_3672.JPG",
+    alt: "Entorno de piscina con drenaje técnico perimetral de secado rápido",
+    title: "Acabado de Piscina con Drenaje Rápido",
+    location: "Vivienda Unifamiliar",
+    tag: "Drenaje Perimetral",
+  },
+];
+
+const PAISAJISMO_STATS = [
+  { value: "Cero Riego", label: "Eficiencia Hídrica" },
+  { value: "Hasta 8 Años", label: "Garantía de Fábrica UV" },
+  { value: "Pet-Safe", label: "Atérmico y No Tóxico" },
+];
+
+const SOLUCIONES_PAISAJISMO = [
+  {
+    id: "fibras",
+    name: "Fibras y Materiales Sintéticos",
+    icon: "landscaping-fibers" as const,
+    subtitle: "Ingeniería de Polímeros",
+    description: "Hebras monofilamento con nervio central de memoria elástica, doble backing de poliuretano y relleno de arena de sílice redondeada que previene el aplastamiento.",
+  },
+  {
+    id: "muros-verdes",
+    name: "Jardines Verticales",
+    icon: "landscaping-vertical-garden" as const,
+    subtitle: "Muros Verdes Arquitectónicos",
+    description: "Paneles botánicos modulares de follaje sintético con protección UV continua. Máximo impacto estético en fachadas, lobbies y cerramientos sin consumo hídrico.",
+  },
+  {
+    id: "drenajes",
+    name: "Drenajes & Sub-Bases",
+    icon: "landscaping-drainage" as const,
+    subtitle: "Evacuación Pluvial Continua",
+    description: "Sistemas de geomalla drenante, grava calibrada y tuberías ranuradas para eliminar charcos y humedad acumulada en jardines naturales o sobre losas.",
+  },
+  {
+    id: "terrazas",
+    name: "Terrazas & Áticos",
+    icon: "landscaping-terrace-lawn" as const,
+    subtitle: "Instalación en Losas y Decks",
+    description: "Adecuación liviana sobre placas de concreto con pads de amortiguación acústica y canalización perimetral de escorrentía hacia sifones existentes.",
+  },
+];
+
+export default async function PaisajismoPage() {
+  const heroSlides = await getPublishedHeroSlides("paisajismo");
+
   return (
     <div className="flex flex-col w-full bg-brand-light">
-      {/* Service Hero */}
-      <section className="relative w-full py-32 md:py-48 bg-brand-dark overflow-hidden flex items-center justify-center">
-        <div className="absolute inset-0 z-0">
-          <div className="absolute inset-0 bg-brand-dark/80 mix-blend-multiply z-10" />
-          <Image
-            src="/images/drive%20organice/residencial/IMG_4638.JPG"
-            alt="Paisajismo Residencial y Comercial"
-            fill
-            priority
-            sizes="100vw"
-            className="object-cover"
-          />
-        </div>
-        
-        <div className="relative z-20 max-w-5xl mx-auto px-6 text-center text-white">
-          <Link href="/#servicios" className="inline-flex items-center text-brand-gold hover:text-white transition-colors mb-8 font-bold text-sm tracking-widest uppercase">
-            &larr; Volver a Servicios
-          </Link>
-          <h1 className="text-5xl md:text-7xl font-black mb-6 leading-tight">
-            Diseño de <span className="text-white border-b-4 border-brand-green">Paisajismo</span> Residencial
-          </h1>
-          <p className="text-xl md:text-2xl font-light text-gray-300 max-w-3xl mx-auto">
-            Grama sintética decorativa premium que aporta vida, frescura y elegancia a cualquier espacio interior o exterior sin el costo de mantenimiento.
+      {/* High-End Unobstructed Rotating Hero */}
+      <ServiceHeroSlider
+        badge="Arquitectura Biofílica y Paisajismo"
+        title="Diseño de Paisajismo y"
+        titleAccent="Terrazas Residenciales"
+        description="Transformamos áreas exteriores en oasis de confort permanente. Grama sintética decorativa premium, jardines verticales y sistemas de drenaje que eliminan el mantenimiento."
+        stats={PAISAJISMO_STATS}
+        slides={heroSlides}
+      />
+
+      {/* Four Landscaping Solutions Architectural Grid */}
+      <section className="py-16 md:py-24 max-w-7xl mx-auto px-6 w-full">
+        <div className="text-center max-w-3xl mx-auto mb-14">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-green/10 text-brand-green text-xs font-bold uppercase tracking-widest mb-3">
+            Ingeniería de Superficies Verdes
+          </div>
+          <h2 className="text-3xl md:text-4xl font-black text-brand-dark tracking-tight">
+            Cuatro Pilares de Arquitectura Paisajística
+          </h2>
+          <p className="text-gray-600 text-base md:text-lg mt-3">
+            Más que instalar grama, resolvemos la hidrología, el confort térmico y la durabilidad estética de su entorno residencial o corporativo.
           </p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+          {SOLUCIONES_PAISAJISMO.map((sol) => (
+            <div
+              key={sol.id}
+              className="bg-white rounded-xl p-6 border border-gray-200/80 shadow-flat hover:shadow-xl transition-all duration-300 flex flex-col group hover:border-brand-green/50"
+            >
+              <div className="w-full h-36 rounded-xl bg-brand-dark/95 border border-brand-green/20 flex items-center justify-center p-3 mb-5 shadow-sm group-hover:scale-102 transition-transform overflow-hidden">
+                <BrandIcon name={sol.icon} size={110} className="w-full h-full object-contain" />
+              </div>
+              <span className="text-xs font-bold text-brand-green uppercase tracking-wider block mb-1">
+                {sol.subtitle}
+              </span>
+              <h3 className="text-lg font-black text-brand-dark group-hover:text-brand-green transition-colors mb-2.5">
+                {sol.name}
+              </h3>
+              <p className="text-gray-600 text-sm leading-relaxed flex-grow">
+                {sol.description}
+              </p>
+            </div>
+          ))}
         </div>
       </section>
 
-      {/* Details Section */}
-      <section className="py-24 max-w-6xl mx-auto px-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
-          <div>
-            <h2 className="text-3xl font-black text-brand-dark mb-6">Estética Permanente, Cero Riego</h2>
-            <p className="text-gray-600 text-lg leading-relaxed mb-6">
-              Adecuamos terrazas de apartamentos, jardines de casas campestres y zonas comunes de conjuntos cerrados. Nuestra grama decorativa cuenta con protección UV, sistema de drenaje rápido y una apariencia &ldquo;Real Feel&rdquo; idéntica al pasto natural.
-            </p>
-            <ul className="space-y-4 mb-8">
-              <li className="flex items-start">
-                <span className="text-brand-green mr-3">✓</span>
-                <span className="text-brand-dark font-medium">Ahorro de hasta un 90% en la factura de agua.</span>
-              </li>
-              <li className="flex items-start">
-                <span className="text-brand-green mr-3">✓</span>
-                <span className="text-brand-dark font-medium">Protección UV contra decoloración (garantía de hasta 8 años).</span>
-              </li>
-              <li className="flex items-start">
-                <span className="text-brand-green mr-3">✓</span>
-                <span className="text-brand-dark font-medium">Seguro para niños y amigable con mascotas (Pet-Friendly).</span>
-              </li>
-              <li className="flex items-start">
-                <span className="text-brand-green mr-3">✓</span>
-                <span className="text-brand-dark font-medium">Libre de alergias, pesticidas e insectos.</span>
-              </li>
-            </ul>
-          </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="relative h-64 w-full rounded-xl overflow-hidden shadow-lg">
-              <Image
-                src="/images/drive%20organice/residencial/IMG_1271.PNG"
-                alt="Terraza residencial con grama sintética"
-                fill
-                sizes="(max-width: 768px) 50vw, 25vw"
-                className="object-cover"
-              />
+      {/* Details Section: Permanent Aesthetics & Zero Watering */}
+      <section className="py-16 md:py-20 bg-white border-y border-gray-200/70">
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16 items-center">
+            <div>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-green/10 text-brand-green text-xs font-bold uppercase tracking-wider mb-4">
+                Eficiencia Hídrica &amp; Estética
+              </div>
+              <h2 className="text-3xl md:text-4xl font-black text-brand-dark mb-6 leading-tight">
+                Estética Permanente, Cero Riego
+              </h2>
+              <p className="text-gray-600 text-base md:text-lg leading-relaxed mb-6">
+                Adecuamos terrazas de apartamentos, jardines de casas campestres y zonas comunes de conjuntos cerrados. Nuestra grama decorativa cuenta con protección UV avanzada, sistema de drenaje continuo de alta velocidad y apariencia “Real Feel” indistinguible del pasto natural.
+              </p>
+
+              <ul className="space-y-4 mb-8">
+                <li className="flex items-center">
+                  <PaisajismoLinearIcon size={26} className="mr-3 shrink-0 text-brand-green" />
+                  <span className="text-brand-dark font-medium text-sm md:text-base">
+                    Eliminación de riego continuo y fertilizantes, reduciendo sensiblemente los costos de mantenimiento mensual.
+                  </span>
+                </li>
+                <li className="flex items-center">
+                  <BrandIcon name="landscaping-fibers" size={32} className="mr-3 shrink-0" />
+                  <span className="text-brand-dark font-medium text-sm md:text-base">
+                    Protección UV certificada contra decoloración (garantía de fábrica de hasta 8 años según especificación del producto).
+                  </span>
+                </li>
+                <li className="flex items-center">
+                  <PaisajismoLinearIcon size={26} className="mr-3 shrink-0 text-brand-gold" />
+                  <span className="text-brand-dark font-medium text-sm md:text-base">
+                    Seguro para niños y 100% amigable con mascotas (Pet-Friendly, atérmico y fácil de sanitizar).
+                  </span>
+                </li>
+                <li className="flex items-center">
+                  <BrandIcon name="landscaping-drainage" size={32} className="mr-3 shrink-0" />
+                  <span className="text-brand-dark font-medium text-sm md:text-base">
+                    Base drenante que evacúa más de 60 litros por minuto por metro cuadrado, evitando encharcamientos.
+                  </span>
+                </li>
+              </ul>
             </div>
-            <div className="relative h-64 w-full rounded-xl overflow-hidden shadow-lg mt-8">
-              <Image
-                src="/images/drive%20organice/piscina/IMG_8075.JPG"
-                alt="Zona de piscina y deck con césped decorativo"
-                fill
-                sizes="(max-width: 768px) 50vw, 25vw"
-                className="object-cover"
-              />
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="relative h-64 w-full rounded-xl overflow-hidden shadow-lg border border-gray-100">
+                <Image
+                  src="/images/drive%20organice/residencial/IMG_1271.PNG"
+                  alt="Terraza residencial con grama sintética"
+                  fill
+                  sizes="(max-width: 768px) 50vw, 25vw"
+                  className="object-cover"
+                />
+              </div>
+              <div className="relative h-64 w-full rounded-xl overflow-hidden shadow-lg mt-8 border border-gray-100">
+                <Image
+                  src="/images/drive%20organice/piscina/IMG_8075.JPG"
+                  alt="Zona de piscina y deck con césped decorativo"
+                  fill
+                  sizes="(max-width: 768px) 50vw, 25vw"
+                  className="object-cover"
+                />
+              </div>
             </div>
           </div>
         </div>

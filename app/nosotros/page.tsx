@@ -1,5 +1,6 @@
 import Link from "next/link";
 import QuoteSimulator from "@/app/components/QuoteSimulator";
+import BrandIcon from "@/app/components/icons/BrandIcon";
 
 export const metadata = {
   title: "Nosotros | 20 Años de Experiencia | Proyectos y Montajes",
@@ -68,29 +69,38 @@ export default function NosotrosPage() {
       {/* Certifications & Materials */}
       <section className="py-24 bg-white border-y border-gray-100">
         <div className="max-w-6xl mx-auto px-6 text-center">
-          <h2 className="text-3xl font-black text-brand-dark mb-16">Calidad y Normativa Internacional</h2>
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-brand-green/10 text-brand-green text-xs font-bold uppercase tracking-widest mb-3">
+            Rigor de Ingeniería
+          </div>
+          <h2 className="text-3xl md:text-4xl font-black text-brand-dark mb-16">Calidad y Normativa Internacional</h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-            <div className="flex flex-col items-center">
-              <div className="w-20 h-20 bg-green-50 rounded-full flex items-center justify-center text-brand-green text-3xl mb-6">🏆</div>
-              <h3 className="text-xl font-bold text-brand-dark mb-4">Certificación FIFA / WPT</h3>
-              <p className="text-gray-500">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+            <div className="flex flex-col items-center p-6 rounded-xl border border-gray-100 shadow-sm bg-brand-light/30">
+              <div className="w-16 h-16 rounded-xl bg-brand-dark flex items-center justify-center p-2 mb-6 border border-brand-green/30 shadow">
+                <BrandIcon name="cancha-isometric-linear" size={44} />
+              </div>
+              <h3 className="text-xl font-black text-brand-dark mb-3">Certificación FIFA &amp; WPT</h3>
+              <p className="text-gray-600 text-sm leading-relaxed">
                 Instalamos gramas sintéticas monofilamento avaladas por laboratorios internacionales, garantizando bote perfecto y tracción biomecánica.
               </p>
             </div>
             
-            <div className="flex flex-col items-center">
-              <div className="w-20 h-20 bg-yellow-50 rounded-full flex items-center justify-center text-brand-gold text-3xl mb-6">🛡️</div>
-              <h3 className="text-xl font-bold text-brand-dark mb-4">Norma EN-1177 (Parques)</h3>
-              <p className="text-gray-500">
+            <div className="flex flex-col items-center p-6 rounded-xl border border-gray-100 shadow-sm bg-brand-light/30">
+              <div className="w-16 h-16 rounded-xl bg-brand-dark flex items-center justify-center p-2 mb-6 border border-brand-gold/30 shadow">
+                <BrandIcon name="playground-safety-floor" size={48} />
+              </div>
+              <h3 className="text-xl font-black text-brand-dark mb-3">Norma EN-1177 (Parques)</h3>
+              <p className="text-gray-600 text-sm leading-relaxed">
                 Nuestros pisos de caucho EPDM continuo superan las pruebas de absorción de impacto crítico (HIC), protegiendo la integridad de los niños.
               </p>
             </div>
             
-            <div className="flex flex-col items-center">
-              <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center text-gray-700 text-3xl mb-6">☀️</div>
-              <h3 className="text-xl font-bold text-brand-dark mb-4">Protección UV Avanzada</h3>
-              <p className="text-gray-500">
+            <div className="flex flex-col items-center p-6 rounded-xl border border-gray-100 shadow-sm bg-brand-light/30">
+              <div className="w-16 h-16 rounded-xl bg-brand-dark flex items-center justify-center p-2 mb-6 border border-brand-green/30 shadow">
+                <BrandIcon name="landscaping-fibers" size={48} />
+              </div>
+              <h3 className="text-xl font-black text-brand-dark mb-3">Protección UV Avanzada</h3>
+              <p className="text-gray-600 text-sm leading-relaxed">
                 Fibras de última generación con tratamiento contra la degradación solar. Aseguramos color verde intenso hasta por 8 años a la intemperie.
               </p>
             </div>

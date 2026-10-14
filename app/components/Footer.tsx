@@ -1,55 +1,114 @@
+import Link from "next/link";
+import BrandLogo from "@/app/components/brand/BrandLogo";
+
 export default function Footer() {
   return (
-    <footer className="w-full bg-brand-dark text-white border-t border-brand-green/20 pt-48 pb-24 px-16 font-sans">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-48 mb-32">
-        <div className="col-span-1 md:col-span-2">
-          <h3 className="text-24 font-black text-brand-gold mb-16">Proyectos y Montajes</h3>
-          <p className="text-gray-400 max-w-sm mb-24 text-16 leading-relaxed">
-            Construyendo espacios premium con más de 20 años de experiencia. Liderando la innovación
-            en infraestructura deportiva y paisajismo en Colombia.
+    <footer className="w-full bg-brand-dark text-white border-t border-brand-green/20 pt-48 pb-28 px-16 sm:px-24 font-sans">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-36 lg:gap-48 mb-36">
+        {/* Brand Column */}
+        <div className="col-span-1 sm:col-span-2">
+          <div className="mb-20">
+            <BrandLogo
+              variant="institutional"
+              theme="dark"
+              height={76}
+              className="hover:opacity-95 transition-opacity"
+            />
+          </div>
+          <p className="text-gray-400 max-w-md mb-20 text-15 sm:text-16 leading-relaxed">
+            Más de 20 años de experiencia transformando espacios en Colombia.
+            Ingeniería de vanguardia en infraestructura deportiva de alto rendimiento,
+            parques recreativos y paisajismo arquitectónico.
           </p>
-          <div className="inline-flex items-center gap-8 px-12 py-4 rounded-full bg-brand-green/20 border border-brand-green text-brand-light text-12">
-            Expertos en Proyectos Comerciales
+          <div className="inline-flex items-center gap-8 px-14 py-6 rounded-full bg-brand-green/20 border border-brand-green/60 text-brand-gold text-12 font-medium">
+            <span className="w-6 h-6 rounded-full bg-brand-gold animate-pulse" />
+            Construcción Comercial y Residencial
           </div>
         </div>
 
+        {/* Services Column */}
         <div>
-          <h4 className="font-bold text-18 mb-16 text-brand-light">Servicios</h4>
-          <ul className="space-y-8 text-gray-400 text-16">
+          <h4 className="font-bold text-16 sm:text-18 mb-16 text-white tracking-wide">
+            Especialidades
+          </h4>
+          <ul className="space-y-10 text-gray-400 text-14 sm:text-15">
             <li>
-              <a href="#canchas" className="hover:text-brand-gold transition-colors">
-                Canchas de Pádel
-              </a>
+              <Link
+                href="/servicios/canchas-deportivas"
+                className="hover:text-brand-gold transition-colors inline-block py-2"
+              >
+                Pistas de Pádel & Fútbol Sintético
+              </Link>
             </li>
             <li>
-              <a href="#canchas" className="hover:text-brand-gold transition-colors">
-                Fútbol Sintético
-              </a>
+              <Link
+                href="/servicios/parques-infantiles"
+                className="hover:text-brand-gold transition-colors inline-block py-2"
+              >
+                Parques Infantiles & Pisos de Seguridad
+              </Link>
             </li>
             <li>
-              <a href="#parques" className="hover:text-brand-gold transition-colors">
-                Parques Infantiles
-              </a>
+              <Link
+                href="/servicios/paisajismo"
+                className="hover:text-brand-gold transition-colors inline-block py-2"
+              >
+                Jardines & Terrazas Arquitectónicas
+              </Link>
             </li>
             <li>
-              <a href="#jardin" className="hover:text-brand-gold transition-colors">
-                Paisajismo y Terrazas
-              </a>
+              <Link
+                href="/portafolio"
+                className="hover:text-brand-gold transition-colors inline-block py-2"
+              >
+                Portafolio de Obras Concluidas
+              </Link>
             </li>
           </ul>
         </div>
 
+        {/* Contact & Channels Column */}
         <div>
-          <h4 className="font-bold text-18 mb-16 text-brand-light">Contacto</h4>
-          <ul className="space-y-8 text-gray-400 text-16">
-            <li>Bucaramanga, Colombia</li>
-            <li>proyectos@ejemplo.com</li>
-            <li>+57 300 000 0000</li>
+          <h4 className="font-bold text-16 sm:text-18 mb-16 text-white tracking-wide">
+            Atención & Cobertura
+          </h4>
+          <ul className="space-y-10 text-gray-400 text-14 sm:text-15">
+            <li className="flex items-start gap-8">
+              <span className="text-brand-gold font-bold">Sede:</span>
+              <span>Bucaramanga, Santander, Colombia</span>
+            </li>
+            <li className="flex items-start gap-8">
+              <span className="text-brand-gold font-bold">Cobertura:</span>
+              <span>Proyectos a nivel nacional</span>
+            </li>
+            <li className="pt-8">
+              <Link
+                href="/#simulador"
+                className="inline-flex items-center gap-6 text-brand-gold hover:text-yellow-400 font-semibold transition-colors"
+              >
+                <span>Cotizar Proyecto en Línea &rarr;</span>
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/cliente"
+                className="inline-flex items-center gap-6 text-gray-400 hover:text-white transition-colors"
+              >
+                <span>Acceso a Portal de Clientes &rarr;</span>
+              </Link>
+            </li>
           </ul>
         </div>
       </div>
-      <div className="max-w-7xl mx-auto border-t border-gray-800 pt-24 text-center text-gray-500 text-12">
-        &copy; {new Date().getFullYear()} Proyectos y Montajes. Todos los derechos reservados.
+
+      {/* Legal & Credits bar */}
+      <div className="max-w-7xl mx-auto border-t border-gray-800/80 pt-24 flex flex-col sm:flex-row items-center justify-between gap-12 text-gray-500 text-12">
+        <p>
+          &copy; {new Date().getFullYear()} Proyectos y Montajes. Todos los derechos reservados.
+        </p>
+        <p className="text-gray-500 text-11">
+          Ingeniería deportiva, recreativa y paisajismo arquitectónico en Colombia.
+        </p>
       </div>
     </footer>
   );

@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Search, ShieldCheck, HardHat, FileText, ArrowRight, Sparkles } from 'lucide-react';
+import BrandLogo from '@/app/components/brand/BrandLogo';
 
 export default function ClientPortalLandingPage() {
   const router = useRouter();
@@ -23,12 +24,12 @@ export default function ClientPortalLandingPage() {
 
       {/* Header */}
       <header className="p-6 md:px-12 max-w-7xl mx-auto w-full flex items-center justify-between relative z-10">
-        <Link href="/" className="flex items-center gap-2">
-          <div className="w-9 h-9 bg-brand-green border border-brand-gold/40 rounded-xl flex items-center justify-center text-white font-black text-sm shadow-md">
-            P&M
-          </div>
+        <Link href="/" className="flex items-center gap-3 group">
+          <BrandLogo variant="mark" theme="dark" height={36} showLink={false} />
           <div>
-            <span className="font-black text-white text-sm tracking-wider uppercase block">Proyectos & Montajes</span>
+            <span className="font-black text-white text-sm tracking-wider uppercase block group-hover:text-brand-gold transition-colors">
+              Proyectos y Montajes
+            </span>
             <span className="text-[10px] text-brand-gold font-bold uppercase tracking-widest block">Portal del Cliente</span>
           </div>
         </Link>

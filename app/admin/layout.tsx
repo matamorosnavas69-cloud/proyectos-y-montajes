@@ -26,6 +26,8 @@ import {
 import { useRBAC } from '@/lib/auth/useRBAC';
 import CreateProjectModal from '@/app/components/admin/CreateProjectModal';
 
+import BrandLogo from '@/app/components/brand/BrandLogo';
+
 interface AdminLayoutProps {
   children: React.ReactNode;
 }
@@ -136,10 +138,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
     <div className="min-h-screen bg-brand-dark text-white flex flex-col md:flex-row antialiased">
       {/* Mobile Header */}
       <div className="md:hidden bg-[#131d16] border-b border-brand-green/30 px-4 py-3 flex items-center justify-between sticky top-0 z-50">
-        <Link href="/admin" className="flex flex-col">
-          <span className="text-lg font-black tracking-tight text-brand-gold">PROYECTOS</span>
-          <span className="text-[10px] font-bold tracking-widest text-gray-400">& MONTAJES ADMIN</span>
-        </Link>
+        <BrandLogo variant="horizontal" theme="dark" height={28} href="/admin" />
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           className="p-2 text-gray-300 hover:text-white rounded-lg hover:bg-white/5"
@@ -156,16 +155,15 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
       >
         <div className="flex flex-col h-full">
           {/* Brand Header */}
-          <div className="p-6 border-b border-brand-green/20">
-            <Link href="/" className="inline-flex flex-col group">
-              <span className="text-22 font-black tracking-tight text-brand-gold group-hover:text-yellow-400 transition-colors">
-                PROYECTOS
-              </span>
-              <span className="text-11 font-bold tracking-widest text-brand-light">
-                & MONTAJES
-              </span>
-            </Link>
-            <div className="mt-4 flex items-center justify-between">
+          <div className="p-5 border-b border-brand-green/20">
+            <BrandLogo
+              variant="horizontal"
+              theme="dark"
+              height={32}
+              href="/admin"
+              className="hover:opacity-95 transition-opacity"
+            />
+            <div className="mt-3 flex items-center justify-between">
               <span className="text-[10px] uppercase font-bold tracking-wider text-gray-400">
                 {isPresentationMode ? 'Modo presentación' : 'Sistema RBAC'}
               </span>
