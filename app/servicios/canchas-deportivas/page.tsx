@@ -3,10 +3,12 @@ import QuoteSimulator from "@/app/components/QuoteSimulator";
 import ServiceShowcaseGallery from "@/app/components/ServiceShowcaseGallery";
 import ServiceHeroSlider, { HeroSlide } from "@/app/components/ServiceHeroSlider";
 import BrandIcon from "@/app/components/icons/BrandIcon";
-import PadelLinearIcon from "@/app/components/icons/PadelLinearIcon";
-import FutbolLinearIcon from "@/app/components/icons/FutbolLinearIcon";
-import GolfLinearIcon from "@/app/components/icons/GolfLinearIcon";
-import CanchaLinearIcon from "@/app/components/icons/CanchaLinearIcon";
+import {
+  PadelSportsIcon,
+  FutbolSportsIcon,
+  GolfSportsIcon,
+  CanchaEngineeringIcon,
+} from "@/app/components/icons/TechnicalIcons";
 import { getPublishedHeroSlides } from "@/lib/hero-management";
 
 export const metadata = {
@@ -131,8 +133,8 @@ export default async function CanchasDeportivasPage() {
               key={disc.id}
               className="bg-white rounded-2xl p-6 md:p-8 border border-gray-200/80 shadow-flat hover:shadow-xl transition-all duration-300 flex flex-col group hover:border-brand-green/50"
             >
-              <div className="w-full h-56 sm:h-64 flex items-center justify-center p-2 mb-4 group-hover:scale-105 transition-transform duration-300">
-                <BrandIcon name={disc.icon} size={240} className="drop-shadow-xl select-none" />
+              <div className="w-full h-60 sm:h-72 flex items-center justify-center p-2 mb-5 group-hover:scale-105 transition-transform duration-300">
+                <BrandIcon name={disc.icon} size={260} className="drop-shadow-xl select-none" />
               </div>
               <span className="text-xs font-bold text-brand-green uppercase tracking-wider block mb-1">
                 {disc.subtitle}
@@ -165,32 +167,32 @@ export default async function CanchasDeportivasPage() {
 
               <ul className="space-y-5 mb-8">
                 <li className="flex items-center">
-                  <div className="w-16 h-16 rounded-2xl bg-brand-green/10 flex items-center justify-center mr-5 shrink-0 border border-brand-green/25 shadow-sm">
-                    <PadelLinearIcon size={48} className="text-brand-green" />
+                  <div className="w-14 h-14 rounded-2xl bg-brand-green/10 flex items-center justify-center mr-5 shrink-0 border border-brand-green/25 shadow-sm">
+                    <PadelSportsIcon size={36} className="text-brand-green" />
                   </div>
                   <span className="text-brand-dark font-medium text-sm md:text-base">
                     Pistas de Pádel con cristal templado de 12mm y estructura autoportante galvanizada.
                   </span>
                 </li>
                 <li className="flex items-center">
-                  <div className="w-16 h-16 rounded-2xl bg-brand-green/10 flex items-center justify-center mr-5 shrink-0 border border-brand-green/25 shadow-sm">
-                    <FutbolLinearIcon size={48} className="text-brand-green" />
+                  <div className="w-14 h-14 rounded-2xl bg-brand-green/10 flex items-center justify-center mr-5 shrink-0 border border-brand-green/25 shadow-sm">
+                    <FutbolSportsIcon size={36} className="text-brand-green" />
                   </div>
                   <span className="text-brand-dark font-medium text-sm md:text-base">
                     Canchas de Fútbol 5, 7 y 11 con sistema de drenaje continuo de alta capacidad.
                   </span>
                 </li>
                 <li className="flex items-center">
-                  <div className="w-16 h-16 rounded-2xl bg-brand-gold/15 flex items-center justify-center mr-5 shrink-0 border border-brand-gold/30 shadow-sm">
-                    <GolfLinearIcon size={48} className="text-brand-gold" />
+                  <div className="w-14 h-14 rounded-2xl bg-brand-gold/15 flex items-center justify-center mr-5 shrink-0 border border-brand-gold/30 shadow-sm">
+                    <GolfSportsIcon size={36} className="text-brand-gold" />
                   </div>
                   <span className="text-brand-dark font-medium text-sm md:text-base">
                     Putting greens de golf residenciales y comerciales con velocidad controlada.
                   </span>
                 </li>
                 <li className="flex items-center">
-                  <div className="w-16 h-16 rounded-2xl bg-brand-green/10 flex items-center justify-center mr-5 shrink-0 border border-brand-green/25 shadow-sm">
-                    <CanchaLinearIcon size={48} className="text-brand-green" />
+                  <div className="w-14 h-14 rounded-2xl bg-brand-green/10 flex items-center justify-center mr-5 shrink-0 border border-brand-green/25 shadow-sm">
+                    <CanchaEngineeringIcon size={36} className="text-brand-green" />
                   </div>
                   <span className="text-brand-dark font-medium text-sm md:text-base">
                     Ingeniería de sub-base, shockpad elástico e iluminación LED deportiva anti-deslumbrante.

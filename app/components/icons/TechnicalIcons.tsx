@@ -283,3 +283,220 @@ export function DrainageFlowIcon({
     </svg>
   );
 }
+
+/**
+ * PadelSportsIcon — High-Impact Vector SVG Icon for Competition Padel Courts
+ * ViewBox: 0 0 64 64
+ */
+export function PadelSportsIcon({
+  size = 48,
+  className = "",
+  title = "Pistas de Pádel Panorámicas",
+  ...props
+}: IconProps) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 64 64"
+      width={size}
+      height={size}
+      fill="none"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+      aria-label={title}
+      role={title ? "img" : undefined}
+      aria-hidden={!title}
+      {...props}
+    >
+      {/* Tempered Glass Perimeter Structure */}
+      <rect
+        x="6"
+        y="8"
+        width="52"
+        height="48"
+        rx="4"
+        fill="#16a34a"
+        fillOpacity="0.12"
+        stroke="#16a34a"
+        strokeWidth="3.5"
+      />
+      {/* Panoramic Glass Net Division */}
+      <path d="M6 32 L58 32" stroke="#ca8a04" strokeWidth="3.5" />
+      <path d="M32 8 L32 56" stroke="#16a34a" strokeWidth="2.5" />
+
+      {/* Racket Silhouette */}
+      <circle cx="21" cy="21" r="7" fill="#15803d" fillOpacity="0.25" stroke="#15803d" strokeWidth="2.5" />
+      <path d="M26 26 L31 31" stroke="#15803d" strokeWidth="3.2" strokeLinecap="round" />
+      <circle cx="21" cy="21" r="1.5" fill="#15803d" />
+
+      {/* Golden Padel Ball with Curves */}
+      <circle cx="43" cy="43" r="8" fill="#ca8a04" fillOpacity="0.25" stroke="#ca8a04" strokeWidth="3.2" />
+      <path d="M38 38 C41 40, 41 46, 38 48 M48 38 C45 40, 45 46, 48 48" stroke="#ca8a04" strokeWidth="2" />
+    </svg>
+  );
+}
+
+/**
+ * FutbolSportsIcon — High-Impact Vector SVG Icon for FIFA Soccer Pitches & Continuous Drainage
+ * ViewBox: 0 0 64 64
+ */
+export function FutbolSportsIcon({
+  size = 48,
+  className = "",
+  title = "Canchas de Fútbol Sintético FIFA",
+  ...props
+}: IconProps) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 64 64"
+      width={size}
+      height={size}
+      fill="none"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+      aria-label={title}
+      role={title ? "img" : undefined}
+      aria-hidden={!title}
+      {...props}
+    >
+      {/* Full Pitch Boundary */}
+      <rect
+        x="6"
+        y="8"
+        width="52"
+        height="48"
+        rx="4"
+        fill="#16a34a"
+        fillOpacity="0.12"
+        stroke="#16a34a"
+        strokeWidth="3.5"
+      />
+      {/* Goal Area Box & Penalty Arc */}
+      <path d="M6 18 L20 18 L20 46 L6 46" stroke="#16a34a" strokeWidth="2.5" />
+      <path d="M20 26 C25 28, 25 36, 20 38" stroke="#16a34a" strokeWidth="2.5" />
+
+      {/* Center Line */}
+      <path d="M58 8 L58 56" stroke="#16a34a" strokeWidth="2.5" />
+
+      {/* Regulation Soccer Ball (Bold Gold & White) */}
+      <circle cx="39" cy="32" r="13" fill="#ffffff" stroke="#ca8a04" strokeWidth="3.5" />
+      <polygon points="39,25 45,29 43,36 35,36 33,29" fill="#ca8a04" />
+      <path d="M39 25 L39 19 M45 29 L51 31 M43 36 L47 43 M35 36 L31 43 M33 29 L27 31" stroke="#ca8a04" strokeWidth="2.2" />
+    </svg>
+  );
+}
+
+/**
+ * GolfSportsIcon — High-Impact Vector SVG Icon for Precision Putting Greens
+ * ViewBox: 0 0 64 64
+ */
+export function GolfSportsIcon({
+  size = 48,
+  className = "",
+  title = "Putting Greens de Golf",
+  ...props
+}: IconProps) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 64 64"
+      width={size}
+      height={size}
+      fill="none"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+      aria-label={title}
+      role={title ? "img" : undefined}
+      aria-hidden={!title}
+      {...props}
+    >
+      {/* Green Turf Organic Contour */}
+      <path
+        d="M6 38 C6 22, 20 12, 38 14 C54 16, 58 30, 56 46 C54 56, 24 58, 10 52 C6 50, 6 44, 6 38 Z"
+        fill="#16a34a"
+        fillOpacity="0.14"
+        stroke="#16a34a"
+        strokeWidth="3.5"
+      />
+
+      {/* Flagstick & Gold Triangle Flag */}
+      <path d="M42 46 L42 8" stroke="#ca8a04" strokeWidth="3.5" />
+      <polygon points="42,10 22,18 42,26" fill="#ca8a04" stroke="#ca8a04" strokeWidth="2.5" />
+
+      {/* Hole / Cup */}
+      <ellipse cx="42" cy="46" rx="7" ry="3.5" fill="#15803d" stroke="#16a34a" strokeWidth="2.5" />
+
+      {/* Golf Ball with Dimples */}
+      <circle cx="18" cy="40" r="7" fill="#ffffff" stroke="#16a34a" strokeWidth="3" />
+      <circle cx="17" cy="39" r="1" fill="#16a34a" />
+      <circle cx="19" cy="41" r="1" fill="#16a34a" />
+
+      {/* Putting Trajectory Path */}
+      <path d="M25 41 C30 43, 34 45, 38 46" stroke="#ca8a04" strokeWidth="2.5" strokeDasharray="3 3" />
+    </svg>
+  );
+}
+
+/**
+ * CanchaEngineeringIcon — High-Impact Vector SVG Icon for Sub-base & Shockpad Engineering
+ * ViewBox: 0 0 64 64
+ */
+export function CanchaEngineeringIcon({
+  size = 48,
+  className = "",
+  title = "Ingeniería de Sub-base y Shockpad",
+  ...props
+}: IconProps) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 64 64"
+      width={size}
+      height={size}
+      fill="none"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+      aria-label={title}
+      role={title ? "img" : undefined}
+      aria-hidden={!title}
+      {...props}
+    >
+      {/* Top Layer: Synthetic Turf Surface (Isometric Slab) */}
+      <polygon
+        points="32,8 56,20 32,32 8,20"
+        fill="#16a34a"
+        fillOpacity="0.25"
+        stroke="#16a34a"
+        strokeWidth="3.5"
+      />
+      <path d="M20 26 L44 14" stroke="#16a34a" strokeWidth="2.2" />
+      <ellipse cx="32" cy="20" rx="4" ry="2" stroke="#16a34a" strokeWidth="2" />
+
+      {/* Middle Layer: Elastic Shockpad */}
+      <path
+        d="M8 20 L8 30 L32 42 L56 30 L56 20"
+        fill="#ca8a04"
+        fillOpacity="0.2"
+        stroke="#ca8a04"
+        strokeWidth="3.2"
+      />
+      <path d="M32 32 L32 42" stroke="#ca8a04" strokeWidth="3.2" />
+
+      {/* Bottom Layer: Concrete / Drainage Sub-base */}
+      <path
+        d="M8 30 L8 44 L32 56 L56 44 L56 30"
+        fill="#15803d"
+        fillOpacity="0.15"
+        stroke="#15803d"
+        strokeWidth="3.5"
+      />
+      <path d="M32 42 L32 56" stroke="#15803d" strokeWidth="3.5" />
+    </svg>
+  );
+}
+
