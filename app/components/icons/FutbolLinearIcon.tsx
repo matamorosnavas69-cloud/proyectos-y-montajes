@@ -2,14 +2,14 @@ import React from "react";
 import { IconProps } from "./types";
 
 /**
- * FutbolLinearIcon — Vector SVG Icon for Proyectos y Montajes
- * Represents soccer pitch geometry, goal areas, center circle, and technical ball.
+ * FutbolLinearIcon — High-Impact Vector SVG Icon
+ * Bold soccer goal and regulation football.
  * ViewBox: 0 0 64 64
  */
 export default function FutbolLinearIcon({
   size = 48,
   className = "",
-  title = "Icono Fútbol Proyectos y Montajes",
+  title = "Fútbol Profesional",
   ...props
 }: IconProps) {
   return (
@@ -27,15 +27,32 @@ export default function FutbolLinearIcon({
       aria-hidden={!title}
       {...props}
     >
-      <rect width="48" height="36" x="8" y="16" fill="#16a34a" fillOpacity=".08" stroke="#16a34a" strokeWidth="1.75" rx="3" />
-      <path stroke="#16a34a" strokeWidth="1.5" d="M32 16v36" />
-      <circle cx="32" cy="34" r="6" stroke="#16a34a" strokeWidth="1.5" />
-      <circle cx="32" cy="34" r="1.2" fill="#16a34a" />
-      <path stroke="#16a34a" strokeWidth="1.25" d="M8 24h8v20H8zM48 24h8v20h-8z" />
-      <path fill="#ca8a04" fillOpacity=".15" stroke="#ca8a04" strokeWidth="1.5" d="M4 27h4v14H4zM56 27h4v14h-4z" />
-      <circle cx="32" cy="10" r="4.5" fill="none" stroke="#15803d" strokeWidth="1.5" />
-      <path fill="#15803d" d="M32 7.5 34 9l-.8 2.4h-2.4L30 9z" />
-      <path stroke="#15803d" strokeWidth=".8" d="M32 7.5v-2M34 9l1.8-1M33.2 11.4l1.6 1.6M30.8 11.4 29.2 13M30 9l-1.8-1" />
+      {/* Goal Post Frame (Bold Green) */}
+      <path
+        d="M8 52 L8 22 L40 22 L40 52"
+        stroke="#16a34a"
+        strokeWidth="3.5"
+      />
+      {/* Goal Net Depth */}
+      <path
+        d="M8 22 L18 12 L50 12 L40 22 M50 12 L50 42 L40 52"
+        stroke="#16a34a"
+        strokeWidth="2.5"
+        strokeOpacity="0.7"
+      />
+      {/* Net Grid Lines */}
+      <path d="M18 22 L24 12 M28 22 L34 12 M38 22 L44 12" stroke="#16a34a" strokeWidth="1.75" strokeOpacity="0.5" />
+      <path d="M40 32 L50 22 M40 42 L50 32" stroke="#16a34a" strokeWidth="1.75" strokeOpacity="0.5" />
+
+      {/* Regulation Soccer Ball (Bold Gold & Green) */}
+      <circle cx="44" cy="42" r="14" fill="#ffffff" stroke="#ca8a04" strokeWidth="3.5" />
+      {/* Center Pentagon */}
+      <polygon
+        points="44,36 49,40 47,46 41,46 39,40"
+        fill="#ca8a04"
+      />
+      {/* Radiating seam lines */}
+      <path d="M44 36 L44 30 M49 40 L55 42 M47 46 L51 52 M41 46 L37 52 M39 40 L33 42" stroke="#ca8a04" strokeWidth="2.5" />
     </svg>
   );
 }

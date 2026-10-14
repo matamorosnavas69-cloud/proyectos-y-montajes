@@ -4,6 +4,12 @@ import ServiceShowcaseGallery from "@/app/components/ServiceShowcaseGallery";
 import ServiceHeroSlider, { HeroSlide } from "@/app/components/ServiceHeroSlider";
 import BrandIcon from "@/app/components/icons/BrandIcon";
 import PaisajismoLinearIcon from "@/app/components/icons/PaisajismoLinearIcon";
+import {
+  EcoWaterDropIcon,
+  SunShieldIcon,
+  PetFriendlyIcon,
+  DrainageFlowIcon,
+} from "@/app/components/icons/TechnicalIcons";
 import { getPublishedHeroSlides } from "@/lib/hero-management";
 
 export const metadata = {
@@ -148,38 +154,51 @@ export default async function PaisajismoPage() {
 
               <ul className="space-y-5 mb-8">
                 <li className="flex items-center">
-                  <div className="w-16 h-16 rounded-2xl bg-brand-green/10 flex items-center justify-center mr-5 shrink-0 border border-brand-green/25 shadow-sm">
-                    <PaisajismoLinearIcon size={48} className="text-brand-green" />
+                  <div className="w-14 h-14 rounded-2xl bg-brand-green/10 flex items-center justify-center mr-5 shrink-0 border border-brand-green/25 shadow-sm">
+                    <EcoWaterDropIcon size={36} className="text-brand-green" />
                   </div>
                   <span className="text-brand-dark font-medium text-sm md:text-base">
                     Eliminación de riego continuo y fertilizantes, reduciendo sensiblemente los costos de mantenimiento mensual.
                   </span>
                 </li>
                 <li className="flex items-center">
-                  <div className="w-16 h-16 rounded-2xl bg-brand-green/10 flex items-center justify-center mr-5 shrink-0 border border-brand-green/25 shadow-sm p-1.5">
-                    <BrandIcon name="landscaping-fibers" size={72} />
+                  <div className="w-14 h-14 rounded-2xl bg-brand-gold/15 flex items-center justify-center mr-5 shrink-0 border border-brand-gold/30 shadow-sm">
+                    <SunShieldIcon size={36} className="text-brand-gold" />
                   </div>
                   <span className="text-brand-dark font-medium text-sm md:text-base">
                     Protección UV certificada contra decoloración (garantía de fábrica de hasta 8 años según especificación del producto).
                   </span>
                 </li>
                 <li className="flex items-center">
-                  <div className="w-16 h-16 rounded-2xl bg-brand-gold/15 flex items-center justify-center mr-5 shrink-0 border border-brand-gold/30 shadow-sm">
-                    <PaisajismoLinearIcon size={48} className="text-brand-gold" />
+                  <div className="w-14 h-14 rounded-2xl bg-brand-green/10 flex items-center justify-center mr-5 shrink-0 border border-brand-green/25 shadow-sm">
+                    <PetFriendlyIcon size={36} className="text-brand-green" />
                   </div>
                   <span className="text-brand-dark font-medium text-sm md:text-base">
                     Seguro para niños y 100% amigable con mascotas (Pet-Friendly, atérmico y fácil de sanitizar).
                   </span>
                 </li>
                 <li className="flex items-center">
-                  <div className="w-16 h-16 rounded-2xl bg-brand-green/10 flex items-center justify-center mr-5 shrink-0 border border-brand-green/25 shadow-sm p-1.5">
-                    <BrandIcon name="landscaping-drainage" size={72} />
+                  <div className="w-14 h-14 rounded-2xl bg-brand-gold/15 flex items-center justify-center mr-5 shrink-0 border border-brand-gold/30 shadow-sm">
+                    <DrainageFlowIcon size={36} className="text-brand-gold" />
                   </div>
                   <span className="text-brand-dark font-medium text-sm md:text-base">
                     Base drenante que evacúa más de 60 litros por minuto por metro cuadrado, evitando encharcamientos.
                   </span>
                 </li>
               </ul>
+
+              {/* Architectural Landscaping Feature Callout */}
+              <div className="p-6 bg-brand-dark rounded-2xl border border-brand-green/30 flex items-center gap-6 shadow-xl">
+                <BrandIcon name="landscaping-fibers" size={160} priority className="shrink-0 hidden sm:flex drop-shadow-2xl" />
+                <div>
+                  <span className="text-brand-gold text-xs font-bold uppercase tracking-wider block mb-1">
+                    Fibras de Alta Densidad y Resiliencia
+                  </span>
+                  <p className="text-gray-200 text-sm leading-snug">
+                    Monofilamentos atérmicos con memoria de forma y filtro UV grado C9 que mantienen la frescura y la verticalidad del césped todo el año.
+                  </p>
+                </div>
+              </div>
             </div>
 
             <div className="grid grid-cols-2 gap-4">

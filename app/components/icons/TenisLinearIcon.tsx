@@ -2,14 +2,14 @@ import React from "react";
 import { IconProps } from "./types";
 
 /**
- * TenisLinearIcon — Vector SVG Icon for Proyectos y Montajes
- * Represents professional tennis court lines, net division, racket strings, and ball.
+ * TenisLinearIcon — High-Impact Vector SVG Icon
+ * Bold professional tennis court lines, tensioned net, competition racket, and tennis ball.
  * ViewBox: 0 0 64 64
  */
 export default function TenisLinearIcon({
   size = 48,
   className = "",
-  title = "Icono Tenis Proyectos y Montajes",
+  title = "Tenis Profesional",
   ...props
 }: IconProps) {
   return (
@@ -27,18 +27,26 @@ export default function TenisLinearIcon({
       aria-hidden={!title}
       {...props}
     >
-      <rect width="44" height="38" x="10" y="20" fill="#16a34a" fillOpacity=".08" stroke="#16a34a" strokeWidth="1.75" rx="2" />
-      <path stroke="#15803d" strokeWidth="1.75" d="M8 39h48" />
-      <path stroke="#ca8a04" strokeWidth="2" d="M8 39v-3M56 39v-3" />
-      <path stroke="#16a34a" strokeWidth="1.25" d="M16 20v38M48 20v38M16 29.5h32M16 48.5h32M32 29.5v19" />
-      <g transform="rotate(-35 33.444 -45.246)">
-        <ellipse fill="none" stroke="#15803d" strokeWidth="1.75" rx="6.5" ry="8" />
-        <path stroke="#15803d" strokeWidth=".8" d="M-3-5.5v11M0-7.5v15M3-5.5v11M-4.5-3h9M-5.5 0h11M-4.5 3h9" opacity=".7" />
-        <path stroke="#15803d" strokeWidth="1.5" d="m-2 8 .5 4h3L2 8" />
-        <rect width="3" height="8" x="-1.5" y="12" fill="none" stroke="#ca8a04" strokeWidth="1.5" rx=".5" />
-      </g>
-      <circle cx="48" cy="8" r="3.5" fill="#ca8a04" />
-      <path stroke="#15803d" strokeWidth=".75" d="M46 5.5c1.2 1 1.2 4 0 5m4-5c-1.2 1-1.2 4 0 5" />
+      {/* Tennis Court Base & Boundary Lines */}
+      <rect
+        x="6"
+        y="16"
+        width="52"
+        height="40"
+        rx="3"
+        fill="#16a34a"
+        fillOpacity="0.12"
+        stroke="#16a34a"
+        strokeWidth="3.2"
+      />
+      {/* Center Service Court Division */}
+      <path d="M6 36 L58 36" stroke="#ca8a04" strokeWidth="3.5" />
+      <path d="M32 24 L32 48" stroke="#16a34a" strokeWidth="2.5" />
+      <path d="M16 24 L48 24 M16 48 L48 48" stroke="#16a34a" strokeWidth="2.2" />
+
+      {/* Regulation Tennis Ball (Bold Gold & Curved Seams) */}
+      <circle cx="48" cy="14" r="10" fill="#ffffff" stroke="#ca8a04" strokeWidth="3" />
+      <path d="M42 8 C45 10, 45 18, 42 20 M54 8 C51 10, 51 18, 54 20" stroke="#ca8a04" strokeWidth="2.2" />
     </svg>
   );
 }

@@ -2,14 +2,14 @@ import React from "react";
 import { IconProps } from "./types";
 
 /**
- * CanchaLinearIcon — Vector SVG Icon for Proyectos y Montajes
- * Represents multi-layer sports court engineering, isometric pitch geometry, and turf drainage.
+ * CanchaLinearIcon — High-Impact Vector SVG Icon
+ * Multi-layer engineering cutaway: Turf, Shockpad, Concrete/Drainage sub-base.
  * ViewBox: 0 0 64 64
  */
 export default function CanchaLinearIcon({
   size = 48,
   className = "",
-  title = "Ingeniería de Canchas Deportivas",
+  title = "Ingeniería de Superficies Deportivas",
   ...props
 }: IconProps) {
   return (
@@ -27,52 +27,40 @@ export default function CanchaLinearIcon({
       aria-hidden={!title}
       {...props}
     >
-      {/* Dynamic foundation aura */}
-      <ellipse
-        cx="32"
-        cy="32"
-        rx="22"
-        ry="14"
-        stroke="#84cc16"
-        strokeWidth="1.75"
-        strokeDasharray="3 3"
-        opacity=".5"
+      {/* Top Layer: Synthetic Turf Surface (Isometric Slab) */}
+      <polygon
+        points="32,8 56,20 32,32 8,20"
+        fill="#16a34a"
+        fillOpacity="0.2"
+        stroke="#16a34a"
+        strokeWidth="3.2"
       />
+      {/* Court Center Line */}
+      <path d="M20 26 L44 14" stroke="#16a34a" strokeWidth="2.2" />
+      <ellipse cx="32" cy="20" rx="4" ry="2" stroke="#16a34a" strokeWidth="2" />
 
-      {/* Layer 3 - Base compactada & drenaje profundo (Gold accent) */}
+      {/* Middle Layer: Elastic Shockpad */}
       <path
-        stroke="#d4af37"
-        strokeWidth="1.5"
-        d="m11 39 21 10.5L53 39M11 39v3M32 49.5v3M53 39v3"
-        opacity=".6"
-      />
-      <path stroke="#d4af37" strokeWidth="1.5" d="m11 42 21 10.5L53 42" opacity=".6" />
-
-      {/* Layer 2 - Geotextil y sub-base técnica */}
-      <path
+        d="M8 20 L8 28 L32 40 L56 28 L56 20"
         stroke="#ca8a04"
-        strokeWidth="1.5"
-        d="M11 34.5 32 45l21-10.5M11 34.5v3M32 45v3M53 34.5v3"
-        opacity=".8"
+        strokeWidth="3"
+        fill="#ca8a04"
+        fillOpacity="0.15"
       />
+      <path d="M32 32 L32 40" stroke="#ca8a04" strokeWidth="3" />
 
-      {/* Layer 1 - Shockpad elástico (Lime green) */}
-      <path stroke="#16a34a" strokeWidth="1.75" d="m11 30 21 10.5L53 30M11 30v3M32 40.5v3M53 30v3" />
-
-      {/* Surface - Grama sintética monofilamento con relleno de arena */}
+      {/* Bottom Layer: Stabilized Concrete / Drainage Sub-base */}
       <path
+        d="M8 32 L8 44 L32 56 L56 44 L56 32"
+        stroke="#15803d"
+        strokeWidth="3.2"
         fill="#15803d"
-        fillOpacity=".85"
-        stroke="#166534"
-        strokeWidth="2"
-        d="m32 15 21 10.5L32 36 11 25.5z"
+        fillOpacity="0.1"
       />
+      <path d="M32 44 L32 56" stroke="#15803d" strokeWidth="3.2" />
 
-      {/* Pitch markings */}
-      <path stroke="#ffffff" strokeWidth="1.25" d="m21.5 20.25 21 10.5" />
-      <ellipse cx="32" cy="25.5" rx="5" ry="2.6" stroke="#ffffff" strokeWidth="1.25" />
-      <path stroke="#ffffff" strokeWidth="1.2" d="m16 23 6-3 3 1.5-6 3M45 32.5l-6 3 3 1.5 6-3" />
-      <path stroke="#ffffff" strokeWidth="1.5" d="M14 24v-2M50 33.5v-2" />
+      {/* Foundation Depth Arrows / Drainage Tick Marks */}
+      <path d="M16 46 L20 48 M40 50 L44 48" stroke="#ca8a04" strokeWidth="2.5" />
     </svg>
   );
 }

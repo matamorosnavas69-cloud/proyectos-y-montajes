@@ -2,14 +2,14 @@ import React from "react";
 import { IconProps } from "./types";
 
 /**
- * PaisajismoLinearIcon — Vector SVG Icon for Proyectos y Montajes
- * Represents architectural terrace landscaping, modern pergola, synthetic turf fibers, and organic botany.
+ * PaisajismoLinearIcon — High-Impact Vector SVG Icon
+ * Bold modern architectural pergola and organic botanical leaves.
  * ViewBox: 0 0 64 64
  */
 export default function PaisajismoLinearIcon({
   size = 48,
   className = "",
-  title = "Icono Paisajismo y Terrazas Proyectos y Montajes",
+  title = "Paisajismo & Terrazas",
   ...props
 }: IconProps) {
   return (
@@ -27,14 +27,26 @@ export default function PaisajismoLinearIcon({
       aria-hidden={!title}
       {...props}
     >
-      <path fill="#ca8a04" fillOpacity=".12" stroke="#ca8a04" strokeWidth="1.5" d="m8 50 48-8v6L8 56z" />
-      <path stroke="#ca8a04" strokeWidth="1.25" d="M20 48v6M32 46v6M44 44v6" />
-      <path stroke="#0b120d" strokeWidth="1.75" d="M14 49V18M50 43V14" />
-      <path stroke="#0b120d" strokeWidth="2" d="m10 18 44-4" />
-      <path stroke="#16a34a" strokeWidth="1.25" d="m14 21 36-4M14 24l36-4" opacity=".8" />
-      <path fill="#15803d" stroke="#15803d" strokeWidth="1.75" d="M32 44c-12-2-16-16-10-24 6 8 10 16 10 24M32 44c12-4 16-18 8-26-4 8-8 16-8 26" />
-      <path stroke="#ca8a04" strokeWidth="1.25" d="M32 44V22" />
-      <path stroke="#16a34a" strokeWidth="1.5" d="m20 47-3-6m5 6 2-7m18 3-2-6m5 6 3-7" />
+      {/* Modern Pergola Beam & Posts */}
+      <path d="M6 16 L58 16" stroke="#ca8a04" strokeWidth="4" strokeLinecap="round" />
+      <path d="M12 16 L12 56 M52 16 L52 56" stroke="#ca8a04" strokeWidth="3.5" />
+      <path d="M22 16 L22 22 M32 16 L32 22 M42 16 L42 22" stroke="#ca8a04" strokeWidth="2.5" />
+
+      {/* Prominent Botanical Monstera Leaf (Vibrant Green) */}
+      <path
+        d="M32 24 C22 24, 16 34, 18 48 C28 50, 42 46, 44 32 C44 26, 38 24, 32 24 Z"
+        fill="#16a34a"
+        fillOpacity="0.18"
+        stroke="#16a34a"
+        strokeWidth="3.2"
+      />
+      {/* Leaf Central Vein and Leaflets */}
+      <path d="M22 46 C28 38, 32 30, 36 26" stroke="#15803d" strokeWidth="2.5" />
+      <path d="M26 38 C32 36, 38 38, 40 40" stroke="#15803d" strokeWidth="2" />
+      <path d="M28 32 C34 30, 38 32, 42 32" stroke="#15803d" strokeWidth="2" />
+
+      {/* Deck / Ground Foundation Line */}
+      <path d="M4 56 L60 56" stroke="#15803d" strokeWidth="3.5" strokeLinecap="round" />
     </svg>
   );
 }

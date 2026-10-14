@@ -4,6 +4,11 @@ import ServiceShowcaseGallery from "@/app/components/ServiceShowcaseGallery";
 import ServiceHeroSlider, { HeroSlide } from "@/app/components/ServiceHeroSlider";
 import BrandIcon from "@/app/components/icons/BrandIcon";
 import ParquesLinearIcon from "@/app/components/icons/ParquesLinearIcon";
+import {
+  ShieldSafetyIcon,
+  FloorShockpadIcon,
+  ModularCastleIcon,
+} from "@/app/components/icons/TechnicalIcons";
 import { getPublishedHeroSlides } from "@/lib/hero-management";
 
 export const metadata = {
@@ -169,38 +174,51 @@ export default async function ParquesInfantilesPage() {
 
               <ul className="space-y-5 mb-8">
                 <li className="flex items-center">
-                  <div className="w-16 h-16 rounded-2xl bg-brand-green/10 flex items-center justify-center mr-5 shrink-0 border border-brand-green/25 shadow-sm">
-                    <ParquesLinearIcon size={48} className="text-brand-green" />
+                  <div className="w-14 h-14 rounded-2xl bg-brand-green/10 flex items-center justify-center mr-5 shrink-0 border border-brand-green/25 shadow-sm">
+                    <ShieldSafetyIcon size={36} className="text-brand-green" />
                   </div>
                   <span className="text-brand-dark font-medium text-sm md:text-base">
                     Estructuras en acero galvanizado termoesmaltado y plásticos rotomoldeados HDPE con filtro UV.
                   </span>
                 </li>
                 <li className="flex items-center">
-                  <div className="w-16 h-16 rounded-2xl bg-brand-gold/15 flex items-center justify-center mr-5 shrink-0 border border-brand-gold/30 shadow-sm p-1.5">
-                    <BrandIcon name="playground-safety-floor" size={72} />
+                  <div className="w-14 h-14 rounded-2xl bg-brand-gold/15 flex items-center justify-center mr-5 shrink-0 border border-brand-gold/30 shadow-sm">
+                    <FloorShockpadIcon size={36} className="text-brand-gold" />
                   </div>
                   <span className="text-brand-dark font-medium text-sm md:text-base">
                     Pisos de caucho EPDM vaciado in-situ sin uniones ni filos cortantes para absorción de impacto.
                   </span>
                 </li>
                 <li className="flex items-center">
-                  <div className="w-16 h-16 rounded-2xl bg-brand-green/10 flex items-center justify-center mr-5 shrink-0 border border-brand-green/25 shadow-sm">
-                    <ParquesLinearIcon size={48} className="text-brand-green" />
+                  <div className="w-14 h-14 rounded-2xl bg-brand-green/10 flex items-center justify-center mr-5 shrink-0 border border-brand-green/25 shadow-sm">
+                    <ParquesLinearIcon size={36} className="text-brand-green" />
                   </div>
                   <span className="text-brand-dark font-medium text-sm md:text-base">
                     Módulos inclusivos y accesibles diseñados para diferentes grupos de edad y motricidad.
                   </span>
                 </li>
                 <li className="flex items-center">
-                  <div className="w-16 h-16 rounded-2xl bg-brand-gold/15 flex items-center justify-center mr-5 shrink-0 border border-brand-gold/30 shadow-sm p-1.5">
-                    <BrandIcon name="playground-modular-castle" size={72} />
+                  <div className="w-14 h-14 rounded-2xl bg-brand-gold/15 flex items-center justify-center mr-5 shrink-0 border border-brand-gold/30 shadow-sm">
+                    <ModularCastleIcon size={36} className="text-brand-gold" />
                   </div>
                   <span className="text-brand-dark font-medium text-sm md:text-base">
                     Configuraciones modulares personalizables al metraje y presupuesto de cada proyecto.
                   </span>
                 </li>
               </ul>
+
+              {/* Architectural Safety Feature Callout */}
+              <div className="p-6 bg-brand-dark rounded-2xl border border-brand-gold/30 flex items-center gap-6 shadow-xl">
+                <BrandIcon name="playground-safety-floor" size={160} priority className="shrink-0 hidden sm:flex drop-shadow-2xl" />
+                <div>
+                  <span className="text-brand-gold text-xs font-bold uppercase tracking-wider block mb-1">
+                    Seguridad Certificada EN-1177
+                  </span>
+                  <p className="text-gray-200 text-sm leading-snug">
+                    Pisos amortiguantes de caucho EPDM continuo vaciados in-situ y estructuras ensayadas para alturas críticas de impacto (HIC).
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </div>

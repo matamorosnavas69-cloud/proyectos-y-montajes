@@ -2,14 +2,14 @@ import React from "react";
 import { IconProps } from "./types";
 
 /**
- * ParquesLinearIcon — Vector SVG Icon for Proyectos y Montajes
- * Represents recreational playground infrastructure: tower, wave slide, climbing ladder, and safety surface.
+ * ParquesLinearIcon — High-Impact Vector SVG Icon
+ * Bold playground castle tower, wave slide, ladder, and safety surface.
  * ViewBox: 0 0 64 64
  */
 export default function ParquesLinearIcon({
   size = 48,
   className = "",
-  title = "Icono Parques Infantiles Proyectos y Montajes",
+  title = "Parques Infantiles",
   ...props
 }: IconProps) {
   return (
@@ -27,18 +27,52 @@ export default function ParquesLinearIcon({
       aria-hidden={!title}
       {...props}
     >
-      <rect width="48" height="6" x="8" y="52" fill="#ca8a04" fillOpacity=".15" stroke="#ca8a04" strokeWidth="1.5" rx="2" />
-      <path stroke="#16a34a" d="M8 54h48" opacity=".6" />
-      <path fill="#16a34a" fillOpacity=".08" stroke="#16a34a" strokeWidth="1.75" d="M14 24h16v28H14z" />
-      <path fill="#15803d" stroke="#15803d" strokeWidth="2" d="m12 24 10-14 10 14z" />
-      <circle cx="22" cy="18" r="2" fill="#ca8a04" />
-      <path stroke="#0b120d" strokeWidth="1.25" d="M14 36h16" />
-      <path stroke="#0b120d" d="M18 36v16M22 36v16M26 36v16" />
-      <path stroke="#ca8a04" strokeWidth="2.5" d="M30 36c4 0 6 3 8 7s4 6 8 6h3" />
-      <path stroke="#16a34a" strokeWidth="1.5" d="M30 39c3 0 5 3 7 7s4 5 7 5h4M10 36v16" />
-      <path stroke="#16a34a" strokeWidth="1.25" d="M10 40h4M10 44h4M10 48h4" />
-      <circle cx="48" cy="16" r="4" fill="#ca8a04" opacity=".9" />
-      <path stroke="#ca8a04" strokeWidth="1.25" d="M48 9v2m0 10v2m-7-7h2m10 0h2" />
+      {/* Tower Roof (Triangular Canopy) */}
+      <polygon
+        points="22,6 8,22 36,22"
+        fill="#ca8a04"
+        fillOpacity="0.2"
+        stroke="#ca8a04"
+        strokeWidth="3.2"
+      />
+      <circle cx="22" cy="5" r="2.5" fill="#ca8a04" />
+
+      {/* Main Play Tower Frame */}
+      <rect
+        x="12"
+        y="22"
+        width="20"
+        height="34"
+        fill="#16a34a"
+        fillOpacity="0.1"
+        stroke="#16a34a"
+        strokeWidth="3.2"
+        rx="2"
+      />
+      {/* Guard Rail / Window */}
+      <rect x="16" y="28" width="12" height="12" stroke="#16a34a" strokeWidth="2.5" rx="1" />
+      <path d="M22 28 L22 40" stroke="#16a34a" strokeWidth="2" />
+
+      {/* Climbing Ladder on Left */}
+      <path d="M6 34 L6 56 M12 34 L12 56" stroke="#15803d" strokeWidth="2.5" />
+      <path d="M6 38 L12 38 M6 44 L12 44 M6 50 L12 50" stroke="#15803d" strokeWidth="2.5" />
+
+      {/* Dynamic Wave Slide on Right */}
+      <path
+        d="M32 38 C38 38, 42 42, 45 46 C48 50, 52 54, 58 54"
+        stroke="#ca8a04"
+        strokeWidth="4"
+        strokeLinecap="round"
+      />
+      <path
+        d="M32 43 C37 43, 40 46, 43 49 C46 52, 49 56, 56 56"
+        stroke="#ca8a04"
+        strokeWidth="2.5"
+        strokeOpacity="0.5"
+      />
+
+      {/* Ground EPDM Safety Line */}
+      <path d="M4 58 L60 58" stroke="#16a34a" strokeWidth="3.5" strokeLinecap="round" />
     </svg>
   );
 }

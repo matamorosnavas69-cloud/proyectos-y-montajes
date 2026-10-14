@@ -84,10 +84,11 @@ export default function BrandIcon({
 
   return (
     <div
-      className={`relative inline-flex items-center justify-center shrink-0 ${className}`}
+      className={`relative inline-flex items-center justify-center shrink-0 max-w-full ${className}`}
       style={{
         width: effectiveWidth,
         height: effectiveHeight,
+        maxWidth: "100%",
       }}
     >
       <Image
