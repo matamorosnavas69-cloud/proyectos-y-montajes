@@ -114,13 +114,13 @@ export default async function PaisajismoPage() {
               key={sol.id}
               className="bg-white rounded-2xl p-6 border border-gray-200/80 shadow-flat hover:shadow-xl transition-all duration-300 flex flex-col group hover:border-brand-green/50"
             >
-              <div className="w-full h-44 sm:h-48 flex items-center justify-center p-2 mb-4 group-hover:scale-105 transition-transform duration-300">
-                <BrandIcon name={sol.icon} size={190} className="drop-shadow-md select-none" />
+              <div className="w-full h-60 sm:h-72 flex items-center justify-center p-2 mb-5 group-hover:scale-105 transition-transform duration-300">
+                <BrandIcon name={sol.icon} size={260} className="drop-shadow-xl select-none" />
               </div>
               <span className="text-xs font-bold text-brand-green uppercase tracking-wider block mb-1">
                 {sol.subtitle}
               </span>
-              <h3 className="text-lg font-black text-brand-dark group-hover:text-brand-green transition-colors mb-2.5">
+              <h3 className="text-xl font-black text-brand-dark group-hover:text-brand-green transition-colors mb-2.5">
                 {sol.name}
               </h3>
               <p className="text-gray-600 text-sm leading-relaxed flex-grow">
@@ -146,34 +146,34 @@ export default async function PaisajismoPage() {
                 Adecuamos terrazas de apartamentos, jardines de casas campestres y zonas comunes de conjuntos cerrados. Nuestra grama decorativa cuenta con protección UV avanzada, sistema de drenaje continuo de alta velocidad y apariencia “Real Feel” indistinguible del pasto natural.
               </p>
 
-              <ul className="space-y-4 mb-8">
+              <ul className="space-y-5 mb-8">
                 <li className="flex items-center">
-                  <div className="w-12 h-12 rounded-xl bg-brand-green/10 flex items-center justify-center mr-4 shrink-0 border border-brand-green/20">
-                    <PaisajismoLinearIcon size={32} className="text-brand-green" />
+                  <div className="w-16 h-16 rounded-2xl bg-brand-green/10 flex items-center justify-center mr-5 shrink-0 border border-brand-green/25 shadow-sm">
+                    <PaisajismoLinearIcon size={48} className="text-brand-green" />
                   </div>
                   <span className="text-brand-dark font-medium text-sm md:text-base">
                     Eliminación de riego continuo y fertilizantes, reduciendo sensiblemente los costos de mantenimiento mensual.
                   </span>
                 </li>
                 <li className="flex items-center">
-                  <div className="w-12 h-12 rounded-xl bg-brand-green/10 flex items-center justify-center mr-4 shrink-0 border border-brand-green/20 p-1">
-                    <BrandIcon name="landscaping-fibers" size={44} />
+                  <div className="w-16 h-16 rounded-2xl bg-brand-green/10 flex items-center justify-center mr-5 shrink-0 border border-brand-green/25 shadow-sm p-1.5">
+                    <BrandIcon name="landscaping-fibers" size={72} />
                   </div>
                   <span className="text-brand-dark font-medium text-sm md:text-base">
                     Protección UV certificada contra decoloración (garantía de fábrica de hasta 8 años según especificación del producto).
                   </span>
                 </li>
                 <li className="flex items-center">
-                  <div className="w-12 h-12 rounded-xl bg-brand-gold/15 flex items-center justify-center mr-4 shrink-0 border border-brand-gold/25">
-                    <PaisajismoLinearIcon size={32} className="text-brand-gold" />
+                  <div className="w-16 h-16 rounded-2xl bg-brand-gold/15 flex items-center justify-center mr-5 shrink-0 border border-brand-gold/30 shadow-sm">
+                    <PaisajismoLinearIcon size={48} className="text-brand-gold" />
                   </div>
                   <span className="text-brand-dark font-medium text-sm md:text-base">
                     Seguro para niños y 100% amigable con mascotas (Pet-Friendly, atérmico y fácil de sanitizar).
                   </span>
                 </li>
                 <li className="flex items-center">
-                  <div className="w-12 h-12 rounded-xl bg-brand-green/10 flex items-center justify-center mr-4 shrink-0 border border-brand-green/20 p-1">
-                    <BrandIcon name="landscaping-drainage" size={44} />
+                  <div className="w-16 h-16 rounded-2xl bg-brand-green/10 flex items-center justify-center mr-5 shrink-0 border border-brand-green/25 shadow-sm p-1.5">
+                    <BrandIcon name="landscaping-drainage" size={72} />
                   </div>
                   <span className="text-brand-dark font-medium text-sm md:text-base">
                     Base drenante que evacúa más de 60 litros por minuto por metro cuadrado, evitando encharcamientos.

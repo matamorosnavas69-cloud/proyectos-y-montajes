@@ -85,15 +85,18 @@ export default function BrandIcon({
   return (
     <div
       className={`relative inline-flex items-center justify-center shrink-0 ${className}`}
-      style={{ maxWidth: effectiveWidth, maxHeight: effectiveHeight, width: "100%", height: "100%" }}
+      style={{
+        width: effectiveWidth,
+        height: effectiveHeight,
+      }}
     >
       <Image
         src={src}
         alt={accessibleAlt}
-        width={effectiveWidth * 2}
-        height={effectiveHeight * 2}
+        width={Math.round(effectiveWidth * 2)}
+        height={Math.round(effectiveHeight * 2)}
         priority={priority}
-        className="w-auto h-full max-h-full max-w-full object-contain select-none transition-transform duration-300"
+        className="w-full h-full object-contain select-none transition-transform duration-300 pointer-events-none drop-shadow-2xl"
         sizes={`${effectiveWidth}px`}
       />
     </div>

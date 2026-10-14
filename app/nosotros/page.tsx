@@ -1,6 +1,9 @@
 import Link from "next/link";
 import QuoteSimulator from "@/app/components/QuoteSimulator";
 import BrandIcon from "@/app/components/icons/BrandIcon";
+import PadelLinearIcon from "@/app/components/icons/PadelLinearIcon";
+import ParquesLinearIcon from "@/app/components/icons/ParquesLinearIcon";
+import PaisajismoLinearIcon from "@/app/components/icons/PaisajismoLinearIcon";
 
 export const metadata = {
   title: "Nosotros | 20 Años de Experiencia | Proyectos y Montajes",
@@ -13,9 +16,9 @@ export default function NosotrosPage() {
       {/* Hero Section */}
       <section className="relative w-full py-32 md:py-48 bg-brand-dark overflow-hidden flex items-center justify-center">
         <div className="absolute inset-0 z-0">
-          <div className="absolute inset-0 bg-brand-dark/90 mix-blend-multiply z-10"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-brand-dark/70 via-transparent to-brand-dark/40 z-10"></div>
           <div
-            className="w-full h-full bg-cover bg-center opacity-40"
+            className="w-full h-full bg-cover bg-center opacity-90 transition-opacity duration-700"
             style={{
               backgroundImage:
                 "url('/images/padel/IMG_3348.PNG')",
@@ -24,10 +27,10 @@ export default function NosotrosPage() {
         </div>
         
         <div className="relative z-20 max-w-4xl mx-auto px-6 text-center text-white">
-          <h1 className="text-5xl md:text-7xl font-black mb-6 leading-tight">
-            Nuestra <span className="text-brand-gold">Trayectoria</span>
+          <h1 className="text-5xl md:text-7xl font-black mb-6 leading-tight drop-shadow-lg">
+            Nuestra <span className="text-gradient-gold">Trayectoria</span>
           </h1>
-          <p className="text-xl md:text-2xl font-light text-gray-300 max-w-2xl mx-auto">
+          <p className="text-xl md:text-2xl font-light text-gray-100 max-w-2xl mx-auto drop-shadow-md">
             Más de dos décadas transformando espacios en Colombia con ingeniería de precisión y materiales de vanguardia.
           </p>
         </div>
@@ -76,31 +79,46 @@ export default function NosotrosPage() {
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
             <div className="flex flex-col items-center p-8 rounded-2xl border border-gray-100 shadow-sm bg-white hover:shadow-xl transition-all duration-300 group hover:border-brand-green/30">
-              <div className="w-full h-32 flex items-center justify-center mb-6 group-hover:scale-105 transition-transform duration-300">
-                <BrandIcon name="padel-court-isometric" size={120} className="drop-shadow-sm select-none" />
+              <div className="w-full h-56 sm:h-64 flex items-center justify-center mb-6 group-hover:scale-105 transition-transform duration-300">
+                <BrandIcon name="padel-court-isometric" size={240} className="drop-shadow-xl select-none" />
               </div>
-              <h3 className="text-xl font-black text-brand-dark mb-3 group-hover:text-brand-green transition-colors">Certificación FIFA &amp; WPT</h3>
-              <p className="text-gray-600 text-sm leading-relaxed">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-10 h-10 rounded-xl bg-brand-green/10 flex items-center justify-center shrink-0 border border-brand-green/20">
+                  <PadelLinearIcon size={28} className="text-brand-green" />
+                </div>
+                <h3 className="text-xl font-black text-brand-dark group-hover:text-brand-green transition-colors">Certificación FIFA &amp; WPT</h3>
+              </div>
+              <p className="text-gray-600 text-sm leading-relaxed text-center">
                 Instalamos gramas sintéticas monofilamento avaladas por laboratorios internacionales, garantizando bote perfecto y tracción biomecánica.
               </p>
             </div>
             
             <div className="flex flex-col items-center p-8 rounded-2xl border border-gray-100 shadow-sm bg-white hover:shadow-xl transition-all duration-300 group hover:border-brand-gold/30">
-              <div className="w-full h-32 flex items-center justify-center mb-6 group-hover:scale-105 transition-transform duration-300">
-                <BrandIcon name="playground-safety-floor" size={130} className="drop-shadow-sm select-none" />
+              <div className="w-full h-56 sm:h-64 flex items-center justify-center mb-6 group-hover:scale-105 transition-transform duration-300">
+                <BrandIcon name="playground-safety-floor" size={240} className="drop-shadow-xl select-none" />
               </div>
-              <h3 className="text-xl font-black text-brand-dark mb-3 group-hover:text-brand-gold transition-colors">Norma EN-1177 (Parques)</h3>
-              <p className="text-gray-600 text-sm leading-relaxed">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-10 h-10 rounded-xl bg-brand-gold/15 flex items-center justify-center shrink-0 border border-brand-gold/30">
+                  <ParquesLinearIcon size={28} className="text-brand-gold" />
+                </div>
+                <h3 className="text-xl font-black text-brand-dark group-hover:text-brand-gold transition-colors">Norma EN-1177 (Parques)</h3>
+              </div>
+              <p className="text-gray-600 text-sm leading-relaxed text-center">
                 Nuestros pisos de caucho EPDM continuo superan las pruebas de absorción de impacto crítico (HIC), protegiendo la integridad de los niños.
               </p>
             </div>
             
             <div className="flex flex-col items-center p-8 rounded-2xl border border-gray-100 shadow-sm bg-white hover:shadow-xl transition-all duration-300 group hover:border-brand-green/30">
-              <div className="w-full h-32 flex items-center justify-center mb-6 group-hover:scale-105 transition-transform duration-300">
-                <BrandIcon name="landscaping-fibers" size={130} className="drop-shadow-sm select-none" />
+              <div className="w-full h-56 sm:h-64 flex items-center justify-center mb-6 group-hover:scale-105 transition-transform duration-300">
+                <BrandIcon name="landscaping-fibers" size={240} className="drop-shadow-xl select-none" />
               </div>
-              <h3 className="text-xl font-black text-brand-dark mb-3 group-hover:text-brand-green transition-colors">Protección UV Avanzada</h3>
-              <p className="text-gray-600 text-sm leading-relaxed">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-10 h-10 rounded-xl bg-brand-green/10 flex items-center justify-center shrink-0 border border-brand-green/20">
+                  <PaisajismoLinearIcon size={28} className="text-brand-green" />
+                </div>
+                <h3 className="text-xl font-black text-brand-dark group-hover:text-brand-green transition-colors">Protección UV Avanzada</h3>
+              </div>
+              <p className="text-gray-600 text-sm leading-relaxed text-center">
                 Fibras de última generación con tratamiento contra la degradación solar. Aseguramos color verde intenso hasta por 8 años a la intemperie.
               </p>
             </div>

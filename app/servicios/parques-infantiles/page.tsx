@@ -114,13 +114,13 @@ export default async function ParquesInfantilesPage() {
               key={sol.id}
               className="bg-white rounded-2xl p-6 border border-gray-200/80 shadow-flat hover:shadow-xl transition-all duration-300 flex flex-col group hover:border-brand-gold/50"
             >
-              <div className="w-full h-44 sm:h-48 flex items-center justify-center p-2 mb-4 group-hover:scale-105 transition-transform duration-300">
-                <BrandIcon name={sol.icon} size={190} className="drop-shadow-md select-none" />
+              <div className="w-full h-60 sm:h-72 flex items-center justify-center p-2 mb-5 group-hover:scale-105 transition-transform duration-300">
+                <BrandIcon name={sol.icon} size={260} className="drop-shadow-xl select-none" />
               </div>
               <span className="text-xs font-bold text-brand-gold uppercase tracking-wider block mb-1">
                 {sol.subtitle}
               </span>
-              <h3 className="text-lg font-black text-brand-dark group-hover:text-brand-gold transition-colors mb-2.5">
+              <h3 className="text-xl font-black text-brand-dark group-hover:text-brand-gold transition-colors mb-2.5">
                 {sol.name}
               </h3>
               <p className="text-gray-600 text-sm leading-relaxed flex-grow">
@@ -167,34 +167,34 @@ export default async function ParquesInfantilesPage() {
                 Nos especializamos en proyectos recreativos de alta durabilidad para constructoras y conjuntos residenciales. Cada instalación se dimensiona considerando las alturas críticas de caída (criterio HIC), garantizando amortiguación real y máxima higiene.
               </p>
 
-              <ul className="space-y-4 mb-8">
+              <ul className="space-y-5 mb-8">
                 <li className="flex items-center">
-                  <div className="w-12 h-12 rounded-xl bg-brand-green/10 flex items-center justify-center mr-4 shrink-0 border border-brand-green/20">
-                    <ParquesLinearIcon size={32} className="text-brand-green" />
+                  <div className="w-16 h-16 rounded-2xl bg-brand-green/10 flex items-center justify-center mr-5 shrink-0 border border-brand-green/25 shadow-sm">
+                    <ParquesLinearIcon size={48} className="text-brand-green" />
                   </div>
                   <span className="text-brand-dark font-medium text-sm md:text-base">
                     Estructuras en acero galvanizado termoesmaltado y plásticos rotomoldeados HDPE con filtro UV.
                   </span>
                 </li>
                 <li className="flex items-center">
-                  <div className="w-12 h-12 rounded-xl bg-brand-gold/15 flex items-center justify-center mr-4 shrink-0 border border-brand-gold/25 p-1">
-                    <BrandIcon name="playground-safety-floor" size={44} />
+                  <div className="w-16 h-16 rounded-2xl bg-brand-gold/15 flex items-center justify-center mr-5 shrink-0 border border-brand-gold/30 shadow-sm p-1.5">
+                    <BrandIcon name="playground-safety-floor" size={72} />
                   </div>
                   <span className="text-brand-dark font-medium text-sm md:text-base">
                     Pisos de caucho EPDM vaciado in-situ sin uniones ni filos cortantes para absorción de impacto.
                   </span>
                 </li>
                 <li className="flex items-center">
-                  <div className="w-12 h-12 rounded-xl bg-brand-green/10 flex items-center justify-center mr-4 shrink-0 border border-brand-green/20">
-                    <ParquesLinearIcon size={32} className="text-brand-green" />
+                  <div className="w-16 h-16 rounded-2xl bg-brand-green/10 flex items-center justify-center mr-5 shrink-0 border border-brand-green/25 shadow-sm">
+                    <ParquesLinearIcon size={48} className="text-brand-green" />
                   </div>
                   <span className="text-brand-dark font-medium text-sm md:text-base">
                     Módulos inclusivos y accesibles diseñados para diferentes grupos de edad y motricidad.
                   </span>
                 </li>
                 <li className="flex items-center">
-                  <div className="w-12 h-12 rounded-xl bg-brand-gold/15 flex items-center justify-center mr-4 shrink-0 border border-brand-gold/25 p-1">
-                    <BrandIcon name="playground-modular-castle" size={44} />
+                  <div className="w-16 h-16 rounded-2xl bg-brand-gold/15 flex items-center justify-center mr-5 shrink-0 border border-brand-gold/30 shadow-sm p-1.5">
+                    <BrandIcon name="playground-modular-castle" size={72} />
                   </div>
                   <span className="text-brand-dark font-medium text-sm md:text-base">
                     Configuraciones modulares personalizables al metraje y presupuesto de cada proyecto.
