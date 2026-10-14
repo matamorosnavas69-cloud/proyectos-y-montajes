@@ -48,31 +48,31 @@ export default function CanchaLinearIcon({
       />
       <path stroke="#d4af37" strokeWidth="1.5" d="m11 42 21 10.5L53 42" opacity=".6" />
 
-      {/* Layer 2 - Geotextil y sub-base técnica (Blanco / Off-white) */}
+      {/* Layer 2 - Geotextil y sub-base técnica */}
       <path
-        stroke="#fff"
+        stroke="#ca8a04"
         strokeWidth="1.5"
         d="M11 34.5 32 45l21-10.5M11 34.5v3M32 45v3M53 34.5v3"
         opacity=".8"
       />
 
       {/* Layer 1 - Shockpad elástico (Lime green) */}
-      <path stroke="#a3e635" strokeWidth="1.75" d="m11 30 21 10.5L53 30M11 30v3M32 40.5v3M53 30v3" />
+      <path stroke="#16a34a" strokeWidth="1.75" d="m11 30 21 10.5L53 30M11 30v3M32 40.5v3M53 30v3" />
 
       {/* Surface - Grama sintética monofilamento con relleno de arena */}
       <path
-        fill="#1b5e20"
-        fillOpacity=".8"
-        stroke="#a3e635"
+        fill="#15803d"
+        fillOpacity=".85"
+        stroke="#166534"
         strokeWidth="2"
         d="m32 15 21 10.5L32 36 11 25.5z"
       />
 
       {/* Pitch markings */}
-      <path stroke="#fff" strokeWidth="1.25" d="m21.5 20.25 21 10.5" />
-      <ellipse cx="32" cy="25.5" rx="5" ry="2.6" stroke="#fff" strokeWidth="1.25" />
-      <path stroke="#fff" strokeWidth="1.2" d="m16 23 6-3 3 1.5-6 3M45 32.5l-6 3 3 1.5 6-3" />
-      <path stroke="#fff" strokeWidth="1.5" d="M14 24v-2M50 33.5v-2" />
+      <path stroke="#ffffff" strokeWidth="1.25" d="m21.5 20.25 21 10.5" />
+      <ellipse cx="32" cy="25.5" rx="5" ry="2.6" stroke="#ffffff" strokeWidth="1.25" />
+      <path stroke="#ffffff" strokeWidth="1.2" d="m16 23 6-3 3 1.5-6 3M45 32.5l-6 3 3 1.5 6-3" />
+      <path stroke="#ffffff" strokeWidth="1.5" d="M14 24v-2M50 33.5v-2" />
     </svg>
   );
 }

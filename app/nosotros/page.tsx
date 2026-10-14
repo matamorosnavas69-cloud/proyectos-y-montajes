@@ -75,31 +75,31 @@ export default function NosotrosPage() {
           <h2 className="text-3xl md:text-4xl font-black text-brand-dark mb-16">Calidad y Normativa Internacional</h2>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-            <div className="flex flex-col items-center p-6 rounded-xl border border-gray-100 shadow-sm bg-brand-light/30">
-              <div className="w-16 h-16 rounded-xl bg-brand-dark flex items-center justify-center p-2 mb-6 border border-brand-green/30 shadow">
-                <BrandIcon name="cancha-isometric-linear" size={44} />
+            <div className="flex flex-col items-center p-8 rounded-2xl border border-gray-100 shadow-sm bg-white hover:shadow-xl transition-all duration-300 group hover:border-brand-green/30">
+              <div className="w-full h-32 flex items-center justify-center mb-6 group-hover:scale-105 transition-transform duration-300">
+                <BrandIcon name="padel-court-isometric" size={120} className="drop-shadow-sm select-none" />
               </div>
-              <h3 className="text-xl font-black text-brand-dark mb-3">Certificación FIFA &amp; WPT</h3>
+              <h3 className="text-xl font-black text-brand-dark mb-3 group-hover:text-brand-green transition-colors">Certificación FIFA &amp; WPT</h3>
               <p className="text-gray-600 text-sm leading-relaxed">
                 Instalamos gramas sintéticas monofilamento avaladas por laboratorios internacionales, garantizando bote perfecto y tracción biomecánica.
               </p>
             </div>
             
-            <div className="flex flex-col items-center p-6 rounded-xl border border-gray-100 shadow-sm bg-brand-light/30">
-              <div className="w-16 h-16 rounded-xl bg-brand-dark flex items-center justify-center p-2 mb-6 border border-brand-gold/30 shadow">
-                <BrandIcon name="playground-safety-floor" size={48} />
+            <div className="flex flex-col items-center p-8 rounded-2xl border border-gray-100 shadow-sm bg-white hover:shadow-xl transition-all duration-300 group hover:border-brand-gold/30">
+              <div className="w-full h-32 flex items-center justify-center mb-6 group-hover:scale-105 transition-transform duration-300">
+                <BrandIcon name="playground-safety-floor" size={130} className="drop-shadow-sm select-none" />
               </div>
-              <h3 className="text-xl font-black text-brand-dark mb-3">Norma EN-1177 (Parques)</h3>
+              <h3 className="text-xl font-black text-brand-dark mb-3 group-hover:text-brand-gold transition-colors">Norma EN-1177 (Parques)</h3>
               <p className="text-gray-600 text-sm leading-relaxed">
                 Nuestros pisos de caucho EPDM continuo superan las pruebas de absorción de impacto crítico (HIC), protegiendo la integridad de los niños.
               </p>
             </div>
             
-            <div className="flex flex-col items-center p-6 rounded-xl border border-gray-100 shadow-sm bg-brand-light/30">
-              <div className="w-16 h-16 rounded-xl bg-brand-dark flex items-center justify-center p-2 mb-6 border border-brand-green/30 shadow">
-                <BrandIcon name="landscaping-fibers" size={48} />
+            <div className="flex flex-col items-center p-8 rounded-2xl border border-gray-100 shadow-sm bg-white hover:shadow-xl transition-all duration-300 group hover:border-brand-green/30">
+              <div className="w-full h-32 flex items-center justify-center mb-6 group-hover:scale-105 transition-transform duration-300">
+                <BrandIcon name="landscaping-fibers" size={130} className="drop-shadow-sm select-none" />
               </div>
-              <h3 className="text-xl font-black text-brand-dark mb-3">Protección UV Avanzada</h3>
+              <h3 className="text-xl font-black text-brand-dark mb-3 group-hover:text-brand-green transition-colors">Protección UV Avanzada</h3>
               <p className="text-gray-600 text-sm leading-relaxed">
                 Fibras de última generación con tratamiento contra la degradación solar. Aseguramos color verde intenso hasta por 8 años a la intemperie.
               </p>

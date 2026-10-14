@@ -65,19 +65,25 @@ def isolate_white_background(img_crop, threshold=242):
 
 def isolate_dark_background(img_crop, threshold=38):
     """
-    BFS Flood fill from border for dark green/black background in Sheet 4.
+    Combines direct color detection of dark green background with edge flood fill
+    so that enclosed dark areas inside decorative rings are completely transparent.
     """
     im_rgb = img_crop.convert("RGB")
     arr = np.array(im_rgb)
     h, w, _ = arr.shape
     
-    alpha = np.ones((h, w), dtype=np.uint8) * 255
-    visited = np.zeros((h, w), dtype=bool)
-    q = deque()
+    # Background color in sheet 4: R < 32, G < 46, B < 32
+    bg_mask = (arr[:, :, 0] < 32) & (arr[:, :, 1] < 46) & (arr[:, :, 2] < 32)
     
+    # Also flood fill any boundary pixels with low average
+    alpha = np.ones((h, w), dtype=np.uint8) * 255
+    alpha[bg_mask] = 0
+    
+    visited = bg_mask.copy()
+    q = deque()
     for x in range(w):
         for y in [0, h - 1]:
-            if np.mean(arr[y, x]) <= threshold:
+            if not visited[y, x] and np.mean(arr[y, x]) <= threshold:
                 q.append((y, x))
                 visited[y, x] = True
     for y in range(h):
@@ -101,7 +107,7 @@ def isolate_dark_background(img_crop, threshold=38):
     result = Image.fromarray(arr_rgba, "RGBA")
     bbox = result.getbbox()
     if bbox:
-        pad = 10
+        pad = 8
         crop_box = (
             max(0, bbox[0] - pad),
             max(0, bbox[1] - pad),

@@ -13,11 +13,10 @@ export default function Hero() {
           priority
           sizes="100vw"
           quality={85}
-          className="object-cover object-center opacity-40 transform scale-105 motion-safe:transition-transform motion-safe:duration-1000"
+          className="object-cover object-center opacity-90 transform scale-100 motion-safe:transition-transform motion-safe:duration-1000"
         />
-        {/* Architectural gradient overlays ensuring WCAG AAA text contrast */}
-        <div className="absolute inset-0 bg-gradient-to-b from-brand-dark/90 via-brand-dark/75 to-brand-dark/95 z-10" />
-        <div className="absolute inset-0 bg-radial-gradient from-transparent via-brand-dark/50 to-brand-dark/90 z-10" />
+        {/* Minimal natural vignette preserving authentic photography brilliance while ensuring text legibility */}
+        <div className="absolute inset-0 bg-gradient-to-t from-brand-dark/85 via-black/25 to-brand-dark/40 z-10" />
       </div>
 
       {/* Ambient architectural glow accents */}
@@ -38,7 +37,7 @@ export default function Hero() {
         </div>
 
         {/* Canonical Engineering Positioning Heading */}
-        <h1 className="text-36 sm:text-48 md:text-56 lg:text-64 font-black text-white mb-20 md:mb-28 leading-[1.08] tracking-tight max-w-4xl">
+        <h1 className="text-36 sm:text-48 md:text-56 lg:text-64 font-black text-white mb-20 md:mb-28 leading-[1.08] tracking-tight max-w-4xl drop-shadow-[0_4px_16px_rgba(0,0,0,0.85)]">
           Ingeniería Deportiva, Recreativa y{" "}
           <span className="text-gradient-gold">
             Paisajismo Arquitectónico
@@ -46,7 +45,7 @@ export default function Hero() {
         </h1>
 
         {/* Value Proposition Description */}
-        <p className="text-16 sm:text-18 md:text-20 text-gray-300 mb-36 md:mb-44 max-w-3xl leading-relaxed font-normal">
+        <p className="text-16 sm:text-18 md:text-20 text-gray-200 mb-36 md:mb-44 max-w-3xl leading-relaxed font-normal drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
           Especialistas en pistas de Pádel profesionales, canchas de fútbol sintético, parques infantiles seguros y paisajismo corporativo y residencial de alta durabilidad.
         </p>
 

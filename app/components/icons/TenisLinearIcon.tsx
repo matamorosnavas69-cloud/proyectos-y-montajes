@@ -27,18 +27,18 @@ export default function TenisLinearIcon({
       aria-hidden={!title}
       {...props}
     >
-      <rect width="44" height="38" x="10" y="20" fill="#0b120d" fillOpacity=".5" stroke="#1b5e20" strokeWidth="1.75" rx="2" />
-      <path stroke="#fff" strokeWidth="1.75" d="M8 39h48" />
-      <path stroke="#d4af37" strokeWidth="2" d="M8 39v-3M56 39v-3" />
-      <path stroke="#1b5e20" strokeWidth="1.25" d="M16 20v38M48 20v38M16 29.5h32M16 48.5h32M32 29.5v19" />
+      <rect width="44" height="38" x="10" y="20" fill="#16a34a" fillOpacity=".08" stroke="#16a34a" strokeWidth="1.75" rx="2" />
+      <path stroke="#15803d" strokeWidth="1.75" d="M8 39h48" />
+      <path stroke="#ca8a04" strokeWidth="2" d="M8 39v-3M56 39v-3" />
+      <path stroke="#16a34a" strokeWidth="1.25" d="M16 20v38M48 20v38M16 29.5h32M16 48.5h32M32 29.5v19" />
       <g transform="rotate(-35 33.444 -45.246)">
-        <ellipse fill="#0b120d" stroke="#a3e635" strokeWidth="1.75" rx="6.5" ry="8" />
-        <path stroke="#a3e635" strokeWidth=".8" d="M-3-5.5v11M0-7.5v15M3-5.5v11M-4.5-3h9M-5.5 0h11M-4.5 3h9" opacity=".7" />
-        <path stroke="#a3e635" strokeWidth="1.5" d="m-2 8 .5 4h3L2 8" />
-        <rect width="3" height="8" x="-1.5" y="12" fill="#0b120d" stroke="#fff" strokeWidth="1.5" rx=".5" />
+        <ellipse fill="none" stroke="#15803d" strokeWidth="1.75" rx="6.5" ry="8" />
+        <path stroke="#15803d" strokeWidth=".8" d="M-3-5.5v11M0-7.5v15M3-5.5v11M-4.5-3h9M-5.5 0h11M-4.5 3h9" opacity=".7" />
+        <path stroke="#15803d" strokeWidth="1.5" d="m-2 8 .5 4h3L2 8" />
+        <rect width="3" height="8" x="-1.5" y="12" fill="none" stroke="#ca8a04" strokeWidth="1.5" rx=".5" />
       </g>
-      <circle cx="48" cy="8" r="3.5" fill="#a3e635" />
-      <path stroke="#0b120d" strokeWidth=".75" d="M46 5.5c1.2 1 1.2 4 0 5m4-5c-1.2 1-1.2 4 0 5" />
+      <circle cx="48" cy="8" r="3.5" fill="#ca8a04" />
+      <path stroke="#15803d" strokeWidth=".75" d="M46 5.5c1.2 1 1.2 4 0 5m4-5c-1.2 1-1.2 4 0 5" />
     </svg>
   );
 }

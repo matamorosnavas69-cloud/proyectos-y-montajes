@@ -112,10 +112,10 @@ export default async function PaisajismoPage() {
           {SOLUCIONES_PAISAJISMO.map((sol) => (
             <div
               key={sol.id}
-              className="bg-white rounded-xl p-6 border border-gray-200/80 shadow-flat hover:shadow-xl transition-all duration-300 flex flex-col group hover:border-brand-green/50"
+              className="bg-white rounded-2xl p-6 border border-gray-200/80 shadow-flat hover:shadow-xl transition-all duration-300 flex flex-col group hover:border-brand-green/50"
             >
-              <div className="w-full h-36 rounded-xl bg-brand-dark/95 border border-brand-green/20 flex items-center justify-center p-3 mb-5 shadow-sm group-hover:scale-102 transition-transform overflow-hidden">
-                <BrandIcon name={sol.icon} size={110} className="w-full h-full object-contain" />
+              <div className="w-full h-44 sm:h-48 flex items-center justify-center p-2 mb-4 group-hover:scale-105 transition-transform duration-300">
+                <BrandIcon name={sol.icon} size={190} className="drop-shadow-md select-none" />
               </div>
               <span className="text-xs font-bold text-brand-green uppercase tracking-wider block mb-1">
                 {sol.subtitle}
@@ -148,25 +148,33 @@ export default async function PaisajismoPage() {
 
               <ul className="space-y-4 mb-8">
                 <li className="flex items-center">
-                  <PaisajismoLinearIcon size={26} className="mr-3 shrink-0 text-brand-green" />
+                  <div className="w-12 h-12 rounded-xl bg-brand-green/10 flex items-center justify-center mr-4 shrink-0 border border-brand-green/20">
+                    <PaisajismoLinearIcon size={32} className="text-brand-green" />
+                  </div>
                   <span className="text-brand-dark font-medium text-sm md:text-base">
                     Eliminación de riego continuo y fertilizantes, reduciendo sensiblemente los costos de mantenimiento mensual.
                   </span>
                 </li>
                 <li className="flex items-center">
-                  <BrandIcon name="landscaping-fibers" size={32} className="mr-3 shrink-0" />
+                  <div className="w-12 h-12 rounded-xl bg-brand-green/10 flex items-center justify-center mr-4 shrink-0 border border-brand-green/20 p-1">
+                    <BrandIcon name="landscaping-fibers" size={44} />
+                  </div>
                   <span className="text-brand-dark font-medium text-sm md:text-base">
                     Protección UV certificada contra decoloración (garantía de fábrica de hasta 8 años según especificación del producto).
                   </span>
                 </li>
                 <li className="flex items-center">
-                  <PaisajismoLinearIcon size={26} className="mr-3 shrink-0 text-brand-gold" />
+                  <div className="w-12 h-12 rounded-xl bg-brand-gold/15 flex items-center justify-center mr-4 shrink-0 border border-brand-gold/25">
+                    <PaisajismoLinearIcon size={32} className="text-brand-gold" />
+                  </div>
                   <span className="text-brand-dark font-medium text-sm md:text-base">
                     Seguro para niños y 100% amigable con mascotas (Pet-Friendly, atérmico y fácil de sanitizar).
                   </span>
                 </li>
                 <li className="flex items-center">
-                  <BrandIcon name="landscaping-drainage" size={32} className="mr-3 shrink-0" />
+                  <div className="w-12 h-12 rounded-xl bg-brand-green/10 flex items-center justify-center mr-4 shrink-0 border border-brand-green/20 p-1">
+                    <BrandIcon name="landscaping-drainage" size={44} />
+                  </div>
                   <span className="text-brand-dark font-medium text-sm md:text-base">
                     Base drenante que evacúa más de 60 litros por minuto por metro cuadrado, evitando encharcamientos.
                   </span>

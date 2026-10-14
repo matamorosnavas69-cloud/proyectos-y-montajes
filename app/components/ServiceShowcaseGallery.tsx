@@ -380,19 +380,16 @@ export default function ServiceShowcaseGallery({
                     {/* Metadata Overlay */}
                     <div className="absolute inset-x-0 bottom-0 p-3.5 md:p-4">
                       <div className="flex items-center justify-between gap-2">
-                        <span className="inline-block rounded bg-white/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-brand-gold backdrop-blur">
+                        <span className="inline-block rounded bg-black/60 border border-brand-gold/30 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider text-brand-gold backdrop-blur-md shadow-sm">
                           {asset.badge || 'Obra'}
                         </span>
                         {asset.type === 'video' && (
-                          <span className="flex items-center gap-1 text-[10px] font-bold text-white/80">
+                          <span className="flex items-center gap-1 text-[10px] font-bold text-white/80 bg-black/50 px-2 py-0.5 rounded backdrop-blur">
                             <Video className="h-3 w-3 text-brand-gold" />
                             Video
                           </span>
                         )}
                       </div>
-                      <p className="mt-1.5 truncate text-xs font-bold text-white md:text-sm">
-                        {asset.title}
-                      </p>
                     </div>
 
                     <span className="absolute right-3 top-3 grid h-8 w-8 place-items-center rounded-full bg-black/50 text-white opacity-0 backdrop-blur transition-all duration-300 group-hover:opacity-100 group-hover:scale-105">

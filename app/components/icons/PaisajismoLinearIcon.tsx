@@ -27,14 +27,14 @@ export default function PaisajismoLinearIcon({
       aria-hidden={!title}
       {...props}
     >
-      <path fill="#0b120d" stroke="#d4af37" strokeWidth="1.5" d="m8 50 48-8v6L8 56z" />
-      <path stroke="#d4af37" strokeWidth="1.25" d="M20 48v6M32 46v6M44 44v6" />
-      <path stroke="#fff" strokeWidth="1.75" d="M14 49V18M50 43V14" />
-      <path stroke="#fff" strokeWidth="2" d="m10 18 44-4" />
-      <path stroke="#a3e635" strokeWidth="1.25" d="m14 21 36-4M14 24l36-4" opacity=".8" />
-      <path fill="#1b5e20" stroke="#a3e635" strokeWidth="1.75" d="M32 44c-12-2-16-16-10-24 6 8 10 16 10 24M32 44c12-4 16-18 8-26-4 8-8 16-8 26" />
-      <path stroke="#d4af37" strokeWidth="1.25" d="M32 44V22" />
-      <path stroke="#a3e635" strokeWidth="1.5" d="m20 47-3-6m5 6 2-7m18 3-2-6m5 6 3-7" />
+      <path fill="#ca8a04" fillOpacity=".12" stroke="#ca8a04" strokeWidth="1.5" d="m8 50 48-8v6L8 56z" />
+      <path stroke="#ca8a04" strokeWidth="1.25" d="M20 48v6M32 46v6M44 44v6" />
+      <path stroke="#0b120d" strokeWidth="1.75" d="M14 49V18M50 43V14" />
+      <path stroke="#0b120d" strokeWidth="2" d="m10 18 44-4" />
+      <path stroke="#16a34a" strokeWidth="1.25" d="m14 21 36-4M14 24l36-4" opacity=".8" />
+      <path fill="#15803d" stroke="#15803d" strokeWidth="1.75" d="M32 44c-12-2-16-16-10-24 6 8 10 16 10 24M32 44c12-4 16-18 8-26-4 8-8 16-8 26" />
+      <path stroke="#ca8a04" strokeWidth="1.25" d="M32 44V22" />
+      <path stroke="#16a34a" strokeWidth="1.5" d="m20 47-3-6m5 6 2-7m18 3-2-6m5 6 3-7" />
     </svg>
   );
 }

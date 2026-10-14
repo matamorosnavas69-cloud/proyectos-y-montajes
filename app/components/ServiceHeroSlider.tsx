@@ -73,10 +73,10 @@ export default function ServiceHeroSlider({
     setCurrent((prev) => (prev - 1 + slides.length) % slides.length);
   }, [slides.length]);
 
-  // Auto-rotation timer (disabled if paused or prefers reduced motion)
+  // Auto-rotation timer (4.5s intervals)
   useEffect(() => {
     if (isPaused || prefersReducedMotion || slides.length <= 1) return;
-    const interval = setInterval(nextSlide, 6000);
+    const interval = setInterval(nextSlide, 4500);
     return () => clearInterval(interval);
   }, [isPaused, prefersReducedMotion, nextSlide, slides.length]);
 
@@ -101,10 +101,6 @@ export default function ServiceHeroSlider({
       className="relative w-full bg-brand-dark text-white border-b border-brand-green/20 overflow-hidden font-sans"
       aria-roledescription="carousel"
       aria-label={`Galería de ${title}`}
-      onMouseEnter={() => setIsPaused(true)}
-      onMouseLeave={() => setIsPaused(false)}
-      onFocus={() => setIsPaused(true)}
-      onBlur={() => setIsPaused(false)}
     >
       {/* Subtle architectural grid pattern background */}
       <div

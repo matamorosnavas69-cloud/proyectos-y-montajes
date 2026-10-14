@@ -28,42 +28,42 @@ type BeforeAfterProject = {
 
 const PROJECTS: BeforeAfterProject[] = [
   {
-    id: 'cancha-futbol-01',
-    title: 'Cancha de Fútbol 7',
+    id: 'padel-indoor-01',
+    title: 'Pistas de Pádel Panorámicas de Competición',
     location: 'Bucaramanga, Santander',
+    category: 'Pádel',
+    categoryColor: 'bg-emerald-600',
+    beforeImage: '/images/padel/IMG_3348.PNG',
+    afterImage: '/images/padel/IMG_3346.PNG',
+    stats: [
+      { label: 'Área', value: '400 m²' },
+      { label: 'Duración', value: '35 días' },
+    ],
+  },
+  {
+    id: 'cancha-futbol-01',
+    title: 'Campo Sintético de Fútbol 7',
+    location: 'Floridablanca, Santander',
     category: 'Fútbol',
-    categoryColor: 'bg-brand-green',
-    beforeImage: '/images/before-after/cancha-futbol-01-before.jpg',
-    afterImage: '/images/before-after/cancha-futbol-01-after.jpg',
+    categoryColor: 'bg-green-600',
+    beforeImage: '/images/futbol/IMG_7552.JPG',
+    afterImage: '/images/futbol/806ebee3-c75b-4dcf-8e3b-eae1d864d211.jpg',
     stats: [
       { label: 'Área', value: '850 m²' },
       { label: 'Duración', value: '45 días' },
     ],
   },
   {
-    id: 'pista-padel-01',
-    title: 'Pista de Pádel Profesional',
-    location: 'Floridablanca, Santander',
-    category: 'Pádel',
-    categoryColor: 'bg-blue-600',
-    beforeImage: '/images/before-after/pista-padel-01-before.jpg',
-    afterImage: '/images/before-after/pista-padel-01-after.jpg',
+    id: 'terraza-residencial-01',
+    title: 'Transformación de Terraza & Jardín Residencial',
+    location: 'Ruitoque Condominio, Santander',
+    category: 'Paisajismo',
+    categoryColor: 'bg-amber-600',
+    beforeImage: '/images/drive%20organice/residencial/IMG_1271.PNG',
+    afterImage: '/images/drive%20organice/piscina/IMG_8075.JPG',
     stats: [
-      { label: 'Área', value: '200 m²' },
-      { label: 'Duración', value: '30 días' },
-    ],
-  },
-  {
-    id: 'parque-infantil-01',
-    title: 'Parque Infantil Residencial',
-    location: 'Piedecuesta, Santander',
-    category: 'Parques',
-    categoryColor: 'bg-brand-gold',
-    beforeImage: '/images/before-after/parque-infantil-01-before.jpg',
-    afterImage: '/images/before-after/parque-infantil-01-after.jpg',
-    stats: [
-      { label: 'Área', value: '320 m²' },
-      { label: 'Duración', value: '25 días' },
+      { label: 'Área', value: '180 m²' },
+      { label: 'Duración', value: '12 días' },
     ],
   },
 ];
@@ -234,15 +234,28 @@ function Slider({ project }: { project: BeforeAfterProject }) {
 
 /* ── Main Component ─────────────────────────────── */
 export default function BeforeAfter() {
+  const [projects, setProjects] = useState<BeforeAfterProject[]>(PROJECTS);
   const [activeIndex, setActiveIndex] = useState(0);
 
-  // Gracefully isolate component from public render until authentic paired photos are provided
-  const hasRealAssets = PROJECTS.some(
-    (p) => !p.beforeImage.includes('cancha-futbol-01-before.jpg')
-  );
-  if (!hasRealAssets) {
+  useEffect(() => {
+    fetch('/api/before-after')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data && Array.isArray(data.projects) && data.projects.length > 0) {
+          setProjects(data.projects);
+        }
+      })
+      .catch((err) => {
+        console.error('Failed to load before-after projects:', err);
+      });
+  }, []);
+
+  if (!projects || projects.length === 0) {
     return null;
   }
+
+  const safeIndex = activeIndex < projects.length ? activeIndex : 0;
+  const currentProject = projects[safeIndex];
 
   return (
     <section id="antes-despues" className="w-full py-24 md:py-32 bg-brand-dark font-sans overflow-hidden">
@@ -267,12 +280,12 @@ export default function BeforeAfter() {
 
         {/* Tab selector */}
         <div className="flex justify-center gap-3 mb-12 flex-wrap">
-          {PROJECTS.map((project, idx) => (
+          {projects.map((project, idx) => (
             <button
               key={project.id}
               onClick={() => setActiveIndex(idx)}
               className={`px-5 py-2.5 rounded-full text-sm font-bold transition-all duration-300 border ${
-                activeIndex === idx
+                safeIndex === idx
                   ? 'bg-brand-gold text-brand-dark border-brand-gold shadow-glow-gold'
                   : 'bg-white/5 text-gray-400 border-white/10 hover:border-brand-gold/40 hover:text-white'
               }`}
@@ -283,7 +296,7 @@ export default function BeforeAfter() {
         </div>
 
         {/* Active slider */}
-        <Slider key={PROJECTS[activeIndex].id} project={PROJECTS[activeIndex]} />
+        <Slider key={currentProject.id} project={currentProject} />
       </div>
     </section>
   );

@@ -112,10 +112,10 @@ export default async function ParquesInfantilesPage() {
           {SOLUCIONES_RECREATIVAS.map((sol) => (
             <div
               key={sol.id}
-              className="bg-white rounded-xl p-6 border border-gray-200/80 shadow-flat hover:shadow-xl transition-all duration-300 flex flex-col group hover:border-brand-gold/50"
+              className="bg-white rounded-2xl p-6 border border-gray-200/80 shadow-flat hover:shadow-xl transition-all duration-300 flex flex-col group hover:border-brand-gold/50"
             >
-              <div className="w-full h-36 rounded-xl bg-brand-dark/95 border border-brand-green/20 flex items-center justify-center p-3 mb-5 shadow-sm group-hover:scale-102 transition-transform overflow-hidden">
-                <BrandIcon name={sol.icon} size={110} className="w-full h-full object-contain" />
+              <div className="w-full h-44 sm:h-48 flex items-center justify-center p-2 mb-4 group-hover:scale-105 transition-transform duration-300">
+                <BrandIcon name={sol.icon} size={190} className="drop-shadow-md select-none" />
               </div>
               <span className="text-xs font-bold text-brand-gold uppercase tracking-wider block mb-1">
                 {sol.subtitle}
@@ -169,25 +169,33 @@ export default async function ParquesInfantilesPage() {
 
               <ul className="space-y-4 mb-8">
                 <li className="flex items-center">
-                  <ParquesLinearIcon size={26} className="mr-3 shrink-0 text-brand-green" />
+                  <div className="w-12 h-12 rounded-xl bg-brand-green/10 flex items-center justify-center mr-4 shrink-0 border border-brand-green/20">
+                    <ParquesLinearIcon size={32} className="text-brand-green" />
+                  </div>
                   <span className="text-brand-dark font-medium text-sm md:text-base">
                     Estructuras en acero galvanizado termoesmaltado y plásticos rotomoldeados HDPE con filtro UV.
                   </span>
                 </li>
                 <li className="flex items-center">
-                  <BrandIcon name="playground-safety-floor" size={32} className="mr-3 shrink-0" />
+                  <div className="w-12 h-12 rounded-xl bg-brand-gold/15 flex items-center justify-center mr-4 shrink-0 border border-brand-gold/25 p-1">
+                    <BrandIcon name="playground-safety-floor" size={44} />
+                  </div>
                   <span className="text-brand-dark font-medium text-sm md:text-base">
                     Pisos de caucho EPDM vaciado in-situ sin uniones ni filos cortantes para absorción de impacto.
                   </span>
                 </li>
                 <li className="flex items-center">
-                  <ParquesLinearIcon size={26} className="mr-3 shrink-0 text-brand-gold" />
+                  <div className="w-12 h-12 rounded-xl bg-brand-green/10 flex items-center justify-center mr-4 shrink-0 border border-brand-green/20">
+                    <ParquesLinearIcon size={32} className="text-brand-green" />
+                  </div>
                   <span className="text-brand-dark font-medium text-sm md:text-base">
                     Módulos inclusivos y accesibles diseñados para diferentes grupos de edad y motricidad.
                   </span>
                 </li>
                 <li className="flex items-center">
-                  <BrandIcon name="playground-modular-castle" size={32} className="mr-3 shrink-0" />
+                  <div className="w-12 h-12 rounded-xl bg-brand-gold/15 flex items-center justify-center mr-4 shrink-0 border border-brand-gold/25 p-1">
+                    <BrandIcon name="playground-modular-castle" size={44} />
+                  </div>
                   <span className="text-brand-dark font-medium text-sm md:text-base">
                     Configuraciones modulares personalizables al metraje y presupuesto de cada proyecto.
                   </span>

@@ -11,6 +11,8 @@ import { BRAND_ASSET_REGISTRY, BrandAssetId } from "./icon-registry";
 export interface BrandIconProps {
   name: BrandAssetId;
   size?: number;
+  width?: number;
+  height?: number;
   className?: string;
   alt?: string;
   priority?: boolean;
@@ -20,12 +22,14 @@ export interface BrandIconProps {
  * BrandIcon — Unified Hybrid Brand Asset Component
  *
  * Automatically routes between:
- * - Native scalable React SVG components for technical line icons (24-64px).
- * - Next.js optimized Image (WebP) for architectural isometric artwork (96-240px).
+ * - Native scalable React SVG components for technical line icons (24-80px).
+ * - Next.js optimized Image (WebP) for architectural isometric artwork (80-320px).
  */
 export default function BrandIcon({
   name,
   size,
+  width,
+  height,
   className = "",
   alt,
   priority = false,
@@ -38,6 +42,8 @@ export default function BrandIcon({
   }
 
   const effectiveSize = size || asset.recommendedSize.default;
+  const effectiveWidth = width || effectiveSize;
+  const effectiveHeight = height || effectiveSize;
   const accessibleAlt = alt || asset.altText;
 
   // 1. Vector SVG Dispatch
@@ -79,16 +85,16 @@ export default function BrandIcon({
   return (
     <div
       className={`relative inline-flex items-center justify-center shrink-0 ${className}`}
-      style={{ width: effectiveSize, height: effectiveSize }}
+      style={{ maxWidth: effectiveWidth, maxHeight: effectiveHeight, width: "100%", height: "100%" }}
     >
       <Image
         src={src}
         alt={accessibleAlt}
-        width={effectiveSize}
-        height={effectiveSize}
+        width={effectiveWidth * 2}
+        height={effectiveHeight * 2}
         priority={priority}
-        className="w-full h-full object-contain select-none transition-transform duration-300 hover:scale-105"
-        sizes={`${effectiveSize}px`}
+        className="w-auto h-full max-h-full max-w-full object-contain select-none transition-transform duration-300"
+        sizes={`${effectiveWidth}px`}
       />
     </div>
   );

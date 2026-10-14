@@ -2,8 +2,9 @@
 
 import Image from 'next/image';
 import { ChangeEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Archive, CheckCircle2, FileImage, FolderOpen, ImagePlus, Loader2, Pencil, RotateCcw, Search, Sliders, UploadCloud, X } from 'lucide-react';
+import { Archive, CheckCircle2, FileImage, FolderOpen, ImagePlus, Loader2, Pencil, RotateCcw, Search, Sliders, Sparkles, UploadCloud, X } from 'lucide-react';
 import HeroManagementSection from './HeroManagementSection';
+import BeforeAfterManagementSection from './BeforeAfterManagementSection';
 
 type Asset = { filename: string; url: string; bytes: number; updatedAt: string };
 type Category = { slug: string; label: string; description: string; assets: Asset[] };
@@ -16,14 +17,14 @@ function formatBytes(value: number) {
 
 export default function MediaLibraryPage() {
   const inputRef = useRef<HTMLInputElement>(null);
-  const [topTab, setTopTab] = useState<'library' | 'heroes' | 'archived'>('library');
+  const [topTab, setTopTab] = useState<'library' | 'heroes' | 'before-after' | 'archived'>('library');
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
       const tabParam = params.get('tab');
-      if (tabParam === 'heroes' || tabParam === 'archived' || tabParam === 'library') {
-        setTopTab(tabParam);
+      if (tabParam === 'heroes' || tabParam === 'before-after' || tabParam === 'archived' || tabParam === 'library') {
+        setTopTab(tabParam as any);
       }
     }
   }, []);
@@ -216,12 +217,27 @@ export default function MediaLibraryPage() {
           onClick={() => setTopTab('heroes')}
           className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold transition-all ${
             topTab === 'heroes'
-              ? 'bg-brand-gold text-brand-dark shadow-lg shadow-brand-gold/20 font-black'
+              ? 'bg-brand-green text-white shadow-lg shadow-brand-green/20'
               : 'bg-white/5 text-gray-400 hover:text-white hover:bg-white/10'
           }`}
         >
           <Sliders className="w-4 h-4" />
           <span>Heroes de Servicios</span>
+          <span className="text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded bg-black/40 text-brand-gold">
+            Sliders
+          </span>
+        </button>
+
+        <button
+          onClick={() => setTopTab('before-after')}
+          className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold transition-all ${
+            topTab === 'before-after'
+              ? 'bg-brand-gold text-brand-dark shadow-lg shadow-brand-gold/20 font-black'
+              : 'bg-white/5 text-gray-400 hover:text-white hover:bg-white/10'
+          }`}
+        >
+          <Sparkles className="w-4 h-4 text-brand-gold" />
+          <span>Antes y Después</span>
           <span className="text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded bg-black/40 text-brand-gold">
             CMS Visual
           </span>
@@ -250,6 +266,8 @@ export default function MediaLibraryPage() {
 
       {topTab === 'heroes' ? (
         <HeroManagementSection />
+      ) : topTab === 'before-after' ? (
+        <BeforeAfterManagementSection />
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-[260px_minmax(0,1fr)] gap-6">
         <aside className="rounded-2xl border border-white/10 bg-[#131d16] p-3 h-fit">
