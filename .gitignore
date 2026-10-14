@@ -12,6 +12,8 @@ public/*
 public/images/*
 !public/images/logo/
 !public/images/og-image.jpg
+!public/images/before-after/
+!public/images/before-after/**
 
 # dependencies
 /node_modules

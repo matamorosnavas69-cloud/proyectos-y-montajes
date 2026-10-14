@@ -28,42 +28,42 @@ type BeforeAfterProject = {
 
 const PROJECTS: BeforeAfterProject[] = [
   {
-    id: 'padel-indoor-01',
-    title: 'Pistas de Pádel Panorámicas de Competición',
-    location: 'Bucaramanga, Santander',
-    category: 'Pádel',
-    categoryColor: 'bg-emerald-600',
-    beforeImage: '/images/padel/IMG_3348.PNG',
-    afterImage: '/images/padel/IMG_3346.PNG',
-    stats: [
-      { label: 'Área', value: '400 m²' },
-      { label: 'Duración', value: '35 días' },
-    ],
-  },
-  {
     id: 'cancha-futbol-01',
-    title: 'Campo Sintético de Fútbol 7',
+    title: 'Campo Sintético de Fútbol Profesional',
     location: 'Floridablanca, Santander',
     category: 'Fútbol',
     categoryColor: 'bg-green-600',
-    beforeImage: '/images/futbol/IMG_7552.JPG',
-    afterImage: '/images/futbol/806ebee3-c75b-4dcf-8e3b-eae1d864d211.jpg',
+    beforeImage: '/images/before-after/before-cancha.jpg',
+    afterImage: '/images/before-after/after-cancha.JPG',
     stats: [
       { label: 'Área', value: '850 m²' },
       { label: 'Duración', value: '45 días' },
     ],
   },
   {
-    id: 'terraza-residencial-01',
-    title: 'Transformación de Terraza & Jardín Residencial',
+    id: 'parque-infantil-01',
+    title: 'Parque Infantil Integral con Piso EPDM',
+    location: 'Bucaramanga, Santander',
+    category: 'Parques',
+    categoryColor: 'bg-brand-gold',
+    beforeImage: '/images/before-after/before-park.jpg',
+    afterImage: '/images/before-after/after-park.jpg',
+    stats: [
+      { label: 'Área', value: '320 m²' },
+      { label: 'Duración', value: '25 días' },
+    ],
+  },
+  {
+    id: 'zona-humeda-01',
+    title: 'Zona Húmeda & Entorno de Piscina',
     location: 'Ruitoque Condominio, Santander',
     category: 'Paisajismo',
     categoryColor: 'bg-amber-600',
-    beforeImage: '/images/drive%20organice/residencial/IMG_1271.PNG',
-    afterImage: '/images/drive%20organice/piscina/IMG_8075.JPG',
+    beforeImage: '/images/before-after/before-pool.jpg',
+    afterImage: '/images/before-after/after-pool.JPG',
     stats: [
       { label: 'Área', value: '180 m²' },
-      { label: 'Duración', value: '12 días' },
+      { label: 'Duración', value: '15 días' },
     ],
   },
 ];
