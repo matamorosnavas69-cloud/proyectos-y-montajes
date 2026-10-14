@@ -450,3 +450,21 @@ model BeforeAfterProject {
   @@schema("proyectos_y_montajes")
 }
 
+// Media library custom categorization, subcategories, title, and badge overrides
+model MediaAssetMetadata {
+  id               String   @id @default(cuid())
+  originalCategory String   // canchas, parques, piscina, golf, residencial
+  filename         String
+  category         String   // assigned category: canchas, parques, piscina, golf, residencial
+  subcategory      String?  // padel, futbol, golf, modulos, caucho, inclusivos, etc.
+  title            String?  // custom title
+  badge            String?  // custom badge
+  updatedAt        DateTime @updatedAt
+  updatedBy        String?
+
+  @@unique([originalCategory, filename])
+  @@index([category])
+  @@schema("proyectos_y_montajes")
+}
+
+

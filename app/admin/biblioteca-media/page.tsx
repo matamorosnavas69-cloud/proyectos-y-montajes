@@ -2,13 +2,84 @@
 
 import Image from 'next/image';
 import { ChangeEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Archive, CheckCircle2, FileImage, FolderOpen, ImagePlus, Loader2, Pencil, RotateCcw, Search, Sliders, Sparkles, UploadCloud, X } from 'lucide-react';
+import {
+  Archive,
+  CheckCircle2,
+  FileImage,
+  FolderKanban,
+  FolderOpen,
+  ImagePlus,
+  Layers,
+  Loader2,
+  Pencil,
+  RotateCcw,
+  Search,
+  Sliders,
+  Sparkles,
+  Tag,
+  UploadCloud,
+  X,
+} from 'lucide-react';
 import HeroManagementSection from './HeroManagementSection';
 import BeforeAfterManagementSection from './BeforeAfterManagementSection';
 
-type Asset = { filename: string; url: string; bytes: number; updatedAt: string };
+type Asset = {
+  id?: string;
+  filename: string;
+  originalCategory?: string;
+  url: string;
+  bytes: number;
+  updatedAt: string;
+  category: string;
+  subcategory: string;
+  title: string;
+  badge?: string;
+};
+
 type Category = { slug: string; label: string; description: string; assets: Asset[] };
 type ArchivedAsset = { id: string; category: string; filename: string; url: string; archivedAt: string; archivedBy?: string };
+
+const CATEGORY_OPTIONS = [
+  { slug: 'canchas', label: 'Canchas Deportivas' },
+  { slug: 'parques', label: 'Parques Infantiles' },
+  { slug: 'piscina', label: 'Piscinas y Zonas Húmedas' },
+  { slug: 'golf', label: 'Golf y Putting Greens' },
+  { slug: 'residencial', label: 'Residencial y Paisajismo' },
+];
+
+const SUBCAT_OPTIONS: Record<string, { id: string; label: string }[]> = {
+  canchas: [
+    { id: 'padel', label: 'Pádel Panorámico' },
+    { id: 'futbol', label: 'Fútbol Sintético' },
+    { id: 'golf', label: 'Greens de Golf' },
+    { id: 'polideportivo', label: 'Polideportivo' },
+    { id: 'general', label: 'General / Canchas' },
+  ],
+  parques: [
+    { id: 'modulos', label: 'Módulos y Castillos' },
+    { id: 'caucho', label: 'Pisos de Caucho EPDM' },
+    { id: 'inclusivos', label: 'Juegos Inclusivos' },
+    { id: 'bio-saludable', label: 'Gimnasios Bio-saludables' },
+    { id: 'general', label: 'General / Parques' },
+  ],
+  piscina: [
+    { id: 'piscinas', label: 'Piscinas y Wet Decks' },
+    { id: 'deck', label: 'Decks y Soláriums' },
+    { id: 'general', label: 'General / Piscinas' },
+  ],
+  golf: [
+    { id: 'golf', label: 'Greens y Putting' },
+    { id: 'paisajismo-golf', label: 'Paisajismo de Campo' },
+    { id: 'general', label: 'General / Golf' },
+  ],
+  residencial: [
+    { id: 'terrazas', label: 'Terrazas y Áticos' },
+    { id: 'jardines', label: 'Jardines Residenciales' },
+    { id: 'zonas-comunes', label: 'Zonas Comunes' },
+    { id: 'piscinas', label: 'Piscinas Residenciales' },
+    { id: 'general', label: 'General / Residencial' },
+  ],
+};
 
 function formatBytes(value: number) {
   if (!value) return '';
@@ -40,6 +111,71 @@ export default function MediaLibraryPage() {
   const [error, setError] = useState<string | null>(null);
   const [renaming, setRenaming] = useState<string | null>(null);
   const [restoring, setRestoring] = useState<string | null>(null);
+
+  // Category & Subcategory UI editor modal state
+  const [editingAsset, setEditingAsset] = useState<Asset | null>(null);
+  const [targetCategory, setTargetCategory] = useState<string>('canchas');
+  const [targetSubcategory, setTargetSubcategory] = useState<string>('general');
+  const [customSubcategory, setCustomSubcategory] = useState<string>('');
+  const [targetTitle, setTargetTitle] = useState<string>('');
+  const [targetBadge, setTargetBadge] = useState<string>('');
+  const [isSavingMetadata, setIsSavingMetadata] = useState(false);
+
+  function openCategoryEditor(asset: Asset) {
+    setEditingAsset(asset);
+    const cat = asset.category || selectedCategory;
+    setTargetCategory(cat);
+    const presets = SUBCAT_OPTIONS[cat] || [];
+    const isPreset = presets.some((p) => p.id === asset.subcategory);
+    if (isPreset) {
+      setTargetSubcategory(asset.subcategory || presets[0]?.id || 'general');
+      setCustomSubcategory('');
+    } else if (asset.subcategory && asset.subcategory !== 'general') {
+      setTargetSubcategory('__custom__');
+      setCustomSubcategory(asset.subcategory);
+    } else {
+      setTargetSubcategory(presets[0]?.id || 'general');
+      setCustomSubcategory('');
+    }
+    setTargetTitle(asset.title || '');
+    setTargetBadge(asset.badge || '');
+  }
+
+  async function handleSaveMetadata(e: React.FormEvent) {
+    e.preventDefault();
+    if (!editingAsset) return;
+    setIsSavingMetadata(true);
+    setError(null);
+    setNotice(null);
+
+    const finalSubcategory =
+      targetSubcategory === '__custom__' ? customSubcategory.trim() : targetSubcategory.trim();
+
+    try {
+      const response = await fetch('/api/admin/media-library', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'update-metadata',
+          filename: editingAsset.filename,
+          originalCategory: editingAsset.originalCategory || editingAsset.category || selectedCategory,
+          newCategory: targetCategory,
+          subcategory: finalSubcategory || null,
+          title: targetTitle.trim() || null,
+          badge: targetBadge.trim() || null,
+        }),
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || 'No fue posible actualizar la categorización.');
+      setNotice(`Categoría y subcategoría actualizadas con éxito.`);
+      setEditingAsset(null);
+      await loadLibrary();
+    } catch (saveErr) {
+      setError(saveErr instanceof Error ? saveErr.message : 'Error al guardar metadatos.');
+    } finally {
+      setIsSavingMetadata(false);
+    }
+  }
 
   const loadLibrary = useCallback(async () => {
     setLoading(true);
@@ -202,8 +338,8 @@ export default function MediaLibraryPage() {
           }}
           className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold transition-all ${
             topTab === 'library'
-              ? 'bg-brand-green text-white shadow-lg shadow-brand-green/20'
-              : 'bg-white/5 text-gray-400 hover:text-white hover:bg-white/10'
+              ? 'bg-brand-green text-white shadow-lg shadow-brand-green/20 border border-brand-green/40'
+              : 'bg-white/5 text-gray-200 hover:text-white hover:bg-white/10 border border-white/5'
           }`}
         >
           <FolderOpen className="w-4 h-4 text-brand-gold" />
@@ -217,8 +353,8 @@ export default function MediaLibraryPage() {
           onClick={() => setTopTab('heroes')}
           className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold transition-all ${
             topTab === 'heroes'
-              ? 'bg-brand-green text-white shadow-lg shadow-brand-green/20'
-              : 'bg-white/5 text-gray-400 hover:text-white hover:bg-white/10'
+              ? 'bg-brand-green text-white shadow-lg shadow-brand-green/20 border border-brand-green/40'
+              : 'bg-white/5 text-gray-200 hover:text-white hover:bg-white/10 border border-white/5'
           }`}
         >
           <Sliders className="w-4 h-4" />
@@ -232,8 +368,8 @@ export default function MediaLibraryPage() {
           onClick={() => setTopTab('before-after')}
           className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold transition-all ${
             topTab === 'before-after'
-              ? 'bg-brand-gold text-brand-dark shadow-lg shadow-brand-gold/20 font-black'
-              : 'bg-white/5 text-gray-400 hover:text-white hover:bg-white/10'
+              ? 'bg-brand-gold text-brand-dark shadow-lg shadow-brand-gold/20 font-black border border-brand-gold/40'
+              : 'bg-white/5 text-gray-200 hover:text-white hover:bg-white/10 border border-white/5'
           }`}
         >
           <Sparkles className="w-4 h-4 text-brand-gold" />
@@ -250,8 +386,8 @@ export default function MediaLibraryPage() {
           }}
           className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold transition-all ${
             topTab === 'archived'
-              ? 'bg-amber-600 text-white shadow-lg'
-              : 'bg-white/5 text-gray-400 hover:text-white hover:bg-white/10'
+              ? 'bg-amber-600 text-white shadow-lg border border-amber-500/40'
+              : 'bg-white/5 text-gray-200 hover:text-white hover:bg-white/10 border border-white/5'
           }`}
         >
           <Archive className="w-4 h-4" />
@@ -271,7 +407,7 @@ export default function MediaLibraryPage() {
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-[260px_minmax(0,1fr)] gap-6">
         <aside className="rounded-2xl border border-white/10 bg-[#131d16] p-3 h-fit">
-          <p className="px-3 pt-2 pb-3 text-[10px] uppercase font-black tracking-[0.16em] text-gray-500">Especialidad</p>
+          <p className="px-3 pt-2 pb-3 text-[10px] uppercase font-black tracking-[0.16em] text-gray-400">Especialidad</p>
           <div className="space-y-1">
             {(categories.length ? categories : [{ slug: 'canchas', label: 'Canchas', description: '', assets: [] }]).map((category) => {
               const selected = category.slug === selectedCategory;
@@ -281,13 +417,17 @@ export default function MediaLibraryPage() {
                   key={category.slug}
                   onClick={() => { setSelectedCategory(category.slug); setSearch(''); }}
                   className={`w-full text-left rounded-xl p-3 transition-all ${
-                    selected ? 'bg-brand-green text-white shadow-md' : 'text-gray-400 hover:bg-white/5 hover:text-white'
+                    selected
+                      ? 'bg-brand-green text-white shadow-md border border-brand-green/40'
+                      : 'text-gray-200 hover:bg-white/10 hover:text-white bg-white/[0.04] border border-white/5'
                   }`}
                 >
                   <div className="flex justify-between gap-3 items-center">
-                    <span className="text-sm font-bold">{category.label}</span>
+                    <span className={`text-sm font-bold ${selected ? 'text-white' : 'text-gray-200'}`}>
+                      {category.label}
+                    </span>
                     <div className="flex items-center gap-1.5">
-                      <span className={`text-xs font-black ${selected ? 'text-brand-gold' : 'text-gray-400'}`}>
+                      <span className={`text-xs font-black ${selected ? 'text-brand-gold' : 'text-gray-300'}`}>
                         {category.assets.length}
                       </span>
                       {catArchivedCount > 0 && (
@@ -297,7 +437,7 @@ export default function MediaLibraryPage() {
                       )}
                     </div>
                   </div>
-                  <p className={`mt-1 text-[11px] leading-relaxed ${selected ? 'text-emerald-100/70' : 'text-gray-600'}`}>
+                  <p className={`mt-1 text-[11px] leading-relaxed ${selected ? 'text-emerald-100/80' : 'text-gray-400'}`}>
                     {category.description}
                   </p>
                 </button>
@@ -389,7 +529,7 @@ export default function MediaLibraryPage() {
             ) : (
               <div className="grid grid-cols-2 xl:grid-cols-3 gap-px bg-white/10">
                 {filteredActiveAssets.map((asset) => (
-                  <article key={asset.filename} className="group bg-[#101811] p-3">
+                  <article key={asset.filename} className="group bg-[#101811] p-3 rounded-2xl border border-white/5 hover:border-brand-gold/30 transition-all">
                     <div className="relative aspect-[4/3] overflow-hidden rounded-xl bg-brand-dark">
                       <Image
                         src={asset.url}
@@ -398,27 +538,69 @@ export default function MediaLibraryPage() {
                         sizes="(max-width: 768px) 50vw, (max-width: 1280px) 33vw, 25vw"
                         className="object-cover transition-transform duration-500 group-hover:scale-105"
                       />
-                      <div className="absolute inset-x-0 bottom-0 flex justify-end gap-1 p-2 bg-gradient-to-t from-black/70 to-transparent opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
+
+                      {/* Top left badge pill: Custom badge or subcategory */}
+                      <div className="absolute top-2 left-2 flex flex-col gap-1 items-start z-10 pointer-events-none">
+                        {asset.badge ? (
+                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-black/80 text-brand-gold backdrop-blur-md border border-brand-gold/40 shadow-sm">
+                            {asset.badge}
+                          </span>
+                        ) : asset.subcategory && asset.subcategory !== 'general' ? (
+                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-black/80 text-emerald-300 backdrop-blur-md border border-emerald-500/40 shadow-sm">
+                            {asset.subcategory}
+                          </span>
+                        ) : null}
+                      </div>
+
+                      {/* Action buttons overlay */}
+                      <div className="absolute inset-x-0 bottom-0 flex justify-end gap-1.5 p-2 bg-gradient-to-t from-black/80 to-transparent opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity z-20">
+                        <button
+                          aria-label={`Editar categoría de ${asset.filename}`}
+                          title="Editar categoría y subcategoría"
+                          onClick={() => openCategoryEditor(asset)}
+                          className="rounded-lg bg-black/60 p-2 text-brand-gold backdrop-blur hover:bg-brand-gold hover:text-brand-dark transition-colors"
+                        >
+                          <Tag className="w-3.5 h-3.5" />
+                        </button>
                         <button
                           aria-label={`Renombrar ${asset.filename}`}
+                          title="Renombrar archivo"
                           onClick={() => renameAsset(asset)}
                           disabled={renaming === asset.filename}
-                          className="rounded-lg bg-white/15 p-2 text-white backdrop-blur hover:bg-brand-gold hover:text-brand-dark"
+                          className="rounded-lg bg-black/60 p-2 text-white backdrop-blur hover:bg-brand-gold hover:text-brand-dark transition-colors"
                         >
                           <Pencil className="w-3.5 h-3.5" />
                         </button>
                         <button
                           aria-label={`Archivar ${asset.filename}`}
+                          title="Archivar imagen"
                           onClick={() => archiveAsset(asset)}
-                          className="rounded-lg bg-white/15 p-2 text-white backdrop-blur hover:bg-red-500"
+                          className="rounded-lg bg-black/60 p-2 text-white backdrop-blur hover:bg-red-500 transition-colors"
                         >
                           <Archive className="w-3.5 h-3.5" />
                         </button>
                       </div>
                     </div>
+
                     <div className="px-1 pt-3">
-                      <p title={asset.filename} className="truncate text-xs font-bold text-white">{asset.filename}</p>
-                      <p className="mt-1 text-[11px] text-gray-500">
+                      <div className="flex items-center justify-between gap-1">
+                        <p title={asset.title || asset.filename} className="truncate text-xs font-bold text-white">
+                          {asset.title || asset.filename}
+                        </p>
+                        <button
+                          onClick={() => openCategoryEditor(asset)}
+                          className="text-[10px] text-brand-gold hover:underline font-semibold shrink-0"
+                          title="Cambiar categoría / subcategoría"
+                        >
+                          Editar
+                        </button>
+                      </div>
+                      {asset.title && (
+                        <p title={asset.filename} className="truncate text-[10px] text-gray-500 mt-0.5">
+                          {asset.filename}
+                        </p>
+                      )}
+                      <p className="mt-1 text-[11px] text-gray-400">
                         {formatBytes(asset.bytes)} · {new Date(asset.updatedAt).toLocaleDateString('es-CO')}
                       </p>
                     </div>
@@ -479,6 +661,208 @@ export default function MediaLibraryPage() {
         <UploadCloud className="w-3.5 h-3.5 text-brand-gold" />
         JPG, PNG, WebP y AVIF hasta 10 MB. Al retirar una imagen queda archivada en base de datos; puede restaurarla en cualquier momento desde la pestaña &quot;Archivadas&quot;.
       </p>
+
+      {/* Category & Subcategory Editor Modal */}
+      {editingAsset && (
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-[#131d16] border border-white/20 rounded-3xl max-w-lg w-full p-6 text-white shadow-2xl relative max-h-[90vh] overflow-y-auto">
+            {/* Modal Header */}
+            <div className="flex items-center justify-between pb-4 border-b border-white/10 mb-5">
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-xl bg-brand-gold/20 flex items-center justify-center text-brand-gold">
+                  <Tag className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="text-base font-bold text-white">Editar Categoría y Subcategoría</h3>
+                  <p className="text-xs text-gray-400">Reasigne la imagen en el ecosistema y galerías públicas</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setEditingAsset(null)}
+                className="p-1 rounded-lg text-gray-400 hover:text-white hover:bg-white/10"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Asset Preview Mini-card */}
+            <div className="flex items-center gap-3 p-3 rounded-2xl bg-white/[0.04] border border-white/10 mb-5">
+              <div className="relative w-16 h-16 rounded-xl overflow-hidden bg-black shrink-0 border border-white/10">
+                <Image src={editingAsset.url} alt={editingAsset.filename} fill className="object-cover" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="text-xs font-bold text-white truncate" title={editingAsset.filename}>
+                  {editingAsset.filename}
+                </p>
+                <div className="flex flex-wrap items-center gap-2 mt-1.5">
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-brand-green/30 text-emerald-200 border border-brand-green/40">
+                    {CATEGORY_OPTIONS.find((c) => c.slug === editingAsset.category)?.label || editingAsset.category}
+                  </span>
+                  {editingAsset.subcategory && (
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-brand-gold/20 text-brand-gold border border-brand-gold/30">
+                      {editingAsset.subcategory}
+                    </span>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Form */}
+            <form onSubmit={handleSaveMetadata} className="space-y-4">
+              {/* Especialidad (Categoría Principal) */}
+              <div>
+                <label className="block text-xs font-bold text-gray-300 uppercase tracking-wider mb-1.5">
+                  Especialidad (Categoría Principal) *
+                </label>
+                <select
+                  value={targetCategory}
+                  onChange={(e) => {
+                    const newCat = e.target.value;
+                    setTargetCategory(newCat);
+                    const presets = SUBCAT_OPTIONS[newCat] || [];
+                    setTargetSubcategory(presets[0]?.id || 'general');
+                    setCustomSubcategory('');
+                  }}
+                  className="w-full px-4 py-2.5 rounded-xl border border-gray-300 bg-white text-gray-900 font-semibold text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-gold"
+                  style={{ color: '#111827', backgroundColor: '#ffffff' }}
+                >
+                  {CATEGORY_OPTIONS.map((cat) => (
+                    <option
+                      key={cat.slug}
+                      value={cat.slug}
+                      className="bg-white text-gray-900 font-medium py-1.5"
+                      style={{ color: '#111827', backgroundColor: '#ffffff' }}
+                    >
+                      {cat.label}
+                    </option>
+                  ))}
+                </select>
+                <p className="mt-1 text-[11px] text-gray-400">
+                  Define en qué pestaña del CMS y en qué servicio del portafolio se mostrará esta imagen.
+                </p>
+              </div>
+
+              {/* Subcategoría */}
+              <div>
+                <label className="block text-xs font-bold text-gray-300 uppercase tracking-wider mb-1.5">
+                  Subcategoría de Proyecto *
+                </label>
+                <select
+                  value={targetSubcategory}
+                  onChange={(e) => setTargetSubcategory(e.target.value)}
+                  className="w-full px-4 py-2.5 rounded-xl border border-gray-300 bg-white text-gray-900 font-semibold text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-gold"
+                  style={{ color: '#111827', backgroundColor: '#ffffff' }}
+                >
+                  {(SUBCAT_OPTIONS[targetCategory] || []).map((sub) => (
+                    <option
+                      key={sub.id}
+                      value={sub.id}
+                      className="bg-white text-gray-900 font-medium py-1.5"
+                      style={{ color: '#111827', backgroundColor: '#ffffff' }}
+                    >
+                      {sub.label}
+                    </option>
+                  ))}
+                  <option
+                    value="__custom__"
+                    className="bg-white text-gray-900 font-medium py-1.5"
+                    style={{ color: '#111827', backgroundColor: '#ffffff' }}
+                  >
+                    + Otra subcategoría (personalizada)...
+                  </option>
+                </select>
+
+                {targetSubcategory === '__custom__' && (
+                  <div className="mt-2.5">
+                    <input
+                      type="text"
+                      value={customSubcategory}
+                      onChange={(e) => setCustomSubcategory(e.target.value)}
+                      placeholder="Escriba el nombre de la subcategoría"
+                      required
+                      className="w-full px-4 py-2.5 rounded-xl border border-gray-300 bg-white text-gray-900 placeholder:text-gray-400 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-gold"
+                      style={{ color: '#111827', backgroundColor: '#ffffff' }}
+                    />
+                  </div>
+                )}
+                <p className="mt-1 text-[11px] text-gray-400">
+                  Filtra los proyectos en las galerías interactivas por tipo específico de obra.
+                </p>
+              </div>
+
+              {/* Título descriptivo (opcional) */}
+              <div>
+                <label className="block text-xs font-bold text-gray-300 uppercase tracking-wider mb-1.5">
+                  Título Descriptivo (Opcional)
+                </label>
+                <input
+                  type="text"
+                  value={targetTitle}
+                  onChange={(e) => setTargetTitle(e.target.value)}
+                  placeholder="Ej: Pistas de Pádel Panorámicas Club Campestre"
+                  className="w-full px-4 py-2.5 rounded-xl border border-gray-300 bg-white text-gray-900 placeholder:text-gray-400 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-gold"
+                  style={{ color: '#111827', backgroundColor: '#ffffff' }}
+                />
+              </div>
+
+              {/* Etiqueta / Badge (opcional) */}
+              <div>
+                <label className="block text-xs font-bold text-gray-300 uppercase tracking-wider mb-1.5">
+                  Etiqueta / Badge (Opcional)
+                </label>
+                <input
+                  type="text"
+                  value={targetBadge}
+                  onChange={(e) => setTargetBadge(e.target.value)}
+                  placeholder="Ej: Pádel Panorámico / Césped FIFA"
+                  className="w-full px-4 py-2.5 rounded-xl border border-gray-300 bg-white text-gray-900 placeholder:text-gray-400 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-gold"
+                  style={{ color: '#111827', backgroundColor: '#ffffff' }}
+                />
+              </div>
+
+              {/* Live Preview Pill */}
+              <div className="p-3 rounded-xl bg-black/40 border border-white/10">
+                <span className="text-[10px] uppercase font-bold text-gray-400 block mb-1">
+                  Vista Previa del Badge:
+                </span>
+                <span className="inline-block text-xs font-bold px-2.5 py-1 rounded-full bg-brand-gold/20 text-brand-gold border border-brand-gold/40">
+                  {targetBadge.trim() ||
+                    (targetSubcategory === '__custom__'
+                      ? customSubcategory.trim() || 'Subcategoría'
+                      : SUBCAT_OPTIONS[targetCategory]?.find((s) => s.id === targetSubcategory)?.label || targetSubcategory)}
+                </span>
+              </div>
+
+              {/* Modal Actions */}
+              <div className="flex items-center justify-end gap-3 pt-4 border-t border-white/10">
+                <button
+                  type="button"
+                  onClick={() => setEditingAsset(null)}
+                  disabled={isSavingMetadata}
+                  className="px-4 py-2.5 rounded-xl text-xs font-bold text-gray-300 hover:text-white hover:bg-white/10 transition-colors"
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="submit"
+                  disabled={isSavingMetadata}
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-black bg-brand-gold text-brand-dark hover:bg-yellow-400 transition-colors shadow-lg disabled:opacity-50"
+                >
+                  {isSavingMetadata ? (
+                    <>
+                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      Guardando…
+                    </>
+                  ) : (
+                    'Guardar Cambios'
+                  )}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

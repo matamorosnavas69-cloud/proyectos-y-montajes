@@ -7,6 +7,7 @@ import {
   listLibraryAssets,
   renameLibraryAsset,
   restoreLibraryAsset,
+  updateAssetMetadata,
 } from '@/lib/media-library';
 
 export const runtime = 'nodejs';
@@ -52,7 +53,7 @@ export async function POST(request: NextRequest) {
 
 export async function PATCH(request: NextRequest) {
   try {
-    await requireAdmin();
+    const user = await requireAdmin();
     const body = await request.json();
     if (typeof body.category !== 'string' || typeof body.filename !== 'string') {
       return NextResponse.json({ error: 'Categoría y archivo son obligatorios.' }, { status: 400 });
@@ -60,6 +61,22 @@ export async function PATCH(request: NextRequest) {
     if (body.action === 'restore') {
       const result = await restoreLibraryAsset(body.category, body.filename);
       return NextResponse.json({ success: true, message: 'La imagen fue restaurada a la galería activa.', result });
+    }
+    if (body.action === 'update-metadata') {
+      const result = await updateAssetMetadata({
+        filename: body.filename,
+        originalCategory: body.originalCategory || body.category,
+        category: body.newCategory || body.category,
+        subcategory: body.subcategory,
+        title: body.title,
+        badge: body.badge,
+        actorEmail: user.email || undefined,
+      });
+      return NextResponse.json({
+        success: true,
+        message: 'Categoría y subcategoría actualizadas con éxito.',
+        result,
+      });
     }
     if (typeof body.newName !== 'string') {
       return NextResponse.json({ error: 'El nuevo nombre es obligatorio.' }, { status: 400 });

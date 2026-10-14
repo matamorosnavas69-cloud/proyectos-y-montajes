@@ -421,7 +421,8 @@ export default function BeforeAfterManagementSection() {
                   onChange={(e) => setTitle(e.target.value)}
                   placeholder="Ej: Pistas de Pádel Panorámicas de Competición"
                   required
-                  className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-gold text-sm"
+                  className="w-full px-4 py-2.5 rounded-xl border border-gray-300 bg-white text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-gold text-sm shadow-sm"
+                  style={{ color: '#111827', backgroundColor: '#ffffff' }}
                 />
               </div>
 
@@ -435,7 +436,8 @@ export default function BeforeAfterManagementSection() {
                     value={location}
                     onChange={(e) => setLocation(e.target.value)}
                     placeholder="Ej: Bucaramanga, Santander"
-                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-gold text-sm"
+                    className="w-full px-4 py-2.5 rounded-xl border border-gray-300 bg-white text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-gold text-sm shadow-sm"
+                    style={{ color: '#111827', backgroundColor: '#ffffff' }}
                   />
                 </div>
 
@@ -452,12 +454,13 @@ export default function BeforeAfterManagementSection() {
                       else if (e.target.value === 'Parques') setCategoryColor('bg-brand-gold');
                       else setCategoryColor('bg-amber-600');
                     }}
-                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-gold text-sm bg-white"
+                    className="w-full px-4 py-2.5 rounded-xl border border-gray-300 bg-white text-gray-900 font-semibold focus:outline-none focus:ring-2 focus:ring-brand-gold text-sm shadow-sm"
+                    style={{ color: '#111827', backgroundColor: '#ffffff' }}
                   >
-                    <option value="Pádel">Pádel</option>
-                    <option value="Fútbol">Fútbol</option>
-                    <option value="Parques">Parques</option>
-                    <option value="Paisajismo">Paisajismo</option>
+                    <option value="Pádel" className="bg-white text-gray-900 font-medium py-1.5" style={{ color: '#111827', backgroundColor: '#ffffff' }}>Pádel</option>
+                    <option value="Fútbol" className="bg-white text-gray-900 font-medium py-1.5" style={{ color: '#111827', backgroundColor: '#ffffff' }}>Fútbol</option>
+                    <option value="Parques" className="bg-white text-gray-900 font-medium py-1.5" style={{ color: '#111827', backgroundColor: '#ffffff' }}>Parques</option>
+                    <option value="Paisajismo" className="bg-white text-gray-900 font-medium py-1.5" style={{ color: '#111827', backgroundColor: '#ffffff' }}>Paisajismo</option>
                   </select>
                 </div>
               </div>
@@ -472,7 +475,8 @@ export default function BeforeAfterManagementSection() {
                     value={area}
                     onChange={(e) => setArea(e.target.value)}
                     placeholder="Ej: 400 m²"
-                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-gold text-sm"
+                    className="w-full px-4 py-2.5 rounded-xl border border-gray-300 bg-white text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-gold text-sm shadow-sm"
+                    style={{ color: '#111827', backgroundColor: '#ffffff' }}
                   />
                 </div>
                 <div>
@@ -484,7 +488,8 @@ export default function BeforeAfterManagementSection() {
                     value={duration}
                     onChange={(e) => setDuration(e.target.value)}
                     placeholder="Ej: 30 días"
-                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-gold text-sm"
+                    className="w-full px-4 py-2.5 rounded-xl border border-gray-300 bg-white text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-gold text-sm shadow-sm"
+                    style={{ color: '#111827', backgroundColor: '#ffffff' }}
                   />
                 </div>
               </div>
@@ -526,7 +531,8 @@ export default function BeforeAfterManagementSection() {
                       if (!beforeFile) setBeforePreview(e.target.value);
                     }}
                     placeholder="O ingrese URL directa"
-                    className="mt-2 w-full text-xs px-2.5 py-1.5 rounded border border-gray-200 bg-white"
+                    className="mt-2 w-full text-xs px-2.5 py-1.5 rounded border border-gray-300 bg-white text-gray-900 placeholder:text-gray-400"
+                    style={{ color: '#111827', backgroundColor: '#ffffff' }}
                   />
                 </div>
 
@@ -565,7 +571,8 @@ export default function BeforeAfterManagementSection() {
                       if (!afterFile) setAfterPreview(e.target.value);
                     }}
                     placeholder="O ingrese URL directa"
-                    className="mt-2 w-full text-xs px-2.5 py-1.5 rounded border border-gray-200 bg-white"
+                    className="mt-2 w-full text-xs px-2.5 py-1.5 rounded border border-gray-300 bg-white text-gray-900 placeholder:text-gray-400"
+                    style={{ color: '#111827', backgroundColor: '#ffffff' }}
                   />
                 </div>
               </div>

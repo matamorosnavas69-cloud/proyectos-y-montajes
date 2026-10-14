@@ -28,6 +28,7 @@ const ARCHIVE_ROOT = path.join(LIBRARY_ROOT, '.archive');
 export type LibraryAsset = {
   id: string;
   filename: string;
+  originalCategory?: string;
   url: string;
   bytes: number;
   updatedAt: string;
@@ -36,6 +37,40 @@ export type LibraryAsset = {
   subcategory: string;
   title: string;
   badge?: string;
+};
+
+export const SUBCATEGORIES_BY_CATEGORY: Record<string, { id: string; label: string }[]> = {
+  canchas: [
+    { id: 'padel', label: 'Pádel Panorámico' },
+    { id: 'futbol', label: 'Fútbol Sintético' },
+    { id: 'golf', label: 'Greens de Golf' },
+    { id: 'polideportivo', label: 'Polideportivo' },
+    { id: 'general', label: 'General / Canchas' },
+  ],
+  parques: [
+    { id: 'modulos', label: 'Módulos y Castillos' },
+    { id: 'caucho', label: 'Pisos de Caucho EPDM' },
+    { id: 'inclusivos', label: 'Juegos Inclusivos' },
+    { id: 'bio-saludable', label: 'Gimnasios Bio-saludables' },
+    { id: 'general', label: 'General / Parques' },
+  ],
+  piscina: [
+    { id: 'piscinas', label: 'Piscinas y Wet Decks' },
+    { id: 'deck', label: 'Decks y Soláriums' },
+    { id: 'general', label: 'General / Piscinas' },
+  ],
+  golf: [
+    { id: 'golf', label: 'Greens y Putting' },
+    { id: 'paisajismo-golf', label: 'Paisajismo de Campo' },
+    { id: 'general', label: 'General / Golf' },
+  ],
+  residencial: [
+    { id: 'terrazas', label: 'Terrazas y Áticos' },
+    { id: 'jardines', label: 'Jardines Residenciales' },
+    { id: 'zonas-comunes', label: 'Zonas Comunes' },
+    { id: 'piscinas', label: 'Piscinas Residenciales' },
+    { id: 'general', label: 'General / Residencial' },
+  ],
 };
 
 export const SERVICES_CONFIG = {
@@ -161,30 +196,60 @@ export async function getArchivedFilenames(category?: string): Promise<Set<strin
   return archived;
 }
 
+export type AssetMetadataOverride = {
+  category: string;
+  subcategory?: string | null;
+  title?: string | null;
+  badge?: string | null;
+};
+
+export async function getAllMetadataMap(): Promise<Map<string, AssetMetadataOverride>> {
+  const map = new Map<string, AssetMetadataOverride>();
+  try {
+    const records = await prisma.mediaAssetMetadata.findMany();
+    for (const r of records) {
+      const item: AssetMetadataOverride = {
+        category: r.category,
+        subcategory: r.subcategory,
+        title: r.title,
+        badge: r.badge,
+      };
+      map.set(`${r.originalCategory}:${r.filename}`, item);
+      map.set(`file:${r.filename}`, item);
+    }
+  } catch (err) {
+    console.warn('[MediaLibrary] DB metadata lookup skipped/fallback:', err instanceof Error ? err.message : err);
+  }
+  return map;
+}
+
 function classifyAsset(
   filename: string,
   url: string,
   category: string,
   bytes: number,
   updatedAt: string,
-  serviceHint?: ServiceSlug
+  serviceHint?: ServiceSlug,
+  meta?: AssetMetadataOverride
 ): LibraryAsset {
   const ext = path.extname(filename).toLowerCase();
   const isVideo = VIDEO_EXTENSIONS.has(ext);
   const type: MediaType = isVideo ? 'video' : 'image';
   const lowerName = filename.toLowerCase();
+  const assignedCategory = meta?.category || category;
   const id = `${category}-${filename}`.replace(/[^a-zA-Z0-9_-]/g, '_');
 
   let subcategory = 'general';
   let title = 'Proyecto Ejecutado';
   let badge = 'Obra Verificada';
 
-  if (serviceHint === 'canchas' || category === 'canchas' || category === 'golf') {
+  const effectiveCategory = assignedCategory;
+  if (serviceHint === 'canchas' || effectiveCategory === 'canchas' || effectiveCategory === 'golf') {
     if (isVideo) {
       subcategory = 'videos';
       badge = 'Video de Obra';
       title = 'Registro Técnico y Vista Aérea';
-    } else if (category === 'golf' || lowerName.includes('golf') || lowerName.includes('green')) {
+    } else if (effectiveCategory === 'golf' || lowerName.includes('golf') || lowerName.includes('green')) {
       subcategory = 'golf';
       badge = 'Golf & Putting';
       title = 'Putting Green Sintético de Alta Definición';
@@ -197,7 +262,7 @@ function classifyAsset(
       badge = 'Fútbol Sintético';
       title = 'Cancha de Césped Sintético Certificado';
     }
-  } else if (serviceHint === 'parques' || category === 'parques') {
+  } else if (serviceHint === 'parques' || effectiveCategory === 'parques') {
     if (isVideo) {
       subcategory = 'videos';
       badge = 'Video de Montaje';
@@ -215,12 +280,12 @@ function classifyAsset(
       badge = 'Módulo Recreativo';
       title = 'Parque Infantil Estructura de Alto Tráfico';
     }
-  } else if (serviceHint === 'paisajismo' || category === 'residencial' || category === 'piscina') {
+  } else if (serviceHint === 'paisajismo' || effectiveCategory === 'residencial' || effectiveCategory === 'piscina') {
     if (isVideo) {
       subcategory = 'videos';
       badge = 'Video de Recorrido';
       title = 'Recorrido Visual de Paisajismo Residencial';
-    } else if (category === 'piscina' || lowerName.includes('piscina') || lowerName.includes('deck')) {
+    } else if (effectiveCategory === 'piscina' || lowerName.includes('piscina') || lowerName.includes('deck')) {
       subcategory = 'piscinas';
       badge = 'Zona Húmeda';
       title = 'Grama Decorativa para Piscina y Deck';
@@ -235,14 +300,20 @@ function classifyAsset(
     }
   }
 
+  // Explicit user metadata overrides take priority
+  if (meta?.subcategory) subcategory = meta.subcategory;
+  if (meta?.title) title = meta.title;
+  if (meta?.badge) badge = meta.badge;
+
   return {
     id,
     filename,
+    originalCategory: category,
     url,
     bytes,
     updatedAt,
     type,
-    category,
+    category: assignedCategory,
     subcategory,
     title,
     badge,
@@ -255,7 +326,8 @@ async function readDirectoryAssets(
   urlBuilder: (fname: string) => string,
   serviceHint?: ServiceSlug,
   includeVideos = true,
-  archivedSet?: Set<string>
+  archivedSet?: Set<string>,
+  metadataMap?: Map<string, AssetMetadataOverride>
 ): Promise<LibraryAsset[]> {
   try {
     const archived = archivedSet ?? (await getArchivedFilenames(category));
@@ -277,13 +349,15 @@ async function readDirectoryAssets(
         const filePath = dynamicPath(dir, entry.name);
         try {
           const info = await stat(filePath);
+          const meta = metadataMap?.get(`${category}:${entry.name}`) || metadataMap?.get(`file:${entry.name}`);
           return classifyAsset(
             entry.name,
             urlBuilder(entry.name),
             category,
             info.size,
             info.mtime.toISOString(),
-            serviceHint
+            serviceHint,
+            meta
           );
         } catch {
           return null;
@@ -297,60 +371,85 @@ async function readDirectoryAssets(
   }
 }
 
-export async function listCategoryAssets(category: MediaCategory, includeVideos = false): Promise<LibraryAsset[]> {
-  const directory = getCategoryDirectory(category);
-  const archived = await getArchivedFilenames(category);
-
-  // 1. Read static repository assets
-  const staticAssets = await readDirectoryAssets(
-    directory,
-    category,
-    (fname) => toPublicUrl(category, fname),
-    category === 'canchas' || category === 'golf' ? 'canchas' : category === 'parques' ? 'parques' : 'paisajismo',
-    includeVideos,
-    archived
-  );
-
-  // 2. Read dynamic cloud assets from Supabase Storage if available
-  const cloudAssets: LibraryAsset[] = [];
-  try {
-    const supabase = createClient();
-    const folder = `gallery/${category}`;
-    const { data: cloudFiles } = await supabase.storage.from(DEFAULT_BUCKET).list(folder, { limit: 100 });
-    if (cloudFiles && cloudFiles.length > 0) {
-      for (const cf of cloudFiles) {
-        if (!cf.name || cf.name === '.emptyFolderPlaceholder') continue;
-        if (archived.has(cf.name) || archived.has(cf.name.toLowerCase())) continue;
-        const { data: pubData } = supabase.storage.from(DEFAULT_BUCKET).getPublicUrl(`${folder}/${cf.name}`);
-        cloudAssets.push(
-          classifyAsset(
-            cf.name,
-            pubData.publicUrl,
-            category,
-            cf.metadata?.size || 0,
-            cf.updated_at || new Date().toISOString(),
-            category === 'canchas' || category === 'golf' ? 'canchas' : category === 'parques' ? 'parques' : 'paisajismo'
-          )
-        );
-      }
-    }
-  } catch {
-    // Optional cloud storage integration
+export async function getAllLibraryAssets(includeVideos = false): Promise<LibraryAsset[]> {
+  const cacheKey = `all-assets:${includeVideos}`;
+  const hit = cache.get(cacheKey);
+  if (hit && Date.now() - hit.timestamp < CACHE_TTL) {
+    return hit.data as LibraryAsset[];
   }
 
-  const combined = [...cloudAssets, ...staticAssets];
-  return combined.sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
+  const metadataMap = await getAllMetadataMap();
+  const archived = await getArchivedFilenames();
+  const allAssets: LibraryAsset[] = [];
+
+  for (const cat of MEDIA_CATEGORIES) {
+    const directory = getCategoryDirectory(cat.slug);
+    const serviceHint: ServiceSlug =
+      cat.slug === 'canchas' || cat.slug === 'golf' ? 'canchas' : cat.slug === 'parques' ? 'parques' : 'paisajismo';
+
+    // 1. Static disk assets
+    const staticAssets = await readDirectoryAssets(
+      directory,
+      cat.slug,
+      (fname) => toPublicUrl(cat.slug, fname),
+      serviceHint,
+      includeVideos,
+      archived,
+      metadataMap
+    );
+    allAssets.push(...staticAssets);
+
+    // 2. Cloud assets
+    try {
+      const supabase = createClient();
+      const folder = `gallery/${cat.slug}`;
+      const { data: cloudFiles } = await supabase.storage.from(DEFAULT_BUCKET).list(folder, { limit: 100 });
+      if (cloudFiles && cloudFiles.length > 0) {
+        for (const cf of cloudFiles) {
+          if (!cf.name || cf.name === '.emptyFolderPlaceholder') continue;
+          if (archived.has(cf.name) || archived.has(cf.name.toLowerCase())) continue;
+          const { data: pubData } = supabase.storage.from(DEFAULT_BUCKET).getPublicUrl(`${folder}/${cf.name}`);
+          const meta = metadataMap.get(`${cat.slug}:${cf.name}`) || metadataMap.get(`file:${cf.name}`);
+          allAssets.push(
+            classifyAsset(
+              cf.name,
+              pubData.publicUrl,
+              cat.slug,
+              cf.metadata?.size || 0,
+              cf.updated_at || new Date().toISOString(),
+              serviceHint,
+              meta
+            )
+          );
+        }
+      }
+    } catch {
+      // Optional cloud storage integration
+    }
+  }
+
+  cache.set(cacheKey, { data: allAssets, timestamp: Date.now() });
+  return allAssets;
+}
+
+export async function listCategoryAssets(category: MediaCategory, includeVideos = false): Promise<LibraryAsset[]> {
+  const all = await getAllLibraryAssets(includeVideos);
+  return all
+    .filter((asset) => asset.category === category)
+    .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
 }
 
 export async function listLibraryAssets(category?: string, includeVideos = false) {
+  const all = await getAllLibraryAssets(includeVideos);
   const categories = category ? MEDIA_CATEGORIES.filter((item) => item.slug === category) : MEDIA_CATEGORIES;
   if (category && categories.length === 0) throw new Error('Categoría de imagen no permitida.');
-  return Promise.all(
-    categories.map(async (item) => ({
-      ...item,
-      assets: await listCategoryAssets(item.slug, includeVideos),
-    }))
-  );
+
+  return categories.map((cat) => ({
+    ...cat,
+    assets: all
+      .filter((asset) => asset.category === cat.slug)
+      .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt)),
+  }));
 }
 
 export async function listServiceAssets(serviceSlug: ServiceSlug) {
@@ -626,3 +725,54 @@ export async function listArchivedLibraryAssets(category?: string) {
     return [];
   }
 }
+
+/**
+ * Updates an asset's categorization, subcategory, descriptive title, and badge
+ */
+export async function updateAssetMetadata(params: {
+  filename: string;
+  originalCategory: string;
+  category?: string;
+  subcategory?: string | null;
+  title?: string | null;
+  badge?: string | null;
+  actorEmail?: string;
+}) {
+  const safeFilename = path.basename(params.filename);
+  if (safeFilename !== params.filename) throw new Error('Archivo no válido.');
+  if (params.category && !isCategory(params.category)) {
+    throw new Error('Categoría asignada no permitida.');
+  }
+
+  const assignedCat = params.category || params.originalCategory;
+
+  const record = await prisma.mediaAssetMetadata.upsert({
+    where: {
+      originalCategory_filename: {
+        originalCategory: params.originalCategory,
+        filename: safeFilename,
+      },
+    },
+    create: {
+      originalCategory: params.originalCategory,
+      filename: safeFilename,
+      category: assignedCat,
+      subcategory: params.subcategory?.trim() || null,
+      title: params.title?.trim() || null,
+      badge: params.badge?.trim() || null,
+      updatedBy: params.actorEmail || null,
+    },
+    update: {
+      category: assignedCat,
+      subcategory: params.subcategory?.trim() || null,
+      title: params.title?.trim() || null,
+      badge: params.badge?.trim() || null,
+      updatedBy: params.actorEmail || null,
+      updatedAt: new Date(),
+    },
+  });
+
+  invalidateMediaCache();
+  return record;
+}
+
