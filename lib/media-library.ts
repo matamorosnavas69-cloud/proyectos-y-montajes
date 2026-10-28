@@ -403,11 +403,13 @@ export async function getAllLibraryAssets(includeVideos = false): Promise<Librar
     try {
       const supabase = createClient();
       const folder = `gallery/${cat.slug}`;
-      const { data: cloudFiles } = await supabase.storage.from(DEFAULT_BUCKET).list(folder, { limit: 100 });
+      const { data: cloudFiles } = await supabase.storage.from(DEFAULT_BUCKET).list(folder, { limit: 1000 });
       if (cloudFiles && cloudFiles.length > 0) {
+        const existingNames = new Set(staticAssets.map((a) => a.filename.toLowerCase()));
         for (const cf of cloudFiles) {
           if (!cf.name || cf.name === '.emptyFolderPlaceholder') continue;
           if (archived.has(cf.name) || archived.has(cf.name.toLowerCase())) continue;
+          if (existingNames.has(cf.name.toLowerCase())) continue;
           const { data: pubData } = supabase.storage.from(DEFAULT_BUCKET).getPublicUrl(`${folder}/${cf.name}`);
           const meta = metadataMap.get(`${cat.slug}:${cf.name}`) || metadataMap.get(`file:${cf.name}`);
           allAssets.push(

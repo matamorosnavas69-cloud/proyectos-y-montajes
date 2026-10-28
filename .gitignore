@@ -14,6 +14,15 @@ public/images/*
 !public/images/og-image.jpg
 !public/images/before-after/
 !public/images/before-after/**
+public/images/drive organice/**
+!public/images/drive organice/parques/15d81928-0e73-46bd-b651-897cd955e52b.jpg
+!public/images/drive organice/parques/1f33c515-446d-4452-81d3-ed1df4d15211.JPG
+!public/images/drive organice/parques/207e5725-8eb2-4049-8a03-5ab905d1b1ee.jpg
+!public/images/drive organice/parques/IMG_4629.JPG
+!public/images/drive organice/piscina/IMG_3672.JPG
+!public/images/drive organice/piscina/IMG_8074.JPG
+!public/images/drive organice/residencial/IMG_4638.JPG
+!public/images/drive organice/residencial/IMG_5679.JPEG
 
 # dependencies
 /node_modules
