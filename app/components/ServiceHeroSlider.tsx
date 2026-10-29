@@ -249,8 +249,21 @@ export default function ServiceHeroSlider({
               ))}
             </div>
 
-            {/* Prev / Next Chevrons */}
+            {/* Play / Pause & Prev / Next Chevrons */}
             <div className="flex items-center gap-1 border-l border-white/10 pl-2">
+              <button
+                type="button"
+                onClick={() => setIsPaused((prev) => !prev)}
+                aria-label={isPaused ? "Reanudar rotación automática" : "Pausar rotación automática"}
+                title={isPaused ? "Reanudar rotación automática" : "Pausar rotación automática"}
+                className="p-1 rounded-lg text-gray-300 hover:text-white hover:bg-white/10 transition-colors cursor-pointer mr-0.5"
+              >
+                {isPaused ? (
+                  <Play className="w-3.5 h-3.5 fill-current text-brand-gold" />
+                ) : (
+                  <Pause className="w-3.5 h-3.5" />
+                )}
+              </button>
               <button
                 type="button"
                 onClick={prevSlide}

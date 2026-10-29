@@ -16,6 +16,7 @@ import {
   X,
   CheckCircle2,
   Loader2,
+  Pause,
 } from 'lucide-react';
 import { LibraryAsset, ServiceSlug } from '@/lib/media-library';
 
@@ -52,6 +53,7 @@ export default function ServiceShowcaseGallery({
   const [activeAssetIndex, setActiveAssetIndex] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isBuffering, setIsBuffering] = useState<boolean>(false);
+  const [isAutoLoadPaused, setIsAutoLoadPaused] = useState<boolean>(false);
   const sentinelRef = useRef<HTMLDivElement>(null);
   const isBufferingRef = useRef<boolean>(false);
 
@@ -109,7 +111,7 @@ export default function ServiceShowcaseGallery({
   const hasMore = visibleCount < filteredAssets.length;
 
   const loadMore = useCallback(() => {
-    if (isBufferingRef.current || !hasMore) return;
+    if (isAutoLoadPaused || isBufferingRef.current || !hasMore) return;
     isBufferingRef.current = true;
     setIsBuffering(true);
 
@@ -119,11 +121,11 @@ export default function ServiceShowcaseGallery({
       setIsBuffering(false);
       isBufferingRef.current = false;
     }, 450);
-  }, [hasMore, filteredAssets.length]);
+  }, [hasMore, filteredAssets.length, isAutoLoadPaused]);
 
   useEffect(() => {
     const sentinel = sentinelRef.current;
-    if (!sentinel || !hasMore) return;
+    if (!sentinel || !hasMore || isAutoLoadPaused) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -141,7 +143,7 @@ export default function ServiceShowcaseGallery({
 
     observer.observe(sentinel);
     return () => observer.disconnect();
-  }, [hasMore, loadMore]);
+  }, [hasMore, loadMore, isAutoLoadPaused]);
 
   // Lightbox navigation
   const activeAsset = activeAssetIndex !== null ? filteredAssets[activeAssetIndex] : null;
@@ -215,42 +217,71 @@ export default function ServiceShowcaseGallery({
           </p>
         </div>
 
-        {/* Subcategory Pill Filters */}
-        <div
-          role="tablist"
-          aria-label="Filtros por especialidad de obra"
-          className="mb-10 flex gap-2.5 overflow-x-auto pb-2 scrollbar-none"
-        >
-          {serviceMeta?.subcategories.map((sub) => {
-            const count = subcategoryCounts[sub.id] ?? 0;
-            const isActive = activeSubcategory === sub.id;
+        {/* Subcategory Pill Filters & Discreet Stream Controller */}
+        <div className="mb-10 flex flex-wrap items-center justify-between gap-3">
+          <div
+            role="tablist"
+            aria-label="Filtros por especialidad de obra"
+            className="flex gap-2.5 overflow-x-auto pb-2 scrollbar-none max-w-full"
+          >
+            {serviceMeta?.subcategories.map((sub) => {
+              const count = subcategoryCounts[sub.id] ?? 0;
+              const isActive = activeSubcategory === sub.id;
 
-            return (
-              <button
-                key={sub.id}
-                type="button"
-                role="tab"
-                aria-selected={isActive}
-                onClick={() => handleSubcategoryChange(sub.id)}
-                className={`group inline-flex shrink-0 items-center gap-2 rounded-full border px-4 py-2.5 text-xs font-bold transition-all duration-200 md:text-sm ${
-                  isActive
-                    ? 'border-brand-gold bg-brand-gold text-brand-dark shadow-lg shadow-brand-gold/20'
-                    : 'border-white/10 bg-white/5 text-gray-300 hover:border-brand-gold/40 hover:bg-white/10 hover:text-white'
-                }`}
-              >
-                <span>{sub.label}</span>
-                <span
-                  className={`rounded-full px-2 py-0.5 text-[10px] font-black ${
+              return (
+                <button
+                  key={sub.id}
+                  type="button"
+                  role="tab"
+                  aria-selected={isActive}
+                  onClick={() => handleSubcategoryChange(sub.id)}
+                  className={`group inline-flex shrink-0 items-center gap-2 rounded-full border px-4 py-2.5 text-xs font-bold transition-all duration-200 md:text-sm ${
                     isActive
-                      ? 'bg-black/20 text-brand-dark'
-                      : 'bg-black/40 text-brand-gold group-hover:bg-brand-gold/20'
+                      ? 'border-brand-gold bg-brand-gold text-brand-dark shadow-lg shadow-brand-gold/20'
+                      : 'border-white/10 bg-white/5 text-gray-300 hover:border-brand-gold/40 hover:bg-white/10 hover:text-white'
                   }`}
                 >
-                  {count}
-                </span>
-              </button>
-            );
-          })}
+                  <span>{sub.label}</span>
+                  <span
+                    className={`rounded-full px-2 py-0.5 text-[10px] font-black ${
+                      isActive
+                        ? 'bg-black/20 text-brand-dark'
+                        : 'bg-black/40 text-brand-gold group-hover:bg-brand-gold/20'
+                    }`}
+                  >
+                    {count}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Discreet Infinity Scroll Pause/Play Control (Header Level) */}
+          {hasMore && (
+            <button
+              type="button"
+              onClick={() => setIsAutoLoadPaused((prev) => !prev)}
+              aria-label={isAutoLoadPaused ? 'Reanudar carga automática' : 'Detener carga automática de la galería'}
+              title={isAutoLoadPaused ? 'Reanudar desplazamiento continuo' : 'Detener desplazamiento continuo'}
+              className={`group inline-flex shrink-0 items-center gap-2 rounded-full border px-3.5 py-2 text-xs font-mono transition-all duration-200 cursor-pointer ${
+                isAutoLoadPaused
+                  ? 'border-amber-400/40 bg-amber-500/10 text-amber-300 hover:bg-amber-500/20 shadow-sm'
+                  : 'border-white/10 bg-white/5 text-gray-400 hover:border-white/20 hover:bg-white/10 hover:text-white'
+              }`}
+            >
+              {isAutoLoadPaused ? (
+                <>
+                  <Play className="h-3 w-3 fill-current text-amber-400" />
+                  <span>Auto-scroll: En pausa</span>
+                </>
+              ) : (
+                <>
+                  <Pause className="h-3 w-3 text-gray-400 group-hover:text-white" />
+                  <span>Pausar flujo</span>
+                </>
+              )}
+            </button>
+          )}
         </div>
 
         {/* Loading State */}
@@ -444,41 +475,94 @@ export default function ServiceShowcaseGallery({
               })}
             </div>
 
-            {/* Minimalist Autoload Buffering Sentinel & Sensory Indicator */}
+            {/* Minimalist Autoload Buffering Sentinel & Sensory Indicator with Discrete Stop Control */}
             {hasMore ? (
               <div
-                ref={sentinelRef}
+                ref={isAutoLoadPaused ? undefined : sentinelRef}
                 className="mt-14 flex flex-col items-center justify-center gap-3 py-6"
                 aria-live="polite"
               >
-                {/* High-End Architectural Buffering Pill */}
-                <div className="relative inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-black/60 border border-brand-gold/25 backdrop-blur-xl shadow-2xl transition-all duration-300">
-                  {/* Glowing Pulse Dot */}
-                  <span className="relative flex h-2 w-2">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-gold opacity-75" />
-                    <span className="relative inline-flex rounded-full h-2 w-2 bg-brand-gold shadow-[0_0_8px_#d4af37]" />
-                  </span>
+                {isAutoLoadPaused ? (
+                  /* Discreet Paused Stream Pill with Seamless Resume & Manual Steps */
+                  <div className="relative inline-flex flex-wrap items-center justify-center gap-2.5 sm:gap-3 px-4 sm:px-5 py-2.5 rounded-full bg-black/70 border border-white/15 backdrop-blur-xl shadow-2xl transition-all duration-300 animate-fade-in">
+                    <span className="relative flex h-2 w-2">
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-400/90 shadow-[0_0_6px_#fbbf24]" />
+                    </span>
 
-                  {/* Micro Shimmer Progress Bar */}
-                  <div className="w-24 sm:w-32 h-1 bg-white/10 rounded-full overflow-hidden relative">
-                    <div className="absolute inset-y-0 w-1/2 bg-gradient-to-r from-transparent via-brand-gold to-transparent animate-shimmer" />
+                    <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-amber-200/90">
+                      Flujo en pausa
+                    </span>
+
+                    <span className="text-[10px] font-mono text-gray-400 border-l border-white/10 pl-2">
+                      {visibleAssets.length} de {filteredAssets.length}
+                    </span>
+
+                    <div className="flex items-center gap-1.5 border-l border-white/10 pl-2">
+                      <button
+                        type="button"
+                        onClick={() => setIsAutoLoadPaused(false)}
+                        className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-gold/15 hover:bg-brand-gold/30 text-brand-gold border border-brand-gold/30 text-[10px] font-mono font-bold tracking-wider transition-all duration-200 cursor-pointer"
+                        title="Reanudar el desplazamiento continuo"
+                      >
+                        <Play className="w-2.5 h-2.5 fill-current" />
+                        <span>Reanudar</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => setVisibleCount((prev) => Math.min(prev + PAGE_SIZE, filteredAssets.length))}
+                        className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white/5 hover:bg-white/15 text-gray-300 hover:text-white border border-white/10 text-[10px] font-mono transition-all duration-200 cursor-pointer"
+                        title="Cargar las siguientes fotos manualmente"
+                      >
+                        <span>+ Cargar más</span>
+                      </button>
+                    </div>
                   </div>
+                ) : (
+                  /* High-End Architectural Buffering Pill with Discrete Stop Button */
+                  <div className="relative inline-flex items-center gap-3 px-4 sm:px-5 py-2.5 rounded-full bg-black/60 border border-brand-gold/25 backdrop-blur-xl shadow-2xl transition-all duration-300">
+                    {/* Glowing Pulse Dot */}
+                    <span className="relative flex h-2 w-2">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-gold opacity-75" />
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-brand-gold shadow-[0_0_8px_#d4af37]" />
+                    </span>
 
-                  <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-gray-300">
-                    {isBuffering ? (
-                      <span className="text-brand-gold flex items-center gap-1.5">
-                        <Loader2 className="w-3 h-3 animate-spin" />
-                        Sincronizando archivo…
-                      </span>
-                    ) : (
-                      <span>Desplazamiento continuo</span>
-                    )}
-                  </span>
+                    {/* Micro Shimmer Progress Bar */}
+                    <div className="w-16 sm:w-28 h-1 bg-white/10 rounded-full overflow-hidden relative">
+                      <div className="absolute inset-y-0 w-1/2 bg-gradient-to-r from-transparent via-brand-gold to-transparent animate-shimmer" />
+                    </div>
 
-                  <span className="text-[10px] font-mono text-gray-500 border-l border-white/10 pl-2">
-                    {visibleAssets.length} / {filteredAssets.length}
-                  </span>
-                </div>
+                    <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-gray-300">
+                      {isBuffering ? (
+                        <span className="text-brand-gold flex items-center gap-1.5">
+                          <Loader2 className="w-3 h-3 animate-spin" />
+                          Sincronizando archivo…
+                        </span>
+                      ) : (
+                        <span>Desplazamiento continuo</span>
+                      )}
+                    </span>
+
+                    <span className="text-[10px] font-mono text-gray-500 border-l border-white/10 pl-2">
+                      {visibleAssets.length} / {filteredAssets.length}
+                    </span>
+
+                    {/* Discrete Stop Button */}
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setIsAutoLoadPaused(true);
+                      }}
+                      className="ml-1 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/5 hover:bg-white/15 text-gray-400 hover:text-white border border-white/10 text-[10px] font-mono tracking-wider transition-all duration-200 group/btn cursor-pointer"
+                      title="Detener carga automática"
+                      aria-label="Detener carga automática de la galería"
+                    >
+                      <Pause className="w-2.5 h-2.5 text-gray-400 group-hover/btn:text-white" />
+                      <span>Detener</span>
+                    </button>
+                  </div>
+                )}
               </div>
             ) : filteredAssets.length > 0 ? (
               /* Minimalist End-of-Stream Architectural Seal */
