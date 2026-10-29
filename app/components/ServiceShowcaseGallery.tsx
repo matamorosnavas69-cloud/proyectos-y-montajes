@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState, useCallback } from 'react';
+import { useEffect, useMemo, useState, useCallback, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import {
@@ -15,6 +15,7 @@ import {
   Video,
   X,
   CheckCircle2,
+  Loader2,
 } from 'lucide-react';
 import { LibraryAsset, ServiceSlug } from '@/lib/media-library';
 
@@ -50,6 +51,9 @@ export default function ServiceShowcaseGallery({
   const [visibleCount, setVisibleCount] = useState<number>(PAGE_SIZE);
   const [activeAssetIndex, setActiveAssetIndex] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isBuffering, setIsBuffering] = useState<boolean>(false);
+  const sentinelRef = useRef<HTMLDivElement>(null);
+  const isBufferingRef = useRef<boolean>(false);
 
   // Fetch service media
   useEffect(() => {
@@ -97,7 +101,47 @@ export default function ServiceShowcaseGallery({
     setActiveSubcategory(subId);
     setVisibleCount(PAGE_SIZE);
     setActiveAssetIndex(null);
+    setIsBuffering(false);
+    isBufferingRef.current = false;
   };
+
+  // Seamless Buffering Autoload mechanism via IntersectionObserver
+  const hasMore = visibleCount < filteredAssets.length;
+
+  const loadMore = useCallback(() => {
+    if (isBufferingRef.current || !hasMore) return;
+    isBufferingRef.current = true;
+    setIsBuffering(true);
+
+    // High-end sensory buffering duration (450ms)
+    setTimeout(() => {
+      setVisibleCount((prev) => Math.min(prev + PAGE_SIZE, filteredAssets.length));
+      setIsBuffering(false);
+      isBufferingRef.current = false;
+    }, 450);
+  }, [hasMore, filteredAssets.length]);
+
+  useEffect(() => {
+    const sentinel = sentinelRef.current;
+    if (!sentinel || !hasMore) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const first = entries[0];
+        if (first.isIntersecting) {
+          loadMore();
+        }
+      },
+      {
+        root: null,
+        rootMargin: '350px', // Trigger ahead of scroll position so it streams seamlessly
+        threshold: 0.05,
+      }
+    );
+
+    observer.observe(sentinel);
+    return () => observer.disconnect();
+  }, [hasMore, loadMore]);
 
   // Lightbox navigation
   const activeAsset = activeAssetIndex !== null ? filteredAssets[activeAssetIndex] : null;
@@ -340,7 +384,7 @@ export default function ServiceShowcaseGallery({
                     key={asset.url}
                     type="button"
                     onClick={() => setActiveAssetIndex(index)}
-                    className={`group relative overflow-hidden rounded-2xl border border-white/10 bg-[#121a14] text-left outline-none transition-all duration-300 hover:border-brand-gold/50 focus-visible:ring-2 focus-visible:ring-brand-gold ${
+                    className={`group relative overflow-hidden rounded-2xl border border-white/10 bg-[#121a14] text-left outline-none transition-all duration-300 hover:border-brand-gold/50 focus-visible:ring-2 focus-visible:ring-brand-gold animate-fade-in ${
                       isDoubleSpan
                         ? 'col-span-2 row-span-2 min-h-[320px] md:min-h-[420px]'
                         : 'min-h-[190px] md:min-h-[240px]'
@@ -400,26 +444,58 @@ export default function ServiceShowcaseGallery({
               })}
             </div>
 
-            {/* Load More Button */}
-            {visibleCount < filteredAssets.length && (
-              <div className="mt-12 flex flex-col items-center justify-center gap-3">
-                <button
-                  type="button"
-                  onClick={() => setVisibleCount((prev) => prev + PAGE_SIZE)}
-                  className="inline-flex items-center gap-2.5 rounded-full border border-brand-gold bg-brand-gold px-8 py-4 text-sm font-black text-brand-dark shadow-lg shadow-brand-gold/20 transition-all duration-300 hover:scale-105 hover:bg-white"
-                >
-                  <span>
-                    Ver más proyectos (
-                    {Math.min(PAGE_SIZE, filteredAssets.length - visibleCount)} de{' '}
-                    {filteredAssets.length - visibleCount})
+            {/* Minimalist Autoload Buffering Sentinel & Sensory Indicator */}
+            {hasMore ? (
+              <div
+                ref={sentinelRef}
+                className="mt-14 flex flex-col items-center justify-center gap-3 py-6"
+                aria-live="polite"
+              >
+                {/* High-End Architectural Buffering Pill */}
+                <div className="relative inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-black/60 border border-brand-gold/25 backdrop-blur-xl shadow-2xl transition-all duration-300">
+                  {/* Glowing Pulse Dot */}
+                  <span className="relative flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-gold opacity-75" />
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-brand-gold shadow-[0_0_8px_#d4af37]" />
                   </span>
-                  <ArrowRight className="h-4 w-4" />
-                </button>
-                <p className="text-xs text-gray-400">
-                  Mostrando {visibleAssets.length} de {filteredAssets.length} obras ejecutadas
+
+                  {/* Micro Shimmer Progress Bar */}
+                  <div className="w-24 sm:w-32 h-1 bg-white/10 rounded-full overflow-hidden relative">
+                    <div className="absolute inset-y-0 w-1/2 bg-gradient-to-r from-transparent via-brand-gold to-transparent animate-shimmer" />
+                  </div>
+
+                  <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-gray-300">
+                    {isBuffering ? (
+                      <span className="text-brand-gold flex items-center gap-1.5">
+                        <Loader2 className="w-3 h-3 animate-spin" />
+                        Sincronizando archivo…
+                      </span>
+                    ) : (
+                      <span>Desplazamiento continuo</span>
+                    )}
+                  </span>
+
+                  <span className="text-[10px] font-mono text-gray-500 border-l border-white/10 pl-2">
+                    {visibleAssets.length} / {filteredAssets.length}
+                  </span>
+                </div>
+              </div>
+            ) : filteredAssets.length > 0 ? (
+              /* Minimalist End-of-Stream Architectural Seal */
+              <div className="mt-16 flex flex-col items-center justify-center gap-2 animate-fade-in">
+                <div className="flex items-center gap-3 text-xs font-mono text-gray-500 uppercase tracking-widest">
+                  <span className="h-px w-12 sm:w-24 bg-gradient-to-r from-transparent to-white/15" />
+                  <span className="flex items-center gap-2 text-brand-gold/80 font-bold">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-brand-gold" />
+                    Registro técnico completo · {filteredAssets.length} obras
+                  </span>
+                  <span className="h-px w-12 sm:w-24 bg-gradient-to-l from-transparent to-white/15" />
+                </div>
+                <p className="text-[11px] text-gray-500 font-sans">
+                  Todas las fotografías y levantamientos disponibles para esta categoría han sido cargados.
                 </p>
               </div>
-            )}
+            ) : null}
           </>
         )}
 

@@ -330,51 +330,51 @@ export default function MediaLibraryPage() {
       </section>
 
       {/* Primary Section Tabs */}
-      <div className="flex flex-wrap items-center gap-2 border-b border-white/10 pb-4">
+      <div className="flex flex-wrap items-center gap-2 p-1.5 rounded-2xl bg-black/40 border border-white/10 backdrop-blur-md">
         <button
           onClick={() => {
             setTopTab('library');
             setViewMode('active');
           }}
-          className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold transition-all ${
+          className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
             topTab === 'library'
-              ? 'bg-brand-green text-white shadow-lg shadow-brand-green/20 border border-brand-green/40'
-              : 'bg-white/5 text-gray-200 hover:text-white hover:bg-white/10 border border-white/5'
+              ? 'bg-brand-green text-white shadow-lg shadow-brand-green/30 border border-brand-gold/30'
+              : 'text-gray-300 hover:text-white hover:bg-white/5 border border-transparent'
           }`}
         >
           <FolderOpen className="w-4 h-4 text-brand-gold" />
           <span>Biblioteca</span>
-          <span className="text-[10px] font-black px-1.5 py-0.5 rounded bg-black/30 text-emerald-200">
+          <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-black/40 text-emerald-300 border border-emerald-500/20">
             {totalAssets}
           </span>
         </button>
 
         <button
           onClick={() => setTopTab('heroes')}
-          className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold transition-all ${
+          className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
             topTab === 'heroes'
-              ? 'bg-brand-green text-white shadow-lg shadow-brand-green/20 border border-brand-green/40'
-              : 'bg-white/5 text-gray-200 hover:text-white hover:bg-white/10 border border-white/5'
+              ? 'bg-brand-green text-white shadow-lg shadow-brand-green/30 border border-brand-gold/30'
+              : 'text-gray-300 hover:text-white hover:bg-white/5 border border-transparent'
           }`}
         >
-          <Sliders className="w-4 h-4" />
+          <Sliders className="w-4 h-4 text-brand-gold" />
           <span>Heroes de Servicios</span>
-          <span className="text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded bg-black/40 text-brand-gold">
+          <span className="text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full bg-black/40 text-brand-gold border border-brand-gold/20">
             Sliders
           </span>
         </button>
 
         <button
           onClick={() => setTopTab('before-after')}
-          className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold transition-all ${
+          className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-black transition-all cursor-pointer ${
             topTab === 'before-after'
-              ? 'bg-brand-gold text-brand-dark shadow-lg shadow-brand-gold/20 font-black border border-brand-gold/40'
-              : 'bg-white/5 text-gray-200 hover:text-white hover:bg-white/10 border border-white/5'
+              ? 'bg-gradient-to-r from-brand-gold via-yellow-400 to-brand-gold text-brand-dark shadow-lg shadow-brand-gold/20 border border-brand-gold'
+              : 'text-gray-300 hover:text-white hover:bg-white/5 border border-transparent'
           }`}
         >
-          <Sparkles className="w-4 h-4 text-brand-gold" />
+          <Sparkles className="w-4 h-4 text-brand-dark" />
           <span>Antes y Después</span>
-          <span className="text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded bg-black/40 text-brand-gold">
+          <span className="text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full bg-black/30 text-brand-dark border border-brand-dark/20">
             CMS Visual
           </span>
         </button>
@@ -384,16 +384,16 @@ export default function MediaLibraryPage() {
             setTopTab('archived');
             setViewMode('archived');
           }}
-          className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold transition-all ${
+          className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
             topTab === 'archived'
               ? 'bg-amber-600 text-white shadow-lg border border-amber-500/40'
-              : 'bg-white/5 text-gray-200 hover:text-white hover:bg-white/10 border border-white/5'
+              : 'text-gray-300 hover:text-white hover:bg-white/5 border border-transparent'
           }`}
         >
-          <Archive className="w-4 h-4" />
+          <Archive className="w-4 h-4 text-amber-400" />
           <span>Archivadas</span>
           {totalArchived > 0 && (
-            <span className="text-[10px] font-black px-1.5 py-0.5 rounded bg-black/30 text-amber-200">
+            <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-black/40 text-amber-300 border border-amber-500/20">
               {totalArchived}
             </span>
           )}
@@ -724,15 +724,13 @@ export default function MediaLibraryPage() {
                     setTargetSubcategory(presets[0]?.id || 'general');
                     setCustomSubcategory('');
                   }}
-                  className="w-full px-4 py-2.5 rounded-xl border border-gray-300 bg-white text-gray-900 font-semibold text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-gold"
-                  style={{ color: '#111827', backgroundColor: '#ffffff' }}
+                  className="w-full px-4 py-2.5 rounded-xl border border-white/15 bg-black/50 text-white font-semibold text-sm shadow-inner focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold"
                 >
                   {CATEGORY_OPTIONS.map((cat) => (
                     <option
                       key={cat.slug}
                       value={cat.slug}
-                      className="bg-white text-gray-900 font-medium py-1.5"
-                      style={{ color: '#111827', backgroundColor: '#ffffff' }}
+                      className="bg-[#111c13] text-white py-1.5"
                     >
                       {cat.label}
                     </option>
@@ -751,23 +749,20 @@ export default function MediaLibraryPage() {
                 <select
                   value={targetSubcategory}
                   onChange={(e) => setTargetSubcategory(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl border border-gray-300 bg-white text-gray-900 font-semibold text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-gold"
-                  style={{ color: '#111827', backgroundColor: '#ffffff' }}
+                  className="w-full px-4 py-2.5 rounded-xl border border-white/15 bg-black/50 text-white font-semibold text-sm shadow-inner focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold"
                 >
                   {(SUBCAT_OPTIONS[targetCategory] || []).map((sub) => (
                     <option
                       key={sub.id}
                       value={sub.id}
-                      className="bg-white text-gray-900 font-medium py-1.5"
-                      style={{ color: '#111827', backgroundColor: '#ffffff' }}
+                      className="bg-[#111c13] text-white py-1.5"
                     >
                       {sub.label}
                     </option>
                   ))}
                   <option
                     value="__custom__"
-                    className="bg-white text-gray-900 font-medium py-1.5"
-                    style={{ color: '#111827', backgroundColor: '#ffffff' }}
+                    className="bg-[#111c13] text-brand-gold py-1.5 font-bold"
                   >
                     + Otra subcategoría (personalizada)...
                   </option>
@@ -781,8 +776,7 @@ export default function MediaLibraryPage() {
                       onChange={(e) => setCustomSubcategory(e.target.value)}
                       placeholder="Escriba el nombre de la subcategoría"
                       required
-                      className="w-full px-4 py-2.5 rounded-xl border border-gray-300 bg-white text-gray-900 placeholder:text-gray-400 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-gold"
-                      style={{ color: '#111827', backgroundColor: '#ffffff' }}
+                      className="w-full px-4 py-2.5 rounded-xl border border-white/15 bg-black/50 text-white placeholder:text-gray-500 text-sm shadow-inner focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold"
                     />
                   </div>
                 )}
@@ -801,8 +795,7 @@ export default function MediaLibraryPage() {
                   value={targetTitle}
                   onChange={(e) => setTargetTitle(e.target.value)}
                   placeholder="Ej: Pistas de Pádel Panorámicas Club Campestre"
-                  className="w-full px-4 py-2.5 rounded-xl border border-gray-300 bg-white text-gray-900 placeholder:text-gray-400 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-gold"
-                  style={{ color: '#111827', backgroundColor: '#ffffff' }}
+                  className="w-full px-4 py-2.5 rounded-xl border border-white/15 bg-black/50 text-white placeholder:text-gray-500 text-sm shadow-inner focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold"
                 />
               </div>
 
@@ -816,8 +809,7 @@ export default function MediaLibraryPage() {
                   value={targetBadge}
                   onChange={(e) => setTargetBadge(e.target.value)}
                   placeholder="Ej: Pádel Panorámico / Césped FIFA"
-                  className="w-full px-4 py-2.5 rounded-xl border border-gray-300 bg-white text-gray-900 placeholder:text-gray-400 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-gold"
-                  style={{ color: '#111827', backgroundColor: '#ffffff' }}
+                  className="w-full px-4 py-2.5 rounded-xl border border-white/15 bg-black/50 text-white placeholder:text-gray-500 text-sm shadow-inner focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold"
                 />
               </div>
 
