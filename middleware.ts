@@ -14,50 +14,72 @@ const isAdminRoute = createRouteMatcher([
 
 export default clerkMiddleware(
   async (auth, req) => {
-    const { pathname } = req.nextUrl;
+    try {
+      const { pathname } = req.nextUrl;
 
-    // Protect admin routes with RBAC
-    if (isAdminRoute(req)) {
-    const { userId, sessionClaims } = await auth();
+      // Protect admin routes with RBAC
+      if (isAdminRoute(req)) {
+        let userId: string | null = null;
+        let sessionClaims: Record<string, unknown> = {};
 
-    // 1. Not signed in -> redirect or 401
-    if (!userId) {
-      if (pathname.startsWith('/api/admin')) {
-        return NextResponse.json(
-          { error: 'Unauthorized', message: 'Se requiere inicio de sesión para acceder a la API de administración.' },
-          { status: 401 }
+        try {
+          const authData = await auth();
+          userId = authData?.userId ?? null;
+          sessionClaims = (authData?.sessionClaims ?? {}) as Record<string, unknown>;
+        } catch (authError) {
+          console.error('[Middleware] Clerk auth error:', authError);
+          if (pathname.startsWith('/api/admin')) {
+            return NextResponse.json(
+              { error: 'Unauthorized', message: 'Error de verificación de sesión.' },
+              { status: 401 }
+            );
+          }
+          const signInUrl = new URL('/sign-in', req.url);
+          signInUrl.searchParams.set('redirect_url', pathname);
+          return NextResponse.redirect(signInUrl);
+        }
+
+        // 1. Not signed in -> redirect or 401
+        if (!userId) {
+          if (pathname.startsWith('/api/admin')) {
+            return NextResponse.json(
+              { error: 'Unauthorized', message: 'Se requiere inicio de sesión para acceder a la API de administración.' },
+              { status: 401 }
+            );
+          }
+          const signInUrl = new URL('/sign-in', req.url);
+          signInUrl.searchParams.set('redirect_url', pathname);
+          return NextResponse.redirect(signInUrl);
+        }
+
+        // 2. Check Admin Role or Super Admin email
+        const claims = sessionClaims;
+        const metadata = ((claims.metadata || claims.publicMetadata) ?? {}) as Record<string, unknown>;
+        const role = typeof metadata.role === 'string' ? metadata.role : '';
+
+        const email = (
+          (typeof claims.email === 'string' ? claims.email : '') ||
+          (typeof claims.primary_email_address === 'string' ? claims.primary_email_address : '') ||
+          (Array.isArray(claims.email_addresses) && typeof claims.email_addresses[0] === 'string' ? claims.email_addresses[0] : '')
+        ).toLowerCase();
+
+        const isSuperAdmin = Boolean(
+          (email && SUPER_ADMIN_EMAILS.includes(email)) ||
+          role.toUpperCase() === 'SUPER_ADMIN'
         );
-      }
-      const signInUrl = new URL('/sign-in', req.url);
-      signInUrl.searchParams.set('redirect_url', pathname);
-      return NextResponse.redirect(signInUrl);
-    }
+        const isAdmin = isPresentationMode || isSuperAdmin || role.toUpperCase() === 'ADMIN';
 
-    // 2. Check Admin Role or Super Admin email
-    const claims = (sessionClaims ?? {}) as Record<string, unknown>;
-    const metadata = ((claims.metadata || claims.publicMetadata) ?? {}) as Record<string, unknown>;
-    const role = typeof metadata.role === 'string' ? metadata.role : '';
+        // 3. Unauthorized role -> 403 Forbidden
+        if (!isAdmin) {
+          if (pathname.startsWith('/api/admin')) {
+            return NextResponse.json(
+              { error: 'Forbidden', message: 'No tiene permisos de administrador para ejecutar esta acción.' },
+              { status: 403 }
+            );
+          }
 
-    const email = (
-      (typeof claims.email === 'string' ? claims.email : '') ||
-      (typeof claims.primary_email_address === 'string' ? claims.primary_email_address : '') ||
-      (Array.isArray(claims.email_addresses) && typeof claims.email_addresses[0] === 'string' ? claims.email_addresses[0] : '')
-    ).toLowerCase();
-
-    const isSuperAdmin = Boolean(email && SUPER_ADMIN_EMAILS.includes(email));
-    const isAdmin = isPresentationMode || isSuperAdmin || role.toUpperCase() === 'ADMIN' || role.toUpperCase() === 'SUPER_ADMIN';
-
-    // 3. Unauthorized role -> 403 Forbidden
-    if (!isAdmin) {
-      if (pathname.startsWith('/api/admin')) {
-        return NextResponse.json(
-          { error: 'Forbidden', message: 'No tiene permisos de administrador para ejecutar esta acción.' },
-          { status: 403 }
-        );
-      }
-
-      // Return high-end branded 403 Forbidden screen
-      return new NextResponse(
+          // Return high-end branded 403 Forbidden screen
+          return new NextResponse(
         `<!DOCTYPE html>
         <html lang="es">
           <head>
@@ -142,9 +164,11 @@ export default clerkMiddleware(
       );
     }
   }
-
-  // Allow request to continue
   return NextResponse.next();
+} catch (globalErr) {
+  console.error('[Middleware] Global error:', globalErr);
+  return NextResponse.next();
+}
 },
 {
   publishableKey:

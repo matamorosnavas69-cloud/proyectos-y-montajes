@@ -8,10 +8,12 @@ export function useRBAC() {
   const { isLoaded, isSignedIn, user } = useUser();
 
   const email = user?.primaryEmailAddress?.emailAddress?.toLowerCase().trim();
+  const allEmails = (user?.emailAddresses || []).map((e) => e.emailAddress.toLowerCase().trim());
   const rawRole = (user?.publicMetadata?.role as string) || 'USER';
 
   const isSuperAdmin = Boolean(
     (email && SUPER_ADMIN_EMAILS.includes(email)) ||
+      allEmails.some((e) => SUPER_ADMIN_EMAILS.includes(e)) ||
       rawRole.toUpperCase() === 'SUPER_ADMIN'
   );
 
