@@ -1,4 +1,5 @@
 import { auth, currentUser } from '@clerk/nextjs/server';
+import { cookies } from 'next/headers';
 import { SUPER_ADMIN_EMAILS, UserRole } from './constants';
 import { isPresentationMode } from './presentation';
 export { SUPER_ADMIN_EMAILS, type UserRole };
@@ -23,7 +24,71 @@ export function checkIsAdmin(role?: string | null, email?: string | null): boole
  * Resolves current user authentication and role state on server
  */
 export async function getCurrentUserRole() {
-  const { userId, sessionClaims } = await auth();
+  // 1. Team Preview & Presentation Mode Check
+  let isTeamPreview = isPresentationMode;
+  try {
+    const cookieStore = await cookies();
+    if (cookieStore.get('pm_team_preview')?.value === 'true') {
+      isTeamPreview = true;
+    }
+  } catch {
+    // cookies() unavailable in certain static passes
+  }
+
+  if (isTeamPreview) {
+    return {
+      userId: 'preview_super_admin',
+      role: 'SUPER_ADMIN' as UserRole,
+      isAdmin: true,
+      isSuperAdmin: true,
+      email: 'sebastian.garciacasanova@gmail.com',
+    };
+  }
+
+  // 2. Resolve Clerk Auth safely
+  let userId: string | null = null;
+  let sessionClaims: Record<string, unknown> = {};
+
+  try {
+    const authData = await auth();
+    userId = authData?.userId ?? null;
+    sessionClaims = (authData?.sessionClaims ?? {}) as Record<string, unknown>;
+  } catch (err) {
+    console.warn('[RBAC] auth() error in API handler:', err);
+  }
+
+  let email: string | undefined;
+  let role: string | undefined;
+
+  if (userId) {
+    const claims = sessionClaims;
+    const metadata = ((claims.metadata || claims.publicMetadata) ?? {}) as Record<string, unknown>;
+    role = typeof metadata.role === 'string' ? metadata.role : undefined;
+
+    email =
+      typeof claims.email === 'string'
+        ? claims.email
+        : typeof claims.primary_email_address === 'string'
+        ? claims.primary_email_address
+        : Array.isArray(claims.email_addresses) && typeof claims.email_addresses[0] === 'string'
+        ? claims.email_addresses[0]
+        : undefined;
+  }
+
+  // Fallback to full currentUser if claims are missing email or role, or if auth() had dev-browser handshake lag
+  try {
+    const user = await currentUser();
+    if (user) {
+      userId = userId || user.id;
+      const primaryEmail =
+        user.emailAddresses?.find((e) => e.id === user.primaryEmailAddressId)?.emailAddress ||
+        user.emailAddresses?.[0]?.emailAddress;
+      email = email || primaryEmail;
+      role = (user.publicMetadata?.role as string) || role;
+    }
+  } catch (err) {
+    console.warn('[RBAC] Could not fetch full currentUser fallback:', err);
+  }
 
   if (!userId) {
     return {
@@ -33,33 +98,6 @@ export async function getCurrentUserRole() {
       isSuperAdmin: false,
       email: null,
     };
-  }
-
-  // Extract from claims first
-  const claims = (sessionClaims ?? {}) as Record<string, unknown>;
-  const metadata = ((claims.metadata || claims.publicMetadata) ?? {}) as Record<string, unknown>;
-  let role = typeof metadata.role === 'string' ? metadata.role : undefined;
-
-  let email: string | undefined =
-    typeof claims.email === 'string'
-      ? claims.email
-      : typeof claims.primary_email_address === 'string'
-      ? claims.primary_email_address
-      : Array.isArray(claims.email_addresses) && typeof claims.email_addresses[0] === 'string'
-      ? claims.email_addresses[0]
-      : undefined;
-
-  // Fallback to full currentUser if claims are missing email or role
-  if (!email || !role) {
-    try {
-      const user = await currentUser();
-      if (user) {
-        email = user.emailAddresses?.[0]?.emailAddress;
-        role = (user.publicMetadata?.role as string) || role;
-      }
-    } catch (err) {
-      console.warn('[RBAC] Could not fetch full currentUser fallback:', err);
-    }
   }
 
   const isSuperAdmin = Boolean(
