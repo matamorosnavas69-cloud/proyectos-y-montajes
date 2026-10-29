@@ -1,6 +1,7 @@
 import { createClient } from './client';
 
-export const DEFAULT_BUCKET = process.env.NEXT_PUBLIC_SUPABASE_BUCKET || 'proyectos';
+export const DEFAULT_BUCKET =
+  process.env.NEXT_PUBLIC_SUPABASE_BUCKET || 'projectos y montajes librarry';
 
 export interface UploadProgress {
   file: File;

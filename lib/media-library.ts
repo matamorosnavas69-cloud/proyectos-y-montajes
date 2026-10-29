@@ -464,73 +464,17 @@ export async function listServiceAssets(serviceSlug: ServiceSlug) {
   const service = SERVICES_CONFIG[serviceSlug];
   if (!service) throw new Error(`Servicio desconocido: ${serviceSlug}`);
 
-  const archived = await getArchivedFilenames();
-  let collected: LibraryAsset[] = [];
-
-  if (serviceSlug === 'canchas') {
-    const canchasAssets = await readDirectoryAssets(
-      getCategoryDirectory('canchas'),
-      'canchas',
-      (fname) => toPublicUrl('canchas', fname),
-      'canchas',
-      false,
-      archived
-    );
-    const golfAssets = await readDirectoryAssets(
-      getCategoryDirectory('golf'),
-      'golf',
-      (fname) => toPublicUrl('golf', fname),
-      'canchas',
-      false,
-      archived
-    );
-    const padelAssets = await readDirectoryAssets(
-      path.join(process.cwd(), 'public', 'images', 'padel'),
-      'canchas',
-      (fname) => `/images/padel/${encodeURIComponent(fname)}`,
-      'canchas',
-      false,
-      archived
-    );
-    const futbolAssets = await readDirectoryAssets(
-      path.join(process.cwd(), 'public', 'images', 'futbol'),
-      'canchas',
-      (fname) => `/images/futbol/${encodeURIComponent(fname)}`,
-      'canchas',
-      false,
-      archived
-    );
-
-    collected = [...padelAssets, ...futbolAssets, ...canchasAssets, ...golfAssets];
-  } else if (serviceSlug === 'parques') {
-    const parquesAssets = await readDirectoryAssets(
-      getCategoryDirectory('parques'),
-      'parques',
-      (fname) => toPublicUrl('parques', fname),
-      'parques',
-      false,
-      archived
-    );
-    collected = parquesAssets;
-  } else if (serviceSlug === 'paisajismo') {
-    const residencialAssets = await readDirectoryAssets(
-      getCategoryDirectory('residencial'),
-      'residencial',
-      (fname) => toPublicUrl('residencial', fname),
-      'paisajismo',
-      false,
-      archived
-    );
-    const piscinaAssets = await readDirectoryAssets(
-      getCategoryDirectory('piscina'),
-      'piscina',
-      (fname) => toPublicUrl('piscina', fname),
-      'paisajismo',
-      false,
-      archived
-    );
-    collected = [...residencialAssets, ...piscinaAssets];
-  }
+  const allAssets = await getAllLibraryAssets(false);
+  const collected = allAssets.filter((asset) => {
+    if (serviceSlug === 'canchas') {
+      return asset.category === 'canchas' || asset.category === 'golf';
+    } else if (serviceSlug === 'parques') {
+      return asset.category === 'parques';
+    } else if (serviceSlug === 'paisajismo') {
+      return asset.category === 'residencial' || asset.category === 'piscina';
+    }
+    return false;
+  });
 
   // De-duplicate by URL or filename
   const seen = new Set<string>();
