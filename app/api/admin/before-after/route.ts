@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { uploadProjectImage } from '@/lib/supabase/storage';
 import { AuthError, requireAdmin } from '@/lib/auth/rbac';
+import { FALLBACK_BEFORE_AFTER_PROJECTS } from '@/app/api/before-after/route';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -16,9 +17,29 @@ function errorResponse(error: unknown) {
 export async function GET() {
   try {
     await requireAdmin();
-    const projects = await prisma.beforeAfterProject.findMany({
-      orderBy: { sortOrder: 'asc' },
-    });
+    let projects: unknown[] = [];
+    try {
+      projects = await prisma.beforeAfterProject.findMany({
+        orderBy: { sortOrder: 'asc' },
+      });
+    } catch (dbErr) {
+      console.warn('[BeforeAfter] Database unavailable, falling back to static projects:', dbErr);
+      projects = FALLBACK_BEFORE_AFTER_PROJECTS.map((p, idx) => ({
+        id: p.id,
+        title: p.title,
+        location: p.location,
+        category: p.category,
+        categoryColor: p.categoryColor,
+        beforeImage: p.beforeImage,
+        afterImage: p.afterImage,
+        area: p.stats[0]?.value || '850 m²',
+        duration: p.stats[1]?.value || '45 días',
+        sortOrder: idx,
+        isActive: true,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      }));
+    }
     return NextResponse.json({ projects });
   } catch (error) {
     return errorResponse(error);

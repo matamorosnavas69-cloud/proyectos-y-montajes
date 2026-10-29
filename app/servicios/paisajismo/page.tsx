@@ -204,7 +204,7 @@ export default async function PaisajismoPage() {
             <div className="grid grid-cols-2 gap-4">
               <div className="relative h-64 w-full rounded-xl overflow-hidden shadow-lg border border-gray-100">
                 <Image
-                  src="/images/drive%20organice/residencial/IMG_1271.PNG"
+                  src="https://ygnvcmwoatlaeulrfmdi.supabase.co/storage/v1/object/public/projectos%20y%20montajes%20librarry/gallery/residencial/IMG_1271.PNG"
                   alt="Terraza residencial con grama sintética"
                   fill
                   sizes="(max-width: 768px) 50vw, 25vw"
@@ -213,7 +213,7 @@ export default async function PaisajismoPage() {
               </div>
               <div className="relative h-64 w-full rounded-xl overflow-hidden shadow-lg mt-8 border border-gray-100">
                 <Image
-                  src="/images/drive%20organice/piscina/IMG_8075.JPG"
+                  src="https://ygnvcmwoatlaeulrfmdi.supabase.co/storage/v1/object/public/projectos%20y%20montajes%20librarry/gallery/piscina/IMG_8075.JPG"
                   alt="Zona de piscina y deck con césped decorativo"
                   fill
                   sizes="(max-width: 768px) 50vw, 25vw"

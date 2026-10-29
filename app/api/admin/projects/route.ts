@@ -33,10 +33,15 @@ export async function GET(req: NextRequest) {
       ];
     }
 
-    const projects = await prisma.project.findMany({
-      where,
-      orderBy: { createdAt: 'desc' },
-    });
+    let projects: unknown[] = [];
+    try {
+      projects = await prisma.project.findMany({
+        where,
+        orderBy: { createdAt: 'desc' },
+      });
+    } catch (dbErr) {
+      console.warn('[Projects] Database unavailable, returning empty list:', dbErr);
+    }
 
     return NextResponse.json({ success: true, projects });
   } catch (error: unknown) {

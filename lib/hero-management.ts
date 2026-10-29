@@ -199,32 +199,61 @@ export async function getPublishedHeroSlides(serviceSlug: ServiceKey): Promise<H
  * Admin accessor: retrieves all slides (active + inactive) for editor
  */
 export async function getAdminHeroSlides(serviceSlug: ServiceKey): Promise<ManagedHeroSlide[]> {
-  await ensureDefaultSlidesSeeded(serviceSlug);
+  try {
+    await ensureDefaultSlidesSeeded(serviceSlug);
 
-  const slides = await prisma.serviceHeroSlide.findMany({
-    where: { serviceSlug, section: 'hero' },
-    orderBy: { sortOrder: 'asc' },
-  });
+    const slides = await prisma.serviceHeroSlide.findMany({
+      where: { serviceSlug, section: 'hero' },
+      orderBy: { sortOrder: 'asc' },
+    });
 
-  return slides.map((s) => ({
-    id: s.id,
-    serviceSlug: s.serviceSlug,
-    section: s.section,
-    assetId: s.assetId,
-    mediaSource: (s.mediaSource as 'LOCAL' | 'SUPABASE') || 'LOCAL',
+    if (slides.length > 0) {
+      return slides.map((s) => ({
+        id: s.id,
+        serviceSlug: s.serviceSlug,
+        section: s.section,
+        assetId: s.assetId,
+        mediaSource: (s.mediaSource as 'LOCAL' | 'SUPABASE') || 'LOCAL',
+        src: s.src,
+        alt: s.alt,
+        title: s.title,
+        location: s.location,
+        tag: s.tag,
+        focalX: s.focalX,
+        focalY: s.focalY,
+        sortOrder: s.sortOrder,
+        isActive: s.isActive,
+        version: s.version,
+        updatedBy: s.updatedBy,
+        createdAt: s.createdAt.toISOString(),
+        updatedAt: s.updatedAt.toISOString(),
+      }));
+    }
+  } catch (err) {
+    console.warn(`[HeroManagement] Error loading slides from DB for ${serviceSlug}, returning defaults:`, err);
+  }
+
+  // Graceful fallback from DEFAULT_HERO_SLIDES
+  const defaults = DEFAULT_HERO_SLIDES[serviceSlug] || [];
+  return defaults.map((s, idx) => ({
+    id: `fallback-${serviceSlug}-${idx}`,
+    serviceSlug,
+    section: 'hero',
+    assetId: null,
+    mediaSource: s.src.startsWith('http') ? 'SUPABASE' : 'LOCAL',
     src: s.src,
     alt: s.alt,
     title: s.title,
-    location: s.location,
-    tag: s.tag,
-    focalX: s.focalX,
-    focalY: s.focalY,
-    sortOrder: s.sortOrder,
-    isActive: s.isActive,
-    version: s.version,
-    updatedBy: s.updatedBy,
-    createdAt: s.createdAt.toISOString(),
-    updatedAt: s.updatedAt.toISOString(),
+    location: s.location || null,
+    tag: s.tag || null,
+    focalX: s.focalX ?? 50,
+    focalY: s.focalY ?? 50,
+    sortOrder: idx,
+    isActive: true,
+    version: 1,
+    updatedBy: 'SYSTEM_FALLBACK',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
   }));
 }
 
