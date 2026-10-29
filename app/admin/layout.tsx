@@ -228,15 +228,16 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
               <ExternalLink className="w-3.5 h-3.5 text-gray-500" />
             </Link>
 
-            <Link
+            <a
               href="/Ficha_Tecnica_Proyectos_y_Montajes.pdf"
               target="_blank"
+              rel="noopener noreferrer"
               className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold text-gray-400 hover:text-white hover:bg-white/5 transition-all"
             >
               <FileCheck className="w-4 h-4 text-brand-gold" />
               <span className="flex-1">Ficha Técnica Oficial</span>
               <ExternalLink className="w-3.5 h-3.5 text-gray-500" />
-            </Link>
+            </a>
           </nav>
 
           {/* User Profile Footer */}
