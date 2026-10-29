@@ -68,8 +68,14 @@ export default function SignInPage() {
         </ClerkLoaded>
       </div>
 
-      {/* Return link */}
-      <div className="mt-8 text-center relative z-10">
+      {/* Team Preview / Return link */}
+      <div className="mt-8 text-center relative z-10 flex flex-col items-center gap-3">
+        <Link
+          href="/admin?preview=pm2026"
+          className="text-xs px-3.5 py-1.5 rounded-full bg-brand-gold/15 border border-brand-gold/30 text-brand-gold hover:bg-brand-gold/25 font-semibold transition-all"
+        >
+          Presentación de equipo (Vista previa directa) &rarr;
+        </Link>
         <Link
           href="/"
           className="text-xs text-gray-400 hover:text-brand-gold transition-colors"
