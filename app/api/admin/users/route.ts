@@ -1,6 +1,6 @@
-import { clerkClient } from '@clerk/nextjs/server';
 import { NextRequest, NextResponse } from 'next/server';
 import { AuthError, requireUserManager, SUPER_ADMIN_EMAILS } from '@/lib/auth/rbac';
+import { getClerkBackendClient } from '@/lib/auth/clerk-config';
 
 const ROLES = ['SUPER_ADMIN', 'ADMIN', 'FINANCE', 'COMMERCIAL', 'PROJECT_MANAGER', 'CLIENT', 'USER'] as const;
 type ManagedRole = (typeof ROLES)[number];
@@ -19,23 +19,51 @@ function serializeUser(user: { id: string; firstName?: string | null; lastName?:
 }
 
 export async function GET() {
-  try { const client = await clerkClient(); await requireUserManager(); const response = await client.users.getUserList({ limit: 100, orderBy: '-created_at' }); return NextResponse.json({ users: response.data.map(serializeUser), totalCount: response.totalCount, roles: ROLES }); }
-  catch (error) { const authError = error as AuthError; return NextResponse.json({ error: error instanceof Error ? error.message : 'No fue posible consultar los usuarios.' }, { status: authError.status || 500 }); }
+  try {
+    await requireUserManager();
+    const client = getClerkBackendClient();
+    const response = await client.users.getUserList({ limit: 100, orderBy: '-created_at' });
+    return NextResponse.json({ users: response.data.map(serializeUser), totalCount: response.totalCount, roles: ROLES });
+  } catch (error) {
+    console.error('[API /api/admin/users] GET error:', error);
+    const authError = error as AuthError;
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : 'No fue posible consultar los usuarios.' },
+      { status: authError.status || 500 }
+    );
+  }
 }
 
 export async function PATCH(request: NextRequest) {
   try {
     const actor = await requireUserManager();
     const { userId, role } = await request.json();
-    const normalizedRole = typeof role === 'string' ? role.toUpperCase() as ManagedRole : null;
-    if (typeof userId !== 'string' || !normalizedRole || !ROLES.includes(normalizedRole)) return NextResponse.json({ error: 'Bad Request', message: 'Usuario o rol no válido.' }, { status: 400 });
-    const client = await clerkClient();
+    const normalizedRole = typeof role === 'string' ? (role.toUpperCase() as ManagedRole) : null;
+    if (typeof userId !== 'string' || !normalizedRole || !ROLES.includes(normalizedRole)) {
+      return NextResponse.json({ error: 'Bad Request', message: 'Usuario o rol no válido.' }, { status: 400 });
+    }
+    const client = getClerkBackendClient();
     const target = await client.users.getUser(userId);
     const currentRole = roleFor(target);
-    if (target.id === actor.userId && !isAdminRole(normalizedRole)) return NextResponse.json({ error: 'Conflict', message: 'No puede retirar su propio acceso administrativo desde esta sesión.' }, { status: 409 });
-    if (isAdminRole(currentRole) && !isAdminRole(normalizedRole)) { const allUsers = await client.users.getUserList({ limit: 100 }); if (allUsers.data.filter((user) => isAdminRole(roleFor(user))).length <= 1) return NextResponse.json({ error: 'Conflict', message: 'Debe conservar al menos un administrador operativo.' }, { status: 409 }); }
+    if (target.id === actor.userId && !isAdminRole(normalizedRole)) {
+      return NextResponse.json({ error: 'Conflict', message: 'No puede retirar su propio acceso administrativo desde esta sesión.' }, { status: 409 });
+    }
+    if (isAdminRole(currentRole) && !isAdminRole(normalizedRole)) {
+      const allUsers = await client.users.getUserList({ limit: 100 });
+      if (allUsers.data.filter((user) => isAdminRole(roleFor(user))).length <= 1) {
+        return NextResponse.json({ error: 'Conflict', message: 'Debe conservar al menos un administrador operativo.' }, { status: 409 });
+      }
+    }
     const metadata = (target.publicMetadata ?? {}) as Record<string, unknown>;
     const updated = await client.users.updateUserMetadata(userId, { publicMetadata: { ...metadata, role: normalizedRole } });
     return NextResponse.json({ user: serializeUser(updated), message: 'Rol actualizado correctamente.' });
-  } catch (error) { const authError = error as AuthError; return NextResponse.json({ error: error instanceof Error ? error.message : 'No fue posible actualizar el rol.' }, { status: authError.status || 500 }); }
+  } catch (error) {
+    console.error('[API /api/admin/users] PATCH error:', error);
+    const authError = error as AuthError;
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : 'No fue posible actualizar el rol.' },
+      { status: authError.status || 500 }
+    );
+  }
 }
+

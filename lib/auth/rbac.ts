@@ -1,3 +1,4 @@
+import './clerk-config';
 import { auth, currentUser } from '@clerk/nextjs/server';
 import { cookies } from 'next/headers';
 import { SUPER_ADMIN_EMAILS, UserRole } from './constants';

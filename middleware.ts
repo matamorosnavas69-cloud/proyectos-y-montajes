@@ -1,6 +1,7 @@
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
 import { NextResponse } from 'next/server';
 import { isPresentationMode } from './lib/auth/presentation';
+import { getCleanClerkPublishableKey, getCleanClerkSecretKey } from './lib/auth/clerk-config';
 
 const SUPER_ADMIN_EMAILS = [
   'sebastian.garciacasanova@gmail.com',
@@ -187,12 +188,8 @@ export default clerkMiddleware(
 }
 },
 {
-  publishableKey:
-    process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY ||
-    'pk_test_ZGVlcC1jb2QtNDkuY2xlcmsuYWNjb3VudHMuZGV2JA',
-  secretKey:
-    process.env.CLERK_SECRET_KEY ||
-    'sk_test_pb4njpJND98u1kiCC6VphnbrZRjGNG8VsHo7vCRXyl',
+  publishableKey: getCleanClerkPublishableKey(),
+  secretKey: getCleanClerkSecretKey(),
 });
 
 export const config = {
