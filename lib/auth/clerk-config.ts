@@ -9,7 +9,7 @@
 import { createClerkClient } from '@clerk/backend';
 
 export const FALLBACK_CLERK_PUBLISHABLE_KEY =
-  'pk_test_ZGVlcC1jb2QtNDkuY2xlcmsuYWNjb3VudHMuZGV2JA';
+  'pk_test_ZnVuLWhhbXN0ZXItNjgyNi5jbGVyay5hY2NvdW50cy5kZXYk';
 
 export const FALLBACK_CLERK_SECRET_KEY =
   'sk_test_pb4njpJND98u1kiCC6VphnbrZRjGNG8VsHo7vCRXyl';

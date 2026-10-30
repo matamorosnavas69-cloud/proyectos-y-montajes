@@ -34,6 +34,19 @@ export default function SignInPage() {
 
       {/* Clerk Card Container */}
       <div className="relative z-10 w-full max-w-md flex flex-col items-center justify-center">
+        {/* Intuitive Switcher Tabs */}
+        <div className="flex w-full mb-4 p-1 bg-black/40 border border-white/10 rounded-xl backdrop-blur-md">
+          <div className="flex-1 py-2.5 text-center text-xs font-black uppercase tracking-wider text-brand-dark bg-brand-gold rounded-lg shadow-sm">
+            Iniciar Sesión
+          </div>
+          <Link
+            href="/sign-up"
+            className="flex-1 py-2.5 text-center text-xs font-bold uppercase tracking-wider text-gray-400 hover:text-white rounded-lg transition-colors"
+          >
+            Crear Cuenta
+          </Link>
+        </div>
+
         <ClerkLoading>
           <div className="w-full bg-[#131d16] border border-brand-green/30 shadow-2xl rounded-2xl p-8 flex flex-col items-center justify-center text-center">
             <div className="w-10 h-10 border-4 border-brand-green/30 border-t-brand-gold rounded-full animate-spin mb-4" />
@@ -66,6 +79,19 @@ export default function SignInPage() {
             fallbackRedirectUrl="/admin"
           />
         </ClerkLoaded>
+
+        {/* Clear Prompt for Users Without Account */}
+        <div className="w-full mt-4 p-4 rounded-2xl bg-[#131d16]/90 border border-brand-gold/25 text-center shadow-lg">
+          <p className="text-xs text-gray-300 font-medium leading-relaxed">
+            ¿Es su primera vez y aún no tiene usuario registrado?
+          </p>
+          <Link
+            href="/sign-up"
+            className="mt-2.5 inline-flex items-center justify-center gap-1.5 w-full py-2.5 px-4 rounded-xl bg-brand-gold/15 hover:bg-brand-gold/25 text-brand-gold border border-brand-gold/30 text-xs font-black uppercase tracking-wider transition-all"
+          >
+            Registrar nueva cuenta &rarr;
+          </Link>
+        </div>
       </div>
 
       {/* Team Preview / Return link */}

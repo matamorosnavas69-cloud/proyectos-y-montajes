@@ -33,7 +33,20 @@ export default function SignUpPage() {
       </div>
 
       {/* Clerk Card Container */}
-      <div className="relative z-10 w-full max-w-md flex justify-center">
+      <div className="relative z-10 w-full max-w-md flex flex-col items-center justify-center">
+        {/* Intuitive Switcher Tabs */}
+        <div className="flex w-full mb-4 p-1 bg-black/40 border border-white/10 rounded-xl backdrop-blur-md">
+          <Link
+            href="/sign-in"
+            className="flex-1 py-2.5 text-center text-xs font-bold uppercase tracking-wider text-gray-400 hover:text-white rounded-lg transition-colors"
+          >
+            Iniciar Sesión
+          </Link>
+          <div className="flex-1 py-2.5 text-center text-xs font-black uppercase tracking-wider text-brand-dark bg-brand-gold rounded-lg shadow-sm">
+            Crear Cuenta
+          </div>
+        </div>
+
         <SignUp
           appearance={{
             elements: {
@@ -56,6 +69,19 @@ export default function SignUpPage() {
           signInUrl="/sign-in"
           fallbackRedirectUrl="/admin"
         />
+
+        {/* Clear Prompt for Users Who Already Have an Account */}
+        <div className="w-full mt-4 p-4 rounded-2xl bg-[#131d16]/90 border border-brand-gold/25 text-center shadow-lg">
+          <p className="text-xs text-gray-300 font-medium leading-relaxed">
+            ¿Ya tiene una cuenta de usuario creada?
+          </p>
+          <Link
+            href="/sign-in"
+            className="mt-2.5 inline-flex items-center justify-center gap-1.5 w-full py-2.5 px-4 rounded-xl bg-brand-gold/15 hover:bg-brand-gold/25 text-brand-gold border border-brand-gold/30 text-xs font-black uppercase tracking-wider transition-all"
+          >
+            Iniciar sesión aquí &rarr;
+          </Link>
+        </div>
       </div>
 
       {/* Return link */}
