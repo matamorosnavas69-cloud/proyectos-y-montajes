@@ -1,20 +1,60 @@
 import { HeroSlide } from '@/app/components/ServiceHeroSlider';
 
-export type ServiceKey = 'canchas' | 'parques' | 'paisajismo';
+export type ServiceKey = 'home' | 'canchas' | 'parques' | 'paisajismo';
 
 export const SERVICE_PATH_MAP: Record<ServiceKey, string> = {
+  home: '/',
   canchas: '/servicios/canchas-deportivas',
   parques: '/servicios/parques-infantiles',
   paisajismo: '/servicios/paisajismo',
 };
 
 export const SERVICE_LABELS: Record<ServiceKey, string> = {
+  home: 'Página Principal (Home)',
   canchas: 'Canchas Deportivas',
   parques: 'Parques Infantiles',
   paisajismo: 'Paisajismo y Terrazas',
 };
 
 export const DEFAULT_HERO_SLIDES: Record<ServiceKey, HeroSlide[]> = {
+  home: [
+    {
+      src: '/images/padel/IMG_3346.PNG',
+      alt: 'Pistas profesionales de pádel panorámico construidas por Proyectos y Montajes en Colombia',
+      title: 'Club Pádel Smash de Competición',
+      location: 'Sede Deportiva Cubierta',
+      tag: 'Pádel Panorámico WPT',
+      focalX: 50,
+      focalY: 50,
+    },
+    {
+      src: '/images/futbol/IMG_7552.JPG',
+      alt: 'Cancha de fútbol sintética profesional de 11 jugadores en Colombia',
+      title: 'Campo de Fútbol Sintético Profesional FIFA Quality',
+      location: 'Santander, Colombia',
+      tag: 'Fútbol Césped Pro',
+      focalX: 50,
+      focalY: 50,
+    },
+    {
+      src: '/images/drive organice/parques/15d81928-0e73-46bd-b651-897cd955e52b.jpg',
+      alt: 'Parque infantil modular multitorre certificado en conjunto residencial',
+      title: 'Parque Infantil Modular Multitorre',
+      location: 'Conjunto Residencial Campestre',
+      tag: 'Módulos Lúdicos',
+      focalX: 50,
+      focalY: 50,
+    },
+    {
+      src: '/images/drive organice/residencial/IMG_4638.JPG',
+      alt: 'Terraza zen con grama sintética premium y paisajismo arquitectónico',
+      title: 'Terraza Zen y Jardín de Alto Confort',
+      location: 'Residencia Campestre',
+      tag: 'Paisajismo Residencial',
+      focalX: 50,
+      focalY: 50,
+    },
+  ],
   canchas: [
     {
       src: '/images/padel/7ad44112-8715-477f-a253-8cd0c796ba8b.jpg',

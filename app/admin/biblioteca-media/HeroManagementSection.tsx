@@ -306,7 +306,7 @@ export default function HeroManagementSection() {
       {/* Service Selector & Status Bar */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-[#111c13] border border-white/10 p-4 rounded-2xl shadow-xl">
         <div className="flex flex-wrap items-center gap-2">
-          {(['canchas', 'parques', 'paisajismo'] as ServiceKey[]).map((key) => {
+          {(['home', 'canchas', 'parques', 'paisajismo'] as ServiceKey[]).map((key) => {
             const isSelected = activeService === key;
             return (
               <button
@@ -323,7 +323,7 @@ export default function HeroManagementSection() {
                     : 'bg-white/5 text-gray-300 hover:bg-white/10 hover:text-white'
                 }`}
               >
-                <span>{key === 'canchas' ? '🎾' : key === 'parques' ? '🏰' : '🌿'}</span>
+                <span>{key === 'home' ? '🏠' : key === 'canchas' ? '🎾' : key === 'parques' ? '🏰' : '🌿'}</span>
                 <span>{SERVICE_LABELS[key]}</span>
               </button>
             );
@@ -717,30 +717,42 @@ export default function HeroManagementSection() {
             >
               <div className="transform scale-95 origin-top">
                 <ServiceHeroSlider
-                  badge={SERVICE_LABELS[activeService]}
+                  badge={activeService === 'home' ? 'Ingeniería & Construcción' : SERVICE_LABELS[activeService]}
                   title={
-                    activeService === 'canchas'
+                    activeService === 'home'
+                      ? 'Ingeniería Deportiva, Recreativa y'
+                      : activeService === 'canchas'
                       ? 'Canchas Deportivas y'
                       : activeService === 'parques'
                       ? 'Parques Infantiles y'
                       : 'Diseño de Paisajismo y'
                   }
                   titleAccent={
-                    activeService === 'canchas'
+                    activeService === 'home'
+                      ? 'Paisajismo Arquitectónico'
+                      : activeService === 'canchas'
                       ? 'Pistas de Pádel'
                       : activeService === 'parques'
                       ? 'Pisos de Seguridad'
                       : 'Terrazas Residenciales'
                   }
                   description={
-                    activeService === 'canchas'
+                    activeService === 'home'
+                      ? 'Especialistas en pistas de Pádel profesionales, canchas sintéticas, parques infantiles y paisajismo de alta durabilidad.'
+                      : activeService === 'canchas'
                       ? 'Diseñamos y construimos infraestructura deportiva de alto rendimiento bajo estándares WPT y FIFA.'
                       : activeService === 'parques'
                       ? 'Módulos lúdicos certificados, pisos amortiguantes EPDM y circuitos recreativos integrales.'
                       : 'Grama sintética decorativa premium, jardines verticales y sistemas de drenaje sin mantenimiento.'
                   }
                   stats={
-                    activeService === 'canchas'
+                    activeService === 'home'
+                      ? [
+                          { value: '20+ Años', label: 'Experiencia' },
+                          { value: '800+ Obras', label: 'Ejecutadas' },
+                          { value: 'Nacional', label: 'Cobertura' },
+                        ]
+                      : activeService === 'canchas'
                       ? [
                           { value: '20+ Años', label: 'Experiencia' },
                           { value: 'FIP / WPT', label: 'Medidas' },

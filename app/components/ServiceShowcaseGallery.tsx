@@ -136,7 +136,7 @@ export default function ServiceShowcaseGallery({
       },
       {
         root: null,
-        rootMargin: '350px', // Trigger ahead of scroll position so it streams seamlessly
+        rootMargin: '100px', // Trigger ahead of scroll position so it streams seamlessly
         threshold: 0.05,
       }
     );
@@ -732,6 +732,54 @@ export default function ServiceShowcaseGallery({
                 <ExternalLink className="h-3.5 w-3.5" />
               </Link>
             </div>
+          </div>
+        </div>
+      )}
+      {/* Lateral Floating Stream Control Dock (Fixed to Viewport Margin) */}
+      {!isLoading && filteredAssets.length > PAGE_SIZE && (
+        <div
+          className="fixed right-4 sm:right-6 bottom-8 z-40 flex flex-col items-end gap-2 animate-fade-in pointer-events-auto"
+          style={{ willChange: 'transform' }}
+        >
+          <div className="flex items-center gap-2 p-1.5 pl-3.5 rounded-full bg-black/80 border border-brand-gold/30 backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.6)] transition-all duration-300 hover:border-brand-gold/60">
+            <div className="flex items-center gap-2 font-mono text-[11px] text-gray-300">
+              <span className="relative flex h-2 w-2">
+                {isAutoLoadPaused ? (
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-400 shadow-[0_0_6px_#fbbf24]" />
+                ) : (
+                  <>
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400 shadow-[0_0_6px_#34d399]" />
+                  </>
+                )}
+              </span>
+              <span className="hidden sm:inline font-bold">
+                {isAutoLoadPaused ? 'Galería: En pausa' : 'Auto-scroll activo'}
+              </span>
+              <span className="text-gray-500">
+                {visibleAssets.length}/{filteredAssets.length}
+              </span>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setIsAutoLoadPaused((prev) => !prev)}
+              aria-label={isAutoLoadPaused ? 'Reanudar carga continua' : 'Pausar carga continua'}
+              title={isAutoLoadPaused ? 'Reanudar auto-carga de la galería' : 'Detener recarga automática'}
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-mono font-bold tracking-wide transition-all duration-200 cursor-pointer ${isAutoLoadPaused ? "bg-brand-gold text-brand-dark hover:bg-yellow-400 shadow-md shadow-brand-gold/20" : "bg-white/10 text-gray-200 hover:bg-white/20 hover:text-white border border-white/10"}`}
+            >
+              {isAutoLoadPaused ? (
+                <>
+                  <Play className="w-3 h-3 fill-current" />
+                  <span>Reanudar</span>
+                </>
+              ) : (
+                <>
+                  <Pause className="w-3 h-3" />
+                  <span>Pausar</span>
+                </>
+              )}
+            </button>
           </div>
         </div>
       )}

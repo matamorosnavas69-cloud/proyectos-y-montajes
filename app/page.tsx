@@ -6,11 +6,14 @@ import AuthorityShowcase from "@/app/components/AuthorityShowcase";
 import BeforeAfter from "@/app/components/BeforeAfter";
 import ManagedProjectGallery from "@/app/components/ManagedProjectGallery";
 import QuoteSimulator from "@/app/components/QuoteSimulator";
+import { getPublishedHeroSlides } from "@/lib/hero-management";
 
-export default function Home() {
+export default async function Home() {
+  const heroSlides = await getPublishedHeroSlides("home");
+
   return (
     <div className="flex flex-col w-full">
-      <Hero />
+      <Hero slides={heroSlides} />
       <SocialProof />
       <Services />
       <FeaturedProjects />

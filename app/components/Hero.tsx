@@ -1,22 +1,88 @@
+"use client";
+
+import React, { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { ChevronLeft, ChevronRight, Pause, Play, MapPin } from "lucide-react";
+import { HeroSlide } from "@/app/components/ServiceHeroSlider";
 
-export default function Hero() {
+interface HeroProps {
+  slides?: HeroSlide[];
+}
+
+const DEFAULT_HOME_SLIDE: HeroSlide = {
+  src: "/images/padel/IMG_3346.PNG",
+  alt: "Pistas profesionales de pádel panorámico construidas por Proyectos y Montajes en Colombia",
+  title: "Club Pádel Smash de Competición",
+  location: "Sede Deportiva Cubierta",
+  tag: "Pádel Panorámico WPT",
+  focalX: 50,
+  focalY: 50,
+};
+
+export default function Hero({ slides }: HeroProps) {
+  const activeSlides = (slides && slides.length > 0) ? slides : [DEFAULT_HOME_SLIDE];
+  const [current, setCurrent] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+  const isSlider = activeSlides.length > 1;
+
+  const nextSlide = useCallback(() => {
+    if (!isSlider) return;
+    setCurrent((prev) => (prev + 1) % activeSlides.length);
+  }, [activeSlides.length, isSlider]);
+
+  const prevSlide = useCallback(() => {
+    if (!isSlider) return;
+    setCurrent((prev) => (prev - 1 + activeSlides.length) % activeSlides.length);
+  }, [activeSlides.length, isSlider]);
+
+  // Auto-rotation timer (6.5s) if multiple slides are configured
+  useEffect(() => {
+    if (!isSlider || isPaused) return;
+    const interval = setInterval(nextSlide, 6500);
+    return () => clearInterval(interval);
+  }, [isSlider, isPaused, nextSlide]);
+
+  const currentSlide = activeSlides[current] || activeSlides[0];
+
   return (
-    <section className="relative w-full min-h-[85vh] lg:min-h-[88vh] flex items-center justify-center bg-brand-dark overflow-hidden font-sans">
-      {/* Background authentic construction photography with Next.js Image */}
+    <section className="relative w-full min-h-[85vh] lg:min-h-[90vh] flex items-center justify-center bg-brand-dark overflow-hidden font-sans">
+      {/* Background authentic construction photography layers */}
       <div className="absolute inset-0 z-0">
-        <Image
-          src="/images/padel/IMG_3346.PNG"
-          alt="Pistas profesionales de pádel panorámico construidas por Proyectos y Montajes en Colombia"
-          fill
-          priority
-          sizes="100vw"
-          quality={85}
-          className="object-cover object-center opacity-90 transform scale-100 motion-safe:transition-transform motion-safe:duration-1000"
-        />
+        {activeSlides.map((slide, idx) => {
+          const isActive = idx === current;
+          const focalPos =
+            slide.focalPoint ||
+            (slide.focalX != null && slide.focalY != null
+              ? `${slide.focalX}% ${slide.focalY}%`
+              : "50% 50%");
+
+          return (
+            <div
+              key={`${slide.src}-${idx}`}
+              aria-hidden={!isActive}
+              className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
+                isActive ? "opacity-100 z-10" : "opacity-0 z-0 pointer-events-none"
+              }`}
+            >
+              <Image
+                src={slide.src}
+                alt={slide.alt || slide.title || "Fotografía de obra real"}
+                fill
+                priority={idx === 0}
+                sizes="100vw"
+                quality={85}
+                style={{ objectPosition: focalPos }}
+                className={`object-cover w-full h-full transform transition-transform duration-[7000ms] ease-out ${
+                  isActive ? "scale-105" : "scale-100"
+                }`}
+              />
+            </div>
+          );
+        })}
+
         {/* Minimal natural vignette preserving authentic photography brilliance while ensuring text legibility */}
-        <div className="absolute inset-0 bg-gradient-to-t from-brand-dark/85 via-black/25 to-brand-dark/40 z-10" />
+        <div className="absolute inset-0 bg-gradient-to-t from-brand-dark/95 via-black/40 to-brand-dark/50 z-10 pointer-events-none" />
       </div>
 
       {/* Ambient architectural glow accents */}
@@ -66,26 +132,111 @@ export default function Hero() {
         </div>
       </div>
 
+      {/* Floating Slide Caption (When multiple slides or tagged slide) */}
+      {currentSlide.tag && (
+        <div className="hidden lg:flex absolute bottom-8 left-10 z-30 pointer-events-none">
+          <div className="bg-black/60 backdrop-blur-md border border-white/10 px-4 py-2 rounded-2xl shadow-xl flex items-center gap-2.5 max-w-xs animate-fade-in">
+            <span className="w-2 h-2 rounded-full bg-brand-gold shadow-[0_0_8px_#d4af37]" />
+            <div className="min-w-0">
+              <span className="text-[10px] font-black uppercase tracking-wider text-brand-gold block truncate">
+                {currentSlide.tag}
+              </span>
+              <p className="text-xs font-bold text-white truncate">
+                {currentSlide.title}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Floating Slider Controls (Active only when multiple slides are configured) */}
+      {isSlider && (
+        <div className="absolute bottom-6 right-6 lg:bottom-8 lg:right-10 z-30 flex items-center gap-2.5 bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-2xl border border-white/10 shadow-2xl">
+          {/* Slide counter */}
+          <div className="text-[11px] font-mono font-bold tracking-wider text-gray-300 flex items-center gap-1">
+            <span className="text-brand-gold font-black">
+              {String(current + 1).padStart(2, "0")}
+            </span>
+            <span className="text-gray-500">/</span>
+            <span className="text-gray-400">
+              {String(activeSlides.length).padStart(2, "0")}
+            </span>
+          </div>
+
+          {/* Pill progress dots */}
+          <div className="flex items-center gap-1.5 px-1">
+            {activeSlides.map((_, idx) => (
+              <button
+                key={idx}
+                type="button"
+                onClick={() => setCurrent(idx)}
+                aria-label={`Ver diapositiva ${idx + 1}`}
+                className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${
+                  idx === current
+                    ? "w-5 bg-brand-gold shadow-[0_0_6px_rgba(212,175,55,0.8)]"
+                    : "w-1.5 bg-white/30 hover:bg-white/60"
+                }`}
+              />
+            ))}
+          </div>
+
+          {/* Pause / Play / Prev / Next Chevrons */}
+          <div className="flex items-center gap-0.5 border-l border-white/10 pl-1.5">
+            <button
+              type="button"
+              onClick={() => setIsPaused((prev) => !prev)}
+              aria-label={isPaused ? "Reanudar rotación" : "Pausar rotación"}
+              title={isPaused ? "Reanudar rotación" : "Pausar rotación"}
+              className="p-1 rounded-lg text-gray-300 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+            >
+              {isPaused ? (
+                <Play className="w-3.5 h-3.5 fill-current text-brand-gold" />
+              ) : (
+                <Pause className="w-3.5 h-3.5" />
+              )}
+            </button>
+            <button
+              type="button"
+              onClick={prevSlide}
+              aria-label="Diapositiva anterior"
+              className="p-1 rounded-lg text-gray-300 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </button>
+            <button
+              type="button"
+              onClick={nextSlide}
+              aria-label="Siguiente diapositiva"
+              className="p-1 rounded-lg text-gray-300 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+            >
+              <ChevronRight className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Subtle Scroll Down Prompt */}
-      <div className="absolute bottom-20 sm:bottom-28 left-1/2 -translate-x-1/2 z-20 hidden sm:flex flex-col items-center gap-6 text-brand-gold/80 hover:text-brand-gold transition-colors">
-        <span className="text-[11px] font-bold uppercase tracking-widest text-gray-400">
-          Descubrir Servicios
-        </span>
-        <svg
-          className="w-20 h-20 animate-bounce"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-          aria-hidden="true"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            d="M19 14l-7 7m0 0l-7-7m7 7V3"
-          />
-        </svg>
-      </div>
+      {!isSlider && (
+        <div className="absolute bottom-20 sm:bottom-28 left-1/2 -translate-x-1/2 z-20 hidden sm:flex flex-col items-center gap-6 text-brand-gold/80 hover:text-brand-gold transition-colors">
+          <span className="text-[11px] font-bold uppercase tracking-widest text-gray-400">
+            Descubrir Servicios
+          </span>
+          <svg
+            className="w-20 h-20 animate-bounce"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M19 14l-7 7m0 0l-7-7m7 7V3"
+            />
+          </svg>
+        </div>
+      )}
     </section>
   );
 }
