@@ -8,21 +8,28 @@ import MobileNavDrawer from "@/app/components/MobileNavDrawer";
 
 export default function Header() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
+  const [isLandingHeroVisible, setIsLandingHeroVisible] = useState(true);
   const hamburgerRef = useRef<HTMLButtonElement | null>(null);
   const pathname = usePathname();
   const isHome = pathname === "/";
 
   useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 24);
+    const handleScroll = () => {
+      if (!isHome) {
+        setIsLandingHeroVisible(false);
+        return;
+      }
+      const lastBanner = document.getElementById("balcones");
+      setIsLandingHeroVisible(!lastBanner || lastBanner.getBoundingClientRect().bottom > 80);
+    };
     handleScroll();
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [isHome]);
 
   return (
     <>
-      <header className={`${isHome ? "fixed" : "sticky"} top-0 z-40 w-full border-b text-white transition-all duration-300 ${isScrolled || !isHome ? "border-brand-green/25 bg-brand-dark/90 shadow-flat backdrop-blur-md" : "border-transparent bg-transparent"}`}>
+      <header className={`${isHome ? "fixed" : "sticky"} top-0 z-40 w-full border-b text-white transition-all duration-300 ${isHome && isLandingHeroVisible ? "border-transparent bg-transparent" : "border-brand-green/25 bg-brand-dark/90 shadow-flat backdrop-blur-md"}`}>
         <div className="max-w-7xl mx-auto px-12 sm:px-16 h-[76px] sm:h-[80px] flex items-center justify-between">
           {/* Logo area */}
           <div className="flex items-center">
