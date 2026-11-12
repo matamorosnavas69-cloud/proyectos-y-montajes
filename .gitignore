@@ -5,6 +5,8 @@
 public/*
 !public/brand/
 !public/images/
+!public/hero/
+!public/hero/**
 !public/favicon.ico
 !public/apple-touch-icon.png
 !public/icon-192.png
