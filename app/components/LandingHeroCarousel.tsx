@@ -81,9 +81,7 @@ export default function LandingHeroCarousel({ id, number, align, eyebrow, title,
     <article ref={sectionRef} id={id} className="relative isolate min-h-screen scroll-mt-28 overflow-hidden border-b border-white/10 bg-brand-dark text-white">
       <div className="absolute inset-0">
         {slides.map((slide, index) => <Image key={`${slide.src}-${index}`} src={slide.src} alt={slide.alt} fill priority={index === 0} sizes="100vw" style={{ objectPosition: slide.focalPoint || "50% 50%" }} className={`object-cover transition-opacity duration-700 ${index === current ? "opacity-100" : "opacity-0"}`} />)}
-        <div className={`absolute inset-y-0 w-full bg-brand-dark/60 sm:w-[62%] ${right ? "right-0" : "left-0"}`} />
       </div>
-      <span aria-hidden className={`pointer-events-none absolute bottom-24 select-none text-[8rem] font-medium leading-none text-white/10 sm:text-[11rem] ${right ? "left-6 sm:left-16" : "right-6 sm:right-16"}`}>{number}</span>
 
       <div className="relative z-10 mx-auto flex min-h-screen max-w-[1440px] flex-col justify-between px-6 pb-7 pt-24 sm:px-8 lg:px-16 lg:pb-9">
         <div className={`flex items-center gap-4 ${right ? "justify-start" : "justify-end"}`}>
@@ -91,7 +89,7 @@ export default function LandingHeroCarousel({ id, number, align, eyebrow, title,
         </div>
 
         <div className={`flex flex-1 items-center py-10 ${right ? "justify-end" : ""}`}>
-          <div className={`max-w-xl transition-all duration-1000 ${isVisible ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"}`}>
+          <div className={`max-w-xl rounded-2xl border border-white/25 bg-brand-dark/30 p-5 shadow-2xl backdrop-blur-[3px] transition-all duration-1000 sm:p-7 lg:p-8 ${isVisible ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"}`}>
             <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-brand-gold">{eyebrow}</p>
             <h2 className="mt-3 text-4xl font-medium leading-[1.06] tracking-[-0.02em] sm:text-5xl">{title}<br /><span className="text-brand-gold">{highlight}</span></h2>
             <p className="mt-4 max-w-md text-sm leading-relaxed text-white/90 sm:text-base">{benefit}</p>
