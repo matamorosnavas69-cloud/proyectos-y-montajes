@@ -172,7 +172,7 @@ export async function getPublishedHeroSlides(serviceSlug: ServiceKey): Promise<H
     });
 
     if (slides.length > 0) {
-      return slides.map((s) => ({
+      const publishedSlides = slides.map((s) => ({
         src: s.src,
         alt: s.alt,
         title: s.title,
@@ -182,6 +182,15 @@ export async function getPublishedHeroSlides(serviceSlug: ServiceKey): Promise<H
         focalY: s.focalY,
         focalPoint: `${s.focalX}% ${s.focalY}%`,
       }));
+
+      // Legacy canchas records may contain padel images from the original shared hero.
+      // Keep those assets editable in the CMS, while preventing them from appearing in
+      // the dedicated Canchas banner now that Pádel has its own section.
+      const organizedSlides = serviceSlug === 'canchas'
+        ? publishedSlides.filter((slide) => !/padel|pádel/i.test(`${slide.src} ${slide.title} ${slide.tag}`))
+        : publishedSlides;
+
+      if (organizedSlides.length > 0) return organizedSlides;
     }
   } catch (dbErr) {
     console.warn(`[HeroManagement] Failed fetching DB slides for ${serviceSlug}, using fallback:`, dbErr);
