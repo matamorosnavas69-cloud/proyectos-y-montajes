@@ -26,10 +26,10 @@
   top: 0;
   bottom: 0;
   width: 4px;
-  background: linear-gradient(180deg, #d4af37 0%, #fff 50%, #d4af37 100%);
+  background: linear-gradient(180deg, #b4e65a 0%, #fff 50%, #b4e65a 100%);
   z-index: 30;
   pointer-events: none;
-  box-shadow: 0 0 12px rgba(212, 175, 55, 0.4);
+  box-shadow: 0 0 12px rgba(180, 230, 90, 0.4);
 }
 
 .before-after-handle {
@@ -40,7 +40,7 @@
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  background: #d4af37;
+  background: #b4e65a;
   border: 3px solid #fff;
   display: flex;
   align-items: center;
@@ -119,7 +119,7 @@
 
 /* ── Premium Gradient Text ────────────────────────── */
 .text-gradient-gold {
-  background: linear-gradient(135deg, #d4af37 0%, #f5e6a3 50%, #d4af37 100%);
+  background: linear-gradient(135deg, #b4e65a 0%, #e3f7b4 50%, #7fc83e 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -138,6 +138,6 @@
 
 /* ── Premium Badge Glow ───────────────────────────── */
 .badge-glow {
-  box-shadow: 0 0 0 1px rgba(212, 175, 55, 0.3),
-    0 0 20px rgba(212, 175, 55, 0.1);
+  box-shadow: 0 0 0 1px rgba(180, 230, 90, 0.3),
+    0 0 20px rgba(180, 230, 90, 0.1);
 }

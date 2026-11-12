@@ -7,11 +7,11 @@ module.exports = {
     extend: {
       colors: {
         brand: {
-          dark: "#0b120d", // Dark background
-          green: "#1b5e20", // Primary green identity
-          gold: "#d4af37", // Accent gold identity
-          light: "#f7f9f7", // Off-white clean background
-          accent: "#86a9af", // From cms-design
+          dark: "#032b2a", // Verde petróleo profundo
+          green: "#0d5c54", // Verde petróleo principal
+          gold: "#b4e65a", // Acento lima del nuevo concepto
+          light: "#f2f7f4", // Blanco verdoso
+          accent: "#6fa9a0", // Verde petróleo suave
           danger: "#ec6602", // From cms-design
           success: "#80bd9a", // From cms-design
         },
@@ -80,8 +80,8 @@ module.exports = {
       },
       boxShadow: {
         flat: "rgba(0, 0, 0, 0.2) 0px 1px 2px 0px",
-        "glow-gold": "0 0 40px rgba(212, 175, 55, 0.15)",
-        "glow-green": "0 0 40px rgba(27, 94, 32, 0.15)",
+        "glow-gold": "0 0 40px rgba(180, 230, 90, 0.18)",
+        "glow-green": "0 0 40px rgba(13, 92, 84, 0.2)",
       },
       animation: {
         "fade-in": "fadeIn 0.6s ease-out forwards",

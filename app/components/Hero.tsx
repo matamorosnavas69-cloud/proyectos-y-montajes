@@ -1,91 +1,44 @@
-import Image from "next/image";
+"use client";
+
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { ArrowRight, ChevronDown, MessageCircle } from "lucide-react";
+
+const SLIDES = [
+  { image: "/hero/cancha.png", eyebrow: "01 — Ingeniería deportiva", title: "Canchas diseñadas", highlight: "para competir", description: "Construimos escenarios deportivos resistentes, funcionales y listos para el ritmo de uso de tu proyecto.", href: "/servicios/canchas-deportivas", cta: "Ver canchas deportivas" },
+  { image: "/hero/hero-2.png", eyebrow: "02 — Paisajismo arquitectónico", title: "Espacios verdes", highlight: "para disfrutar", description: "Terrazas, jardines y balcones con soluciones de alto desempeño, diseñadas para verse bien todos los días.", href: "/servicios/paisajismo", cta: "Explorar paisajismo" },
+  { image: "/hero/parque.png", eyebrow: "03 — Recreación segura", title: "Parques que inspiran", highlight: "a jugar", description: "Diseñamos zonas infantiles seguras y durables para colegios, conjuntos, hoteles y espacios públicos.", href: "/servicios/parques-infantiles", cta: "Ver parques infantiles" },
+] as const;
+
+const CATEGORIES = [["Canchas", "/servicios/canchas-deportivas"], ["Pádel", "/servicios/canchas-deportivas"], ["Parques", "/servicios/parques-infantiles"], ["Terrazas", "/servicios/paisajismo"], ["Balcones", "/servicios/paisajismo"]] as const;
 
 export default function Hero() {
+  const [index, setIndex] = useState(0);
+  const slide = SLIDES[index];
+
+  useEffect(() => {
+    const timer = window.setInterval(() => setIndex((current) => (current + 1) % SLIDES.length), 6500);
+    return () => window.clearInterval(timer);
+  }, []);
+
   return (
-    <section className="relative w-full min-h-[85vh] lg:min-h-[88vh] flex items-center justify-center bg-brand-dark overflow-hidden font-sans">
-      {/* Background authentic construction photography with Next.js Image */}
-      <div className="absolute inset-0 z-0">
-        <Image
-          src="/images/padel/IMG_3346.PNG"
-          alt="Pistas profesionales de pádel panorámico construidas por Proyectos y Montajes en Colombia"
-          fill
-          priority
-          sizes="100vw"
-          quality={85}
-          className="object-cover object-center opacity-90 transform scale-100 motion-safe:transition-transform motion-safe:duration-1000"
-        />
-        {/* Minimal natural vignette preserving authentic photography brilliance while ensuring text legibility */}
-        <div className="absolute inset-0 bg-gradient-to-t from-brand-dark/85 via-black/25 to-brand-dark/40 z-10" />
+    <section className="relative isolate min-h-[calc(100svh-76px)] overflow-hidden bg-brand-dark text-white sm:min-h-[calc(100svh-80px)]">
+      <div className="absolute inset-0">
+        {SLIDES.map((item, itemIndex) => <div key={item.image} className={`absolute inset-0 bg-cover bg-center transition-opacity duration-1000 ${itemIndex === index ? "opacity-100" : "opacity-0"}`} style={{ backgroundImage: `url('${item.image}')` }} aria-hidden={itemIndex !== index} />)}
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(3,43,42,.92)_0%,rgba(3,43,42,.72)_38%,rgba(3,43,42,.16)_78%),linear-gradient(0deg,rgba(3,43,42,.92)_0%,rgba(3,43,42,.08)_52%)]" />
       </div>
-
-      {/* Ambient architectural glow accents */}
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-brand-gold/5 rounded-full blur-[140px] pointer-events-none z-[12]" />
-      <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-brand-green/10 rounded-full blur-[120px] pointer-events-none z-[12]" />
-
-      {/* Hero Content */}
-      <div className="relative z-20 flex flex-col items-center text-center px-16 sm:px-24 max-w-5xl mx-auto py-48 md:py-64">
-        {/* Engineering Authority Badge */}
-        <div className="inline-flex items-center gap-10 px-18 py-6 rounded-full bg-brand-green/25 border border-brand-green/60 text-brand-gold mb-24 md:mb-32 backdrop-blur-md badge-glow">
-          <span className="relative flex h-[10px] w-[10px]">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-gold opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-[10px] w-[10px] bg-brand-gold"></span>
-          </span>
-          <span className="text-12 font-bold tracking-widest uppercase text-white/95">
-            Más de 20 años transformando espacios en Colombia
-          </span>
-        </div>
-
-        {/* Canonical Engineering Positioning Heading */}
-        <h1 className="text-36 sm:text-48 md:text-56 lg:text-64 font-black text-white mb-20 md:mb-28 leading-[1.08] tracking-tight max-w-4xl drop-shadow-[0_4px_16px_rgba(0,0,0,0.85)]">
-          Ingeniería Deportiva, Recreativa y{" "}
-          <span className="text-gradient-gold">
-            Paisajismo Arquitectónico
-          </span>
-        </h1>
-
-        {/* Value Proposition Description */}
-        <p className="text-16 sm:text-18 md:text-20 text-gray-200 mb-36 md:mb-44 max-w-3xl leading-relaxed font-normal drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
-          Especialistas en pistas de Pádel profesionales, canchas de fútbol sintético, parques infantiles seguros y paisajismo corporativo y residencial de alta durabilidad.
-        </p>
-
-        {/* Responsive Conversion Action Triggers */}
-        <div className="flex flex-col sm:flex-row items-center gap-16 sm:gap-20 w-full sm:w-auto">
-          <a
-            href="#simulador"
-            className="w-full sm:w-auto inline-flex items-center justify-center bg-brand-gold text-brand-dark px-32 sm:px-40 py-16 sm:py-18 rounded-xl font-bold text-16 sm:text-18 hover:bg-yellow-400 transition-all shadow-flat hover:shadow-glow-gold hover:-translate-y-0.5 active:translate-y-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
-          >
-            Cotizar Mi Proyecto
-          </a>
-          <Link
-            href="/portafolio"
-            className="w-full sm:w-auto inline-flex items-center justify-center bg-white/5 border border-white/20 text-white px-28 sm:px-36 py-16 sm:py-18 rounded-xl font-semibold text-16 sm:text-18 hover:bg-white/10 hover:border-brand-gold/60 hover:text-brand-gold transition-all backdrop-blur-sm shadow-flat focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold"
-          >
-            Explorar Obras Reales
-          </Link>
-        </div>
+      <div className="relative z-10 mx-auto flex min-h-[calc(100svh-76px)] max-w-[1440px] flex-col px-6 pb-8 pt-8 sm:px-8 lg:min-h-[calc(100svh-80px)] lg:px-16 lg:pb-10 lg:pt-10">
+        <nav aria-label="Categorías" className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">{CATEGORIES.map(([label, href]) => <Link key={label} href={href} className="shrink-0 rounded-full border border-white/35 bg-black/10 px-5 py-2 text-sm font-semibold text-white/95 backdrop-blur-sm transition hover:border-brand-gold hover:bg-white/10">{label}</Link>)}</nav>
+        <div className="flex flex-1 items-center pb-10 pt-20 sm:pt-24 lg:pb-16 lg:pt-16"><div className="max-w-3xl">
+          <p className="mb-6 flex items-center gap-4 text-xs font-bold uppercase tracking-[0.22em] text-brand-gold sm:text-sm"><span>{slide.eyebrow.split(" — ")[0]}</span><span className="h-px w-8 bg-brand-gold" /><span>{slide.eyebrow.split(" — ")[1]}</span></p>
+          <h1 className="max-w-3xl text-5xl font-black leading-[.98] tracking-[-0.04em] sm:text-6xl lg:text-8xl">{slide.title}<br /><span className="text-brand-gold">{slide.highlight}</span></h1>
+          <p className="mt-7 max-w-2xl text-base leading-relaxed text-white/85 sm:text-lg lg:text-xl">{slide.description}</p>
+          <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center"><Link href={slide.href} className="inline-flex min-h-14 items-center justify-center gap-3 rounded-full bg-white px-7 font-bold text-brand-dark transition hover:bg-brand-gold">{slide.cta}<ArrowRight className="h-5 w-5" /></Link><Link href="#simulador" className="inline-flex min-h-14 items-center justify-center px-4 font-semibold text-white underline decoration-white/50 underline-offset-8 transition hover:text-brand-gold">Cotizar mi proyecto</Link></div>
+        </div></div>
+        <div className="grid max-w-4xl grid-cols-2 overflow-hidden rounded-2xl border border-white/25 bg-brand-dark/75 backdrop-blur-md sm:grid-cols-4">{[["20+", "años de experiencia"], ["100%", "acompañamiento"], ["4", "líneas de servicio"], ["Colombia", "cobertura nacional"]].map(([value, label]) => <div key={label} className="border-white/20 px-5 py-4 first:border-r sm:border-r sm:px-6 sm:py-5 [&:nth-child(2)]:border-b sm:[&:nth-child(2)]:border-b-0"><p className="text-2xl font-black sm:text-3xl">{value}</p><p className="mt-1 text-[10px] font-bold uppercase tracking-[0.14em] text-white/60">{label}</p></div>)}</div>
       </div>
-
-      {/* Subtle Scroll Down Prompt */}
-      <div className="absolute bottom-20 sm:bottom-28 left-1/2 -translate-x-1/2 z-20 hidden sm:flex flex-col items-center gap-6 text-brand-gold/80 hover:text-brand-gold transition-colors">
-        <span className="text-[11px] font-bold uppercase tracking-widest text-gray-400">
-          Descubrir Servicios
-        </span>
-        <svg
-          className="w-20 h-20 animate-bounce"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-          aria-hidden="true"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            d="M19 14l-7 7m0 0l-7-7m7 7V3"
-          />
-        </svg>
-      </div>
+      <div className="absolute bottom-8 right-6 z-20 flex items-center gap-3 sm:right-10"><a href="#simulador" className="hidden items-center gap-2 rounded-full bg-[#25D366] px-5 py-3 text-sm font-bold shadow-xl transition hover:bg-[#1ebe57] sm:inline-flex"><MessageCircle className="h-4 w-4" /> WhatsApp</a><div className="flex gap-2" aria-label="Cambiar imagen del hero">{SLIDES.map((item, itemIndex) => <button key={item.image} type="button" aria-label={`Ver imagen ${itemIndex + 1}`} onClick={() => setIndex(itemIndex)} className={`h-2 rounded-full transition-all ${itemIndex === index ? "w-8 bg-brand-gold" : "w-2 bg-white/60"}`} />)}</div></div>
+      <ChevronDown className="absolute bottom-8 left-1/2 z-20 hidden h-6 w-6 -translate-x-1/2 animate-bounce text-white/60 lg:block" aria-hidden="true" />
     </section>
   );
 }
