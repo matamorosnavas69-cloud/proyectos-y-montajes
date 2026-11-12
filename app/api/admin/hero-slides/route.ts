@@ -9,7 +9,7 @@ import {
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
-const VALID_SERVICES = new Set<string>(['home', 'canchas', 'parques', 'paisajismo']);
+const VALID_SERVICES = new Set<string>(['canchas', 'padel', 'parques', 'terrazas', 'balcones', 'paisajismo']);
 
 function errorResponse(error: unknown) {
   const authError = error as AuthError;

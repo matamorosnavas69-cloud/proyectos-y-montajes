@@ -1,97 +1,68 @@
 import { HeroSlide } from '@/app/components/ServiceHeroSlider';
 
-export type ServiceKey = 'home' | 'canchas' | 'parques' | 'paisajismo';
+export type ServiceKey = 'canchas' | 'padel' | 'parques' | 'terrazas' | 'balcones' | 'paisajismo';
 
 export const SERVICE_PATH_MAP: Record<ServiceKey, string> = {
-  home: '/',
   canchas: '/servicios/canchas-deportivas',
+  padel: '/servicios/canchas-deportivas',
   parques: '/servicios/parques-infantiles',
+  terrazas: '/servicios/paisajismo',
+  balcones: '/servicios/paisajismo',
   paisajismo: '/servicios/paisajismo',
 };
 
 export const SERVICE_LABELS: Record<ServiceKey, string> = {
-  home: 'Página Principal (Home)',
   canchas: 'Canchas Deportivas',
+  padel: 'Pádel',
   parques: 'Parques Infantiles',
+  terrazas: 'Terrazas',
+  balcones: 'Balcones',
   paisajismo: 'Paisajismo y Terrazas',
 };
 
 export const DEFAULT_HERO_SLIDES: Record<ServiceKey, HeroSlide[]> = {
-  home: [
-    {
-      src: '/images/padel/IMG_3346.PNG',
-      alt: 'Pistas profesionales de pádel panorámico construidas por Proyectos y Montajes en Colombia',
-      title: 'Club Pádel Smash de Competición',
-      location: 'Sede Deportiva Cubierta',
-      tag: 'Pádel Panorámico WPT',
-      focalX: 50,
-      focalY: 50,
-    },
-    {
-      src: '/images/futbol/IMG_7552.JPG',
-      alt: 'Cancha de fútbol sintética profesional de 11 jugadores en Colombia',
-      title: 'Campo de Fútbol Sintético Profesional FIFA Quality',
-      location: 'Santander, Colombia',
-      tag: 'Fútbol Césped Pro',
-      focalX: 50,
-      focalY: 50,
-    },
-    {
-      src: '/images/drive organice/parques/15d81928-0e73-46bd-b651-897cd955e52b.jpg',
-      alt: 'Parque infantil modular multitorre certificado en conjunto residencial',
-      title: 'Parque Infantil Modular Multitorre',
-      location: 'Conjunto Residencial Campestre',
-      tag: 'Módulos Lúdicos',
-      focalX: 50,
-      focalY: 50,
-    },
-    {
-      src: '/images/drive organice/residencial/IMG_4638.JPG',
-      alt: 'Terraza zen con grama sintética premium y paisajismo arquitectónico',
-      title: 'Terraza Zen y Jardín de Alto Confort',
-      location: 'Residencia Campestre',
-      tag: 'Paisajismo Residencial',
-      focalX: 50,
-      focalY: 50,
-    },
-  ],
   canchas: [
     {
-      src: '/images/padel/7ad44112-8715-477f-a253-8cd0c796ba8b.jpg',
-      alt: 'Pista de pádel panorámica profesional con cerramientos de cristal templado',
-      title: 'Pista de Pádel Panorámica de Competición',
-      location: 'Complejo Deportivo Club',
-      tag: 'Pádel Panorámico',
+      src: '/hero/cancha.png',
+      alt: 'Cancha deportiva sintética profesional',
+      title: 'Cancha deportiva de alto rendimiento',
+      location: 'Proyectos deportivos',
+      tag: 'Cancha profesional',
       focalX: 50,
       focalY: 50,
     },
     {
-      src: '/images/futbol/IMG_7552.JPG',
-      alt: 'Cancha de fútbol sintética profesional de 11 jugadores',
-      title: 'Campo de Fútbol Sintético Profesional',
+      src: '/hero/cancha2.png',
+      alt: 'Cancha sintética para entrenamiento y competencia',
+      title: 'Campo sintético para competencia',
       location: 'Santander, Colombia',
-      tag: 'Fútbol Césped Pro',
+      tag: 'Fútbol sintético',
       focalX: 50,
       focalY: 50,
     },
     {
-      src: '/images/futbol/806ebee3-c75b-4dcf-8e3b-eae1d864d211.jpg',
-      alt: 'Cancha de fútbol con sistema de iluminación deportiva LED',
-      title: 'Cancha Comunitaria con Iluminación LED',
+      src: '/hero/cancha3.png',
+      alt: 'Cancha deportiva con iluminación profesional',
+      title: 'Cancha con iluminación deportiva',
       location: 'Bucaramanga',
       tag: 'Iluminación',
       focalX: 50,
       focalY: 50,
     },
     {
-      src: '/images/padel/IMG_3346.PNG',
-      alt: 'Complejo de pádel cubierto Club Smash',
-      title: 'Club Pádel Smash de Competición',
-      location: 'Sede Deportiva Cubierta',
-      tag: 'Club Deportivo',
+      src: '/hero/cancha4.png',
+      alt: 'Complejo deportivo de fútbol sintético',
+      title: 'Complejo deportivo integral',
+      location: 'Sede deportiva',
+      tag: 'Infraestructura',
       focalX: 50,
       focalY: 50,
     },
+  ],
+  padel: [
+    { src: '/hero/hero-1.png', alt: 'Pista de pádel profesional', title: 'Pistas de pádel profesionales', location: 'Complejos deportivos', tag: 'Pádel', focalX: 50, focalY: 50 },
+    { src: '/hero/cancha2.png', alt: 'Cancha deportiva para entrenamiento', title: 'Superficies para alto rendimiento', location: 'Colombia', tag: 'Rendimiento', focalX: 50, focalY: 50 },
+    { src: '/hero/cancha3.png', alt: 'Instalación deportiva iluminada', title: 'Iluminación para competir', location: 'Proyectos deportivos', tag: 'Iluminación', focalX: 50, focalY: 50 },
   ],
   parques: [
     {
@@ -130,6 +101,16 @@ export const DEFAULT_HERO_SLIDES: Record<ServiceKey, HeroSlide[]> = {
       focalX: 50,
       focalY: 50,
     },
+  ],
+  terrazas: [
+    { src: '/hero/hero-2.png', alt: 'Terraza con grama sintética', title: 'Terrazas verdes de bajo mantenimiento', location: 'Residencial y comercial', tag: 'Terrazas', focalX: 50, focalY: 50 },
+    { src: '/hero/7a7429e0-5413-482b-9b10-9497a319259b.png', alt: 'Paisajismo exterior con grama sintética', title: 'Paisajismo para compartir', location: 'Colombia', tag: 'Paisajismo', focalX: 50, focalY: 50 },
+    { src: '/hero/hero-3.png', alt: 'Exterior residencial con superficie verde', title: 'Diseño exterior a tu medida', location: 'Residencial', tag: 'Diseño', focalX: 50, focalY: 50 },
+  ],
+  balcones: [
+    { src: '/hero/hero-3.png', alt: 'Balcón residencial con grama sintética', title: 'Balcones con vida y confort', location: 'Vivienda urbana', tag: 'Balcones', focalX: 50, focalY: 50 },
+    { src: '/hero/hero-2.png', alt: 'Terraza urbana con vegetación', title: 'Más verde en menos espacio', location: 'Apartamentos y oficinas', tag: 'Exterior', focalX: 50, focalY: 50 },
+    { src: '/hero/53fab49b-9e5c-41ad-914a-a69248cae6b4.jpg', alt: 'Detalle de superficie verde decorativa', title: 'Acabados fáciles de mantener', location: 'Proyectos residenciales', tag: 'Confort', focalX: 50, focalY: 50 },
   ],
   paisajismo: [
     {
