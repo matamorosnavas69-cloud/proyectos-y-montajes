@@ -23,13 +23,13 @@ export default function Hero() {
           <div className="relative z-10 mx-auto flex min-h-[calc(100svh-76px)] max-w-[1440px] flex-col justify-between px-6 pb-8 pt-14 sm:px-8 sm:pt-16 lg:min-h-[calc(100svh-80px)] lg:px-16 lg:pb-10">
             <div className="flex flex-1 items-center py-14 sm:py-20">
               <div className="max-w-3xl rounded-3xl border border-white/30 bg-brand-dark/35 p-6 shadow-2xl backdrop-blur-[3px] sm:p-9 lg:p-11">
-                <p className="mb-6 flex items-center gap-4 text-xs font-bold uppercase tracking-[0.22em] text-brand-gold drop-shadow-sm sm:text-sm"><span>{banner.eyebrow.split(" — ")[0]}</span><span className="h-px w-8 bg-brand-gold" /><span>{banner.eyebrow.split(" — ")[1]}</span></p>
-                <h2 className="max-w-3xl text-5xl font-black leading-[.98] tracking-[-0.04em] drop-shadow-[0_3px_12px_rgba(0,0,0,.6)] sm:text-6xl lg:text-8xl">{banner.title}<br /><span className="text-brand-gold">{banner.highlight}</span></h2>
-                <p className="mt-7 max-w-2xl text-base leading-relaxed text-white drop-shadow-[0_2px_8px_rgba(0,0,0,.7)] sm:text-lg lg:text-xl">{banner.description}</p>
+                <p className="mb-5 flex items-center gap-3 text-[10px] font-bold uppercase tracking-[0.18em] text-brand-gold drop-shadow-sm sm:text-xs"><span>{banner.eyebrow.split(" — ")[0]}</span><span className="h-px w-6 bg-brand-gold" /><span>{banner.eyebrow.split(" — ")[1]}</span></p>
+                <h2 className="max-w-2xl text-4xl font-extrabold leading-[1.02] tracking-[-0.03em] drop-shadow-[0_3px_12px_rgba(0,0,0,.6)] sm:text-5xl lg:text-6xl">{banner.title}<br /><span className="text-brand-gold">{banner.highlight}</span></h2>
+                <p className="mt-5 max-w-xl text-sm leading-relaxed text-white drop-shadow-[0_2px_8px_rgba(0,0,0,.7)] sm:text-base lg:text-lg">{banner.description}</p>
                 <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center"><Link href={banner.href} className="inline-flex min-h-14 items-center justify-center gap-3 rounded-full bg-white px-7 font-bold text-brand-dark transition hover:bg-brand-gold">{banner.cta}<ArrowRight className="h-5 w-5" /></Link><Link href="#simulador" className="inline-flex min-h-14 items-center justify-center px-4 font-semibold text-white underline decoration-white/70 underline-offset-8 transition hover:text-brand-gold">Cotizar mi proyecto</Link></div>
               </div>
             </div>
-            <div className="grid max-w-5xl grid-cols-2 overflow-hidden rounded-2xl border border-white/35 bg-brand-dark/80 backdrop-blur-md sm:grid-cols-4">{banner.stats.map(([value, label]) => <div key={label} className="border-white/20 px-5 py-4 first:border-r sm:border-r sm:px-6 sm:py-5 [&:nth-child(2)]:border-b sm:[&:nth-child(2)]:border-b-0"><p className="text-2xl font-black sm:text-3xl">{value}</p><p className="mt-1 text-[10px] font-bold uppercase tracking-[0.14em] text-white/70">{label}</p></div>)}</div>
+            <div className="grid max-w-5xl grid-cols-2 overflow-hidden rounded-2xl border border-white/35 bg-brand-dark/80 backdrop-blur-md sm:grid-cols-4">{banner.stats.map(([value, label]) => <div key={label} className="border-white/20 px-4 py-3 first:border-r sm:border-r sm:px-5 sm:py-4 [&:nth-child(2)]:border-b sm:[&:nth-child(2)]:border-b-0"><p className="text-xl font-extrabold sm:text-2xl">{value}</p><p className="mt-1 text-[9px] font-bold uppercase tracking-[0.12em] text-white/70">{label}</p></div>)}</div>
           </div>
         </article>
       ))}
