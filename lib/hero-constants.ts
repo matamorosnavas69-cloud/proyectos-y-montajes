@@ -3,15 +3,6 @@ import { HeroSlide } from '@/app/components/ServiceHeroSlider';
 // Páginas de servicios: canchas, parques, paisajismo. Landing principal: landing-*.
 export type ServiceKey = 'canchas' | 'parques' | 'paisajismo' | 'landing-canchas' | 'landing-padel' | 'landing-parques' | 'landing-terrazas' | 'landing-balcones';
 
-// Fotos que ya existían en el CMS antes de separar landing y servicios: cada banner del landing arranca copiándolas.
-export const LEGACY_SOURCE: Partial<Record<ServiceKey, string>> = {
-  'landing-canchas': 'canchas',
-  'landing-padel': 'padel',
-  'landing-parques': 'parques',
-  'landing-terrazas': 'terrazas',
-  'landing-balcones': 'balcones',
-};
-
 export const SERVICE_PATH_MAP: Record<ServiceKey, string> = {
   canchas: '/servicios/canchas-deportivas',
   parques: '/servicios/parques-infantiles',
@@ -74,9 +65,10 @@ const BASE_HERO_SLIDES: Record<Exclude<ServiceKey, 'landing-canchas' | 'landing-
     },
   ],
   'landing-padel': [
-    { src: '/hero/hero-1.png', alt: 'Pista de pádel profesional', title: 'Pistas de pádel profesionales', location: 'Complejos deportivos', tag: 'Pádel', focalX: 50, focalY: 50 },
-    { src: '/hero/cancha2.png', alt: 'Cancha deportiva para entrenamiento', title: 'Superficies para alto rendimiento', location: 'Colombia', tag: 'Rendimiento', focalX: 50, focalY: 50 },
-    { src: '/hero/cancha3.png', alt: 'Instalación deportiva iluminada', title: 'Iluminación para competir', location: 'Proyectos deportivos', tag: 'Iluminación', focalX: 50, focalY: 50 },
+    { src: '/images/padel/IMG_3346.PNG', alt: 'Pistas de pádel panorámico profesionales', title: 'Pistas de pádel profesionales', location: 'Complejos deportivos', tag: 'Pádel', focalX: 50, focalY: 50 },
+    { src: '/images/padel/IMG_3348.PNG', alt: 'Pista de pádel con cerramiento panorámico', title: 'Cerramiento panorámico', location: 'Sedes deportivas', tag: 'Pádel panorámico', focalX: 50, focalY: 50 },
+    { src: '/images/padel/IMG_3349.PNG', alt: 'Pista de pádel con grama sintética', title: 'Superficie de alto rendimiento', location: 'Colombia', tag: 'Rendimiento', focalX: 50, focalY: 50 },
+    { src: '/images/padel/7ad44112-8715-477f-a253-8cd0c796ba8b.jpg', alt: 'Pista de pádel profesional', title: 'Pistas listas para competir', location: 'Colombia', tag: 'Competición', focalX: 50, focalY: 50 },
   ],
   parques: [
     {
@@ -117,14 +109,12 @@ const BASE_HERO_SLIDES: Record<Exclude<ServiceKey, 'landing-canchas' | 'landing-
     },
   ],
   'landing-terrazas': [
-    { src: '/hero/hero-2.png', alt: 'Terraza con grama sintética', title: 'Terrazas verdes de bajo mantenimiento', location: 'Residencial y comercial', tag: 'Terrazas', focalX: 50, focalY: 50 },
-    { src: '/hero/7a7429e0-5413-482b-9b10-9497a319259b.png', alt: 'Paisajismo exterior con grama sintética', title: 'Paisajismo para compartir', location: 'Colombia', tag: 'Paisajismo', focalX: 50, focalY: 50 },
-    { src: '/hero/hero-3.png', alt: 'Exterior residencial con superficie verde', title: 'Diseño exterior a tu medida', location: 'Residencial', tag: 'Diseño', focalX: 50, focalY: 50 },
+    { src: '/hero/balcones y terrazasa 1.png', alt: 'Terraza con grama sintética al atardecer', title: 'Terrazas verdes de bajo mantenimiento', location: 'Residencial y comercial', tag: 'Terrazas', focalX: 50, focalY: 50 },
+    { src: '/hero/balcones y terrazasa2.png', alt: 'Balcón con vista a la ciudad y grama sintética', title: 'Más verde en menos espacio', location: 'Apartamentos y oficinas', tag: 'Exterior', focalX: 50, focalY: 50 },
   ],
   'landing-balcones': [
-    { src: '/hero/hero-3.png', alt: 'Balcón residencial con grama sintética', title: 'Balcones con vida y confort', location: 'Vivienda urbana', tag: 'Balcones', focalX: 50, focalY: 50 },
-    { src: '/hero/hero-2.png', alt: 'Terraza urbana con vegetación', title: 'Más verde en menos espacio', location: 'Apartamentos y oficinas', tag: 'Exterior', focalX: 50, focalY: 50 },
-    { src: '/hero/53fab49b-9e5c-41ad-914a-a69248cae6b4.jpg', alt: 'Detalle de superficie verde decorativa', title: 'Acabados fáciles de mantener', location: 'Proyectos residenciales', tag: 'Confort', focalX: 50, focalY: 50 },
+    { src: '/hero/balcones y terrazasa2.png', alt: 'Balcón con vista a la ciudad y grama sintética', title: 'Balcones con vida y confort', location: 'Vivienda urbana', tag: 'Balcones', focalX: 50, focalY: 50 },
+    { src: '/hero/balcones y terrazasa 1.png', alt: 'Terraza con grama sintética al atardecer', title: 'Terrazas y balcones a tu medida', location: 'Residencial', tag: 'Exterior', focalX: 50, focalY: 50 },
   ],
   paisajismo: [
     {
@@ -168,6 +158,16 @@ const BASE_HERO_SLIDES: Record<Exclude<ServiceKey, 'landing-canchas' | 'landing-
 
 export const DEFAULT_HERO_SLIDES: Record<ServiceKey, HeroSlide[]> = {
   ...BASE_HERO_SLIDES,
-  'landing-canchas': BASE_HERO_SLIDES.canchas,
-  'landing-parques': BASE_HERO_SLIDES.parques,
+  'landing-canchas': [
+    { src: '/hero/cancha.png', alt: 'Cancha deportiva sintética profesional', title: 'Cancha deportiva de alto rendimiento', location: 'Proyectos deportivos', tag: 'Cancha profesional', focalX: 50, focalY: 50 },
+    { src: '/hero/cancha2.png', alt: 'Cancha deportiva sintética profesional', title: 'Estadio de fútbol con grama sintética', location: 'Colombia', tag: 'Fútbol sintético', focalX: 50, focalY: 50 },
+    { src: '/hero/cancha3.png', alt: 'Cancha deportiva sintética profesional', title: 'Cancha con iluminación profesional', location: 'Bucaramanga', tag: 'Iluminación', focalX: 50, focalY: 50 },
+    { src: '/hero/cancha4.png', alt: 'Cancha deportiva sintética profesional', title: 'Campo sintético para competencia', location: 'Santander, Colombia', tag: 'Competencia', focalX: 50, focalY: 50 },
+    { src: '/hero/cancha5.png', alt: 'Cancha deportiva sintética profesional', title: 'Cancha deportiva con tribunas', location: 'Sede deportiva', tag: 'Infraestructura', focalX: 50, focalY: 50 },
+  ],
+  'landing-parques': [
+    { src: '/hero/parque.png', alt: 'Parque infantil en terraza con grama sintética', title: 'Parques seguros para jugar', location: 'Conjuntos y colegios', tag: 'Parque infantil', focalX: 50, focalY: 50 },
+    { src: '/hero/parque2.png', alt: 'Parque infantil con juegos modulares', title: 'Zonas infantiles durables', location: 'Espacios públicos', tag: 'Juegos modulares', focalX: 50, focalY: 50 },
+    { src: '/hero/53fab49b-9e5c-41ad-914a-a69248cae6b4.jpg', alt: 'Parque infantil con grama sintética', title: 'Superficie suave y segura', location: 'Proyectos residenciales', tag: 'Seguridad', focalX: 50, focalY: 50 },
+  ],
 };

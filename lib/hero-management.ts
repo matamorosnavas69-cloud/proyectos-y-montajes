@@ -8,7 +8,6 @@ import {
   SERVICE_PATH_MAP,
   SERVICE_LABELS,
   DEFAULT_HERO_SLIDES,
-  LEGACY_SOURCE,
 } from '@/lib/hero-constants';
 
 /**
@@ -129,36 +128,6 @@ export async function ensureDefaultSlidesSeeded(serviceSlug: ServiceKey): Promis
     });
     if (count > 0) return;
 
-    // Banners del landing: arrancan con una copia de las fotos que ya tenía el CMS bajo la clave anterior.
-    const legacySlug = LEGACY_SOURCE[serviceSlug];
-    if (legacySlug) {
-      const legacyRows = await prisma.serviceHeroSlide.findMany({
-        where: { serviceSlug: legacySlug, section: 'hero' },
-        orderBy: { sortOrder: 'asc' },
-      });
-      if (legacyRows.length > 0) {
-        await prisma.serviceHeroSlide.createMany({
-          data: legacyRows.map((r, idx) => ({
-            serviceSlug,
-            section: 'hero',
-            src: r.src,
-            alt: r.alt,
-            title: r.title,
-            location: r.location,
-            tag: r.tag,
-            focalX: r.focalX,
-            focalY: r.focalY,
-            sortOrder: idx,
-            isActive: r.isActive,
-            assetId: r.assetId,
-            mediaSource: r.mediaSource,
-            createdBy: 'SYSTEM_SEED',
-          })),
-        });
-        return;
-      }
-    }
-
     const defaults = DEFAULT_HERO_SLIDES[serviceSlug];
     if (!defaults || defaults.length === 0) return;
 
@@ -192,13 +161,10 @@ export async function ensureDefaultSlidesSeeded(serviceSlug: ServiceKey): Promis
  * Public accessor for service pages: retrieves active published slides with fallback
  */
 export async function getPublishedHeroSlides(serviceSlug: ServiceKey): Promise<HeroSlide[]> {
-  // Si el banner del landing aún no se editó en el CMS, mostramos las fotos de su clave anterior.
-  const slugs = [serviceSlug, LEGACY_SOURCE[serviceSlug]].filter((s): s is string => Boolean(s));
-  for (const slug of slugs) {
   try {
     const slides = await prisma.serviceHeroSlide.findMany({
       where: {
-        serviceSlug: slug,
+        serviceSlug,
         section: 'hero',
         isActive: true,
       },
@@ -227,8 +193,7 @@ export async function getPublishedHeroSlides(serviceSlug: ServiceKey): Promise<H
       if (organizedSlides.length > 0) return organizedSlides;
     }
   } catch (dbErr) {
-    console.warn(`[HeroManagement] Failed fetching DB slides for ${slug}, using fallback:`, dbErr);
-  }
+    console.warn(`[HeroManagement] Failed fetching DB slides for ${serviceSlug}, using fallback:`, dbErr);
   }
 
   // Graceful deterministic fallback
