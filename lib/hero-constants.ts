@@ -1,16 +1,22 @@
 import { HeroSlide } from '@/app/components/ServiceHeroSlider';
 
-export type ServiceKey = 'canchas' | 'parques' | 'paisajismo';
+export type ServiceKey = 'canchas' | 'padel' | 'parques' | 'terrazas' | 'balcones' | 'paisajismo';
 
 export const SERVICE_PATH_MAP: Record<ServiceKey, string> = {
   canchas: '/servicios/canchas-deportivas',
+  padel: '/servicios/canchas-deportivas',
   parques: '/servicios/parques-infantiles',
+  terrazas: '/servicios/paisajismo',
+  balcones: '/servicios/paisajismo',
   paisajismo: '/servicios/paisajismo',
 };
 
 export const SERVICE_LABELS: Record<ServiceKey, string> = {
   canchas: 'Canchas Deportivas',
+  padel: 'Pádel',
   parques: 'Parques Infantiles',
+  terrazas: 'Terrazas',
+  balcones: 'Balcones',
   paisajismo: 'Paisajismo y Terrazas',
 };
 
@@ -53,6 +59,11 @@ export const DEFAULT_HERO_SLIDES: Record<ServiceKey, HeroSlide[]> = {
       focalY: 50,
     },
   ],
+  padel: [
+    { src: '/hero/hero-1.png', alt: 'Pista de pádel profesional', title: 'Pistas de pádel profesionales', location: 'Complejos deportivos', tag: 'Pádel', focalX: 50, focalY: 50 },
+    { src: '/hero/cancha2.png', alt: 'Cancha deportiva para entrenamiento', title: 'Superficies para alto rendimiento', location: 'Colombia', tag: 'Rendimiento', focalX: 50, focalY: 50 },
+    { src: '/hero/cancha3.png', alt: 'Instalación deportiva iluminada', title: 'Iluminación para competir', location: 'Proyectos deportivos', tag: 'Iluminación', focalX: 50, focalY: 50 },
+  ],
   parques: [
     {
       src: '/images/drive organice/parques/15d81928-0e73-46bd-b651-897cd955e52b.jpg',
@@ -90,6 +101,16 @@ export const DEFAULT_HERO_SLIDES: Record<ServiceKey, HeroSlide[]> = {
       focalX: 50,
       focalY: 50,
     },
+  ],
+  terrazas: [
+    { src: '/hero/hero-2.png', alt: 'Terraza con grama sintética', title: 'Terrazas verdes de bajo mantenimiento', location: 'Residencial y comercial', tag: 'Terrazas', focalX: 50, focalY: 50 },
+    { src: '/hero/7a7429e0-5413-482b-9b10-9497a319259b.png', alt: 'Paisajismo exterior con grama sintética', title: 'Paisajismo para compartir', location: 'Colombia', tag: 'Paisajismo', focalX: 50, focalY: 50 },
+    { src: '/hero/hero-3.png', alt: 'Exterior residencial con superficie verde', title: 'Diseño exterior a tu medida', location: 'Residencial', tag: 'Diseño', focalX: 50, focalY: 50 },
+  ],
+  balcones: [
+    { src: '/hero/hero-3.png', alt: 'Balcón residencial con grama sintética', title: 'Balcones con vida y confort', location: 'Vivienda urbana', tag: 'Balcones', focalX: 50, focalY: 50 },
+    { src: '/hero/hero-2.png', alt: 'Terraza urbana con vegetación', title: 'Más verde en menos espacio', location: 'Apartamentos y oficinas', tag: 'Exterior', focalX: 50, focalY: 50 },
+    { src: '/hero/53fab49b-9e5c-41ad-914a-a69248cae6b4.jpg', alt: 'Detalle de superficie verde decorativa', title: 'Acabados fáciles de mantener', location: 'Proyectos residenciales', tag: 'Confort', focalX: 50, focalY: 50 },
   ],
   paisajismo: [
     {

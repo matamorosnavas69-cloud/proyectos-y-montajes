@@ -306,7 +306,7 @@ export default function HeroManagementSection() {
       {/* Service Selector & Status Bar */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-[#111c13] border border-white/10 p-4 rounded-2xl shadow-xl">
         <div className="flex flex-wrap items-center gap-2">
-          {(['canchas', 'parques', 'paisajismo'] as ServiceKey[]).map((key) => {
+          {(['canchas', 'padel', 'parques', 'terrazas', 'balcones', 'paisajismo'] as ServiceKey[]).map((key) => {
             const isSelected = activeService === key;
             return (
               <button
@@ -323,7 +323,7 @@ export default function HeroManagementSection() {
                     : 'bg-white/5 text-gray-300 hover:bg-white/10 hover:text-white'
                 }`}
               >
-                <span>{key === 'canchas' ? '🎾' : key === 'parques' ? '🏰' : '🌿'}</span>
+                <span>{key === 'canchas' ? '🎾' : key === 'padel' ? '🏓' : key === 'parques' ? '🏰' : key === 'terrazas' ? '🏡' : key === 'balcones' ? '🌇' : '🌿'}</span>
                 <span>{SERVICE_LABELS[key]}</span>
               </button>
             );
