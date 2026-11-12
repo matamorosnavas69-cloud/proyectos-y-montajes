@@ -1,4 +1,3 @@
-import Link from "next/link";
 import LandingHeroCarousel from "@/app/components/LandingHeroCarousel";
 import { getPublishedHeroSlides } from "@/lib/hero-management";
 import { SERVICE_PATH_MAP, SERVICE_LABELS, type ServiceKey } from "@/lib/hero-constants";
@@ -16,9 +15,6 @@ export default async function Hero() {
 
   return (
     <section className="bg-brand-dark text-white">
-      <nav aria-label="Categorías del landing" className="sticky top-[76px] z-30 flex gap-2 overflow-x-auto border-b border-white/10 bg-brand-dark/95 px-6 py-3 backdrop-blur-md sm:top-[80px] sm:px-8 lg:px-16 scrollbar-hide">
-        {BANNERS.map((banner) => <Link key={banner.id} href={`#${banner.id}`} className="shrink-0 rounded-full border border-white/35 px-4 py-1.5 text-[11px] font-semibold transition hover:border-brand-gold hover:bg-brand-gold hover:text-brand-dark">{SERVICE_LABELS[banner.key as ServiceKey]}</Link>)}
-      </nav>
       {BANNERS.map((banner, index) => <LandingHeroCarousel key={banner.id} id={banner.id} category={SERVICE_LABELS[banner.key as ServiceKey]} eyebrow={banner.eyebrow} title={banner.title} highlight={banner.highlight} description={banner.description} href={SERVICE_PATH_MAP[banner.key as ServiceKey]} cta={banner.cta} stats={banner.stats} slides={slidesByService[index]} />)}
     </section>
   );
