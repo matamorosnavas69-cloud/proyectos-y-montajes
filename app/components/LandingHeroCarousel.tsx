@@ -43,13 +43,13 @@ export default function LandingHeroCarousel({
   if (!activeSlide) return null;
 
   return (
-    <article id={id} className="relative isolate min-h-[72svh] scroll-mt-28 overflow-hidden border-b border-white/10 bg-brand-dark text-white sm:min-h-[76svh]">
+    <article id={id} className="relative isolate min-h-screen scroll-mt-28 overflow-hidden border-b border-white/10 bg-brand-dark text-white">
       <div className="absolute inset-0">
         {slides.map((slide, index) => <Image key={`${slide.src}-${index}`} src={slide.src} alt={slide.alt} fill priority={index === 0} sizes="100vw" style={{ objectPosition: slide.focalPoint || "50% 50%" }} className={`object-cover transition-opacity duration-700 ${index === current ? "opacity-100" : "opacity-0"}`} />)}
         <div className="absolute inset-0 bg-brand-dark/10" />
       </div>
 
-      <div className="relative z-10 mx-auto flex min-h-[72svh] max-w-[1440px] flex-col justify-between px-6 pb-7 pt-14 sm:min-h-[76svh] sm:px-8 sm:pt-16 lg:px-16 lg:pb-9">
+      <div className="relative z-10 mx-auto flex min-h-screen max-w-[1440px] flex-col justify-between px-6 pb-7 pt-14 sm:px-8 sm:pt-16 lg:px-16 lg:pb-9">
         <div className="flex items-center justify-between gap-4">
           <span className="rounded-full border border-white/55 bg-black/10 px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] backdrop-blur-sm">{category}</span>
           {slides.length > 1 && <span className="rounded-full border border-white/30 bg-black/15 px-3 py-1.5 text-[11px] font-mono font-bold backdrop-blur-sm"><span className="text-brand-gold">{String(current + 1).padStart(2, "0")}</span> / {String(slides.length).padStart(2, "0")}</span>}

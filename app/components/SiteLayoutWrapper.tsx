@@ -22,7 +22,7 @@ export default function SiteLayoutWrapper({
   return (
     <>
       <Header />
-      <main className="min-h-screen">{children}</main>
+      <main className={`${pathname === "/" ? "min-h-screen" : "min-h-screen pt-[76px] sm:pt-[80px]"}`}>{children}</main>
       <Footer />
     </>
   );
