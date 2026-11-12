@@ -25,6 +25,8 @@ import {
   ChevronRight,
 } from 'lucide-react';
 import ServiceHeroSlider, { HeroSlide } from '@/app/components/ServiceHeroSlider';
+import LandingHeroCarousel from '@/app/components/LandingHeroCarousel';
+import { BANNERS } from '@/lib/hero-banners';
 import { ServiceKey, SERVICE_LABELS, SERVICE_PATH_MAP, DEFAULT_HERO_SLIDES } from '@/lib/hero-constants';
 
 export interface AdminSlide {
@@ -49,6 +51,7 @@ interface LibraryItem {
 
 export default function HeroManagementSection() {
   const [activeService, setActiveService] = useState<ServiceKey>('canchas');
+  const activeBanner = BANNERS.find((b) => b.key === activeService);
   const [slides, setSlides] = useState<AdminSlide[]>([]);
   const [initialSlides, setInitialSlides] = useState<AdminSlide[]>([]);
   const [loading, setLoading] = useState(true);
@@ -324,7 +327,7 @@ export default function HeroManagementSection() {
                 }`}
               >
                 <span>{key === 'canchas' ? '🎾' : key === 'padel' ? '🏓' : key === 'parques' ? '🏰' : key === 'terrazas' ? '🏡' : key === 'balcones' ? '🌇' : '🌿'}</span>
-                <span>{SERVICE_LABELS[key]}</span>
+                <span>{BANNERS.some((b) => b.key === key) ? `Banner ${BANNERS.findIndex((b) => b.key === key) + 1} · ` : ''}{SERVICE_LABELS[key]}</span>
               </button>
             );
           })}
@@ -716,50 +719,70 @@ export default function HeroManagementSection() {
               }`}
             >
               <div className="transform scale-95 origin-top">
-                <ServiceHeroSlider
-                  badge={SERVICE_LABELS[activeService]}
-                  title={
-                    activeService === 'canchas'
-                      ? 'Canchas Deportivas y'
-                      : activeService === 'parques'
-                      ? 'Parques Infantiles y'
-                      : 'Diseño de Paisajismo y'
-                  }
-                  titleAccent={
-                    activeService === 'canchas'
-                      ? 'Pistas de Pádel'
-                      : activeService === 'parques'
-                      ? 'Pisos de Seguridad'
-                      : 'Terrazas Residenciales'
-                  }
-                  description={
-                    activeService === 'canchas'
-                      ? 'Diseñamos y construimos infraestructura deportiva de alto rendimiento bajo estándares WPT y FIFA.'
-                      : activeService === 'parques'
-                      ? 'Módulos lúdicos certificados, pisos amortiguantes EPDM y circuitos recreativos integrales.'
-                      : 'Grama sintética decorativa premium, jardines verticales y sistemas de drenaje sin mantenimiento.'
-                  }
-                  stats={
-                    activeService === 'canchas'
-                      ? [
-                          { value: '20+ Años', label: 'Experiencia' },
-                          { value: 'FIP / WPT', label: 'Medidas' },
-                          { value: 'Hasta 8 Años', label: 'Garantía UV' },
-                        ]
-                      : activeService === 'parques'
-                      ? [
-                          { value: '20+ Años', label: 'Obras' },
-                          { value: 'EN-1177', label: 'Criterio HIC' },
-                          { value: 'EPDM', label: 'Caucho Continuo' },
-                        ]
-                      : [
-                          { value: 'Cero Riego', label: 'Eficiencia' },
-                          { value: 'Hasta 8 Años', label: 'Garantía UV' },
-                          { value: 'Pet-Safe', label: 'Atérmico' },
-                        ]
-                  }
-                  slides={previewSlides}
-                />
+                {activeBanner ? (
+                  <LandingHeroCarousel
+                    key={activeBanner.key}
+                    compact
+                    id={`preview-${activeBanner.key}`}
+                    number=""
+                    align="left"
+                    eyebrow={activeBanner.eyebrow}
+                    title={activeBanner.title}
+                    highlight={activeBanner.highlight}
+                    benefit={activeBanner.benefit}
+                    items={activeBanner.items}
+                    warranty={activeBanner.warranty}
+                    href="#"
+                    cta={activeBanner.cta}
+                    stats={activeBanner.stats}
+                    slides={previewSlides}
+                  />
+                ) : (
+                  <ServiceHeroSlider
+                    badge={SERVICE_LABELS[activeService]}
+                    title={
+                      activeService === 'canchas'
+                        ? 'Canchas Deportivas y'
+                        : activeService === 'parques'
+                        ? 'Parques Infantiles y'
+                        : 'Diseño de Paisajismo y'
+                    }
+                    titleAccent={
+                      activeService === 'canchas'
+                        ? 'Pistas de Pádel'
+                        : activeService === 'parques'
+                        ? 'Pisos de Seguridad'
+                        : 'Terrazas Residenciales'
+                    }
+                    description={
+                      activeService === 'canchas'
+                        ? 'Diseñamos y construimos infraestructura deportiva de alto rendimiento bajo estándares WPT y FIFA.'
+                        : activeService === 'parques'
+                        ? 'Módulos lúdicos certificados, pisos amortiguantes EPDM y circuitos recreativos integrales.'
+                        : 'Grama sintética decorativa premium, jardines verticales y sistemas de drenaje sin mantenimiento.'
+                    }
+                    stats={
+                      activeService === 'canchas'
+                        ? [
+                            { value: '20+ Años', label: 'Experiencia' },
+                            { value: 'FIP / WPT', label: 'Medidas' },
+                            { value: 'Hasta 8 Años', label: 'Garantía UV' },
+                          ]
+                        : activeService === 'parques'
+                        ? [
+                            { value: '20+ Años', label: 'Obras' },
+                            { value: 'EN-1177', label: 'Criterio HIC' },
+                            { value: 'EPDM', label: 'Caucho Continuo' },
+                          ]
+                        : [
+                            { value: 'Cero Riego', label: 'Eficiencia' },
+                            { value: 'Hasta 8 Años', label: 'Garantía UV' },
+                            { value: 'Pet-Safe', label: 'Atérmico' },
+                          ]
+                    }
+                    slides={previewSlides}
+                  />
+                )}
               </div>
             </div>
           </div>

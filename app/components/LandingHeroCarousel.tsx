@@ -22,6 +22,7 @@ type LandingHeroCarouselProps = {
   cta: string;
   stats: readonly (readonly [string, string])[];
   slides: HeroSlide[];
+  compact?: boolean; // vista previa dentro del admin
 };
 
 function animatedValue(value: string, progress: number) {
@@ -33,13 +34,14 @@ function animatedValue(value: string, progress: number) {
   return `${display}${match[2]}`;
 }
 
-export default function LandingHeroCarousel({ id, number, align, eyebrow, title, highlight, benefit, items, warranty, href, cta, stats, slides }: LandingHeroCarouselProps) {
+export default function LandingHeroCarousel({ id, number, align, eyebrow, title, highlight, benefit, items, warranty, href, cta, stats, slides, compact }: LandingHeroCarouselProps) {
   const [current, setCurrent] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
   const [counterProgress, setCounterProgress] = useState(0);
   const sectionRef = useRef<HTMLElement | null>(null);
   const activeSlide = slides[current] || slides[0];
   const right = align === "right";
+  const full = compact ? "min-h-[600px]" : "min-h-screen";
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -78,12 +80,12 @@ export default function LandingHeroCarousel({ id, number, align, eyebrow, title,
   const allItems = [...items.map(([icon, t, s]) => ({ Icon: ICONS[icon], t, s, gold: true })), { Icon: ShieldCheck, t: "Garantía", s: warranty, gold: false }];
 
   return (
-    <article ref={sectionRef} id={id} className="relative isolate min-h-screen scroll-mt-28 overflow-hidden border-b border-white/10 bg-brand-dark text-white">
+    <article ref={sectionRef} id={id} className={`relative isolate ${full} scroll-mt-28 overflow-hidden border-b border-white/10 bg-brand-dark text-white`}>
       <div className="absolute inset-0">
         {slides.map((slide, index) => <Image key={`${slide.src}-${index}`} src={slide.src} alt={slide.alt} fill priority={index === 0} sizes="100vw" style={{ objectPosition: slide.focalPoint || "50% 50%" }} className={`object-cover transition-opacity duration-700 ${index === current ? "opacity-100" : "opacity-0"}`} />)}
       </div>
 
-      <div className="relative z-10 mx-auto flex min-h-screen max-w-[1440px] flex-col justify-between px-6 pb-7 pt-24 sm:px-8 lg:px-16 lg:pb-9">
+      <div className={`relative z-10 mx-auto flex ${full} max-w-[1440px] flex-col justify-between px-6 pb-7 pt-24 sm:px-8 lg:px-16 lg:pb-9`}>
         <div className={`flex items-center gap-4 ${right ? "justify-start" : "justify-end"}`}>
           {slides.length > 1 && <span className="font-mono text-xs font-bold text-white/80"><span className="text-brand-gold">{String(current + 1).padStart(2, "0")}</span> / {String(slides.length).padStart(2, "0")}</span>}
         </div>
@@ -100,7 +102,7 @@ export default function LandingHeroCarousel({ id, number, align, eyebrow, title,
 
         <div>
           <div className={`grid grid-cols-2 gap-y-3 border-t border-white/35 pt-3 transition-all delay-300 duration-1000 sm:grid-cols-4 ${isVisible ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"}`}>{stats.map(([value, label]) => <div key={label}><p className="text-lg font-medium drop-shadow-[0_1px_4px_rgba(0,0,0,.6)] sm:text-xl">{animatedValue(value, counterProgress)}</p><p className="mt-0.5 text-[11px] uppercase tracking-[0.06em] text-white/85 drop-shadow-[0_1px_3px_rgba(0,0,0,.6)]">{label}</p></div>)}</div>
-          {slides.length > 1 && <div className="mt-3 flex gap-1.5" aria-label="Imágenes">{slides.map((slide, index) => <button key={`${slide.src}-dot`} type="button" onClick={() => setCurrent(index)} aria-label={`Ver imagen ${index + 1}`} className={`h-1.5 rounded-full transition-all ${index === current ? "w-7 bg-brand-gold" : "w-1.5 bg-white/70"}`} />)}</div>}
+          <div className="mt-3 flex items-center gap-4">{slides.length > 1 && <div className="flex gap-1.5" aria-label="Imágenes">{slides.map((slide, index) => <button key={`${slide.src}-dot`} type="button" onClick={() => setCurrent(index)} aria-label={`Ver imagen ${index + 1}`} className={`h-1.5 rounded-full transition-all ${index === current ? "w-7 bg-brand-gold" : "w-1.5 bg-white/70"}`} />)}</div>}{(activeSlide.tag || activeSlide.location) && <span className="text-[11px] uppercase tracking-[0.08em] text-white/80 drop-shadow-[0_1px_3px_rgba(0,0,0,.6)]">{[activeSlide.tag, activeSlide.location].filter(Boolean).join(" · ")}</span>}</div>
         </div>
       </div>
     </article>
