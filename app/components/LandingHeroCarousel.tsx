@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ShieldCheck } from "lucide-react";
 import type { HeroSlide } from "@/app/components/ServiceHeroSlider";
 
 type LandingHeroCarouselProps = {
@@ -13,6 +13,7 @@ type LandingHeroCarouselProps = {
   title: string;
   highlight: string;
   description: string;
+  guarantee: string;
   href: string;
   cta: string;
   stats: readonly (readonly [string, string])[];
@@ -35,6 +36,7 @@ export default function LandingHeroCarousel({
   title,
   highlight,
   description,
+  guarantee,
   href,
   cta,
   stats,
@@ -90,20 +92,21 @@ export default function LandingHeroCarousel({
       <div className="relative z-10 mx-auto flex min-h-screen max-w-[1440px] flex-col justify-between px-6 pb-7 pt-14 sm:px-8 sm:pt-16 lg:px-16 lg:pb-9">
         <div className="flex items-center justify-between gap-4">
           <span className="rounded-full border border-white/55 bg-black/10 px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] backdrop-blur-sm">{category}</span>
-          {slides.length > 1 && <span className="rounded-full border border-white/30 bg-black/15 px-3 py-1.5 text-[11px] font-mono font-bold backdrop-blur-sm"><span className="text-brand-gold">{String(current + 1).padStart(2, "0")}</span> / {String(slides.length).padStart(2, "0")}</span>}
+          {slides.length > 1 && <span className="rounded-full border border-white/20 bg-transparent px-3 py-1.5 text-[11px] font-mono font-bold text-white/80"><span className="text-brand-gold">{String(current + 1).padStart(2, "0")}</span> / {String(slides.length).padStart(2, "0")}</span>}
         </div>
 
         <div className="flex flex-1 items-center py-12 sm:py-16">
           <div className={`max-w-xl rounded-2xl border border-white/25 bg-brand-dark/25 p-5 shadow-2xl backdrop-blur-[2px] transition-all duration-1000 sm:p-7 lg:p-8 ${isVisible ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"}`}>
             <p className="mb-4 flex items-center gap-3 text-[9px] font-bold uppercase tracking-[0.18em] text-brand-gold drop-shadow-sm transition-all delay-100 duration-700 sm:text-[10px]"><span>{eyebrow.split(" — ")[0]}</span><span className="h-px w-5 bg-brand-gold" /><span>{eyebrow.split(" — ")[1]}</span></p>
             <h2 className="text-3xl font-extrabold leading-[1.04] tracking-[-0.025em] drop-shadow-[0_2px_8px_rgba(0,0,0,.65)] sm:text-4xl lg:text-5xl">{title}<br /><span className="text-brand-gold">{highlight}</span></h2>
-            <p className="mt-4 max-w-lg text-xs leading-relaxed text-white drop-shadow-[0_1px_5px_rgba(0,0,0,.7)] transition-all delay-200 duration-700 sm:text-sm lg:text-base">{activeSlide.title || description}</p>
-            <p className="mt-2 text-[10px] uppercase tracking-[0.12em] text-white/75 transition-all delay-300 duration-700">{activeSlide.tag}{activeSlide.location ? ` · ${activeSlide.location}` : ""}</p>
+            <p className="mt-4 max-w-lg text-xs leading-relaxed text-white drop-shadow-[0_1px_5px_rgba(0,0,0,.7)] transition-all delay-200 duration-700 sm:text-sm lg:text-base">{description}</p>
+            <p className="mt-3 inline-flex items-center gap-2 rounded-full border border-brand-gold/60 bg-black/15 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.1em] text-brand-gold sm:text-[11px]"><ShieldCheck className="h-3.5 w-3.5" />{guarantee}</p>
+            <p className="mt-2 text-[10px] uppercase tracking-[0.12em] text-white/75 transition-all delay-300 duration-700">{activeSlide.title ? `${activeSlide.title} · ` : ""}{activeSlide.tag}{activeSlide.location ? ` · ${activeSlide.location}` : ""}</p>
             <div className="mt-6 flex flex-wrap items-center gap-3 transition-all delay-300 duration-700"><Link href={href} className="inline-flex min-h-10 items-center gap-2 rounded-full bg-white px-5 text-xs font-bold text-brand-dark transition hover:bg-brand-gold">{cta}<ArrowRight className="h-4 w-4" /></Link><Link href="#simulador" className="text-xs font-semibold text-white underline underline-offset-4 hover:text-brand-gold">Cotizar proyecto</Link></div>
           </div>
         </div>
 
-        <div className={`grid max-w-4xl grid-cols-2 overflow-hidden rounded-xl border border-white/30 bg-brand-dark/75 backdrop-blur-md transition-all delay-300 duration-1000 sm:grid-cols-4 ${isVisible ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"}`}>{stats.map(([value, label]) => <div key={label} className="border-white/20 px-3 py-2.5 first:border-r sm:border-r sm:px-4 sm:py-3 [&:nth-child(2)]:border-b sm:[&:nth-child(2)]:border-b-0"><p className="text-base font-extrabold sm:text-lg">{animatedValue(value, counterProgress)}</p><p className="mt-0.5 text-[7px] font-bold uppercase tracking-[0.08em] text-white/70 sm:text-[8px]">{label}</p></div>)}</div>
+        <div className={`grid max-w-4xl grid-cols-2 overflow-hidden rounded-xl border border-white/15 bg-black/5 transition-all delay-300 duration-1000 sm:grid-cols-4 ${isVisible ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"}`}>{stats.map(([value, label]) => <div key={label} className="border-white/20 px-3 py-2.5 first:border-r sm:border-r sm:px-4 sm:py-3 [&:nth-child(2)]:border-b sm:[&:nth-child(2)]:border-b-0"><p className="text-base font-extrabold drop-shadow-[0_1px_4px_rgba(0,0,0,.7)] sm:text-lg">{animatedValue(value, counterProgress)}</p><p className="mt-0.5 text-[7px] font-bold uppercase tracking-[0.08em] text-white/85 drop-shadow-[0_1px_3px_rgba(0,0,0,.7)] sm:text-[8px]">{label}</p></div>)}</div>
         {slides.length > 1 && <div className="mt-3 flex gap-1.5" aria-label={`Imágenes de ${category}`}>{slides.map((slide, index) => <button key={`${slide.src}-dot`} type="button" onClick={() => setCurrent(index)} aria-label={`Ver imagen ${index + 1} de ${category}`} className={`h-1.5 rounded-full transition-all ${index === current ? "w-7 bg-brand-gold" : "w-1.5 bg-white/70"}`} />)}</div>}
       </div>
     </article>
