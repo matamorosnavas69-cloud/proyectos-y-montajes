@@ -5,11 +5,12 @@ import {
   saveAdminHeroSlides,
   ServiceKey,
 } from '@/lib/hero-management';
+import { SERVICE_LABELS } from '@/lib/hero-constants';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
-const VALID_SERVICES = new Set<string>(['canchas', 'padel', 'parques', 'terrazas', 'balcones', 'paisajismo']);
+const VALID_SERVICES = new Set<string>(Object.keys(SERVICE_LABELS));
 
 function errorResponse(error: unknown) {
   const authError = error as AuthError;

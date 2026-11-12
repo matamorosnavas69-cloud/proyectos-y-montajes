@@ -50,7 +50,7 @@ interface LibraryItem {
 }
 
 export default function HeroManagementSection() {
-  const [activeService, setActiveService] = useState<ServiceKey>('canchas');
+  const [activeService, setActiveService] = useState<ServiceKey>('landing-canchas');
   const activeBanner = BANNERS.find((b) => b.key === activeService);
   const [slides, setSlides] = useState<AdminSlide[]>([]);
   const [initialSlides, setInitialSlides] = useState<AdminSlide[]>([]);
@@ -308,29 +308,38 @@ export default function HeroManagementSection() {
     <div className="space-y-6">
       {/* Service Selector & Status Bar */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-[#111c13] border border-white/10 p-4 rounded-2xl shadow-xl">
-        <div className="flex flex-wrap items-center gap-2">
-          {(['canchas', 'padel', 'parques', 'terrazas', 'balcones', 'paisajismo'] as ServiceKey[]).map((key) => {
-            const isSelected = activeService === key;
-            return (
-              <button
-                key={key}
-                onClick={() => {
-                  if (isDirty && !window.confirm('Tiene cambios no guardados. ¿Desea cambiar de servicio sin guardar?')) {
-                    return;
-                  }
-                  setActiveService(key);
-                }}
-                className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all ${
-                  isSelected
-                    ? 'bg-brand-gold text-brand-dark shadow-md font-black'
-                    : 'bg-white/5 text-gray-300 hover:bg-white/10 hover:text-white'
-                }`}
-              >
-                <span>{key === 'canchas' ? '🎾' : key === 'padel' ? '🏓' : key === 'parques' ? '🏰' : key === 'terrazas' ? '🏡' : key === 'balcones' ? '🌇' : '🌿'}</span>
-                <span>{BANNERS.some((b) => b.key === key) ? `Banner ${BANNERS.findIndex((b) => b.key === key) + 1} · ` : ''}{SERVICE_LABELS[key]}</span>
-              </button>
-            );
-          })}
+        <div className="space-y-3">
+          {([
+            ['Landing principal (5 banners)', ['landing-canchas', 'landing-padel', 'landing-parques', 'landing-terrazas', 'landing-balcones']],
+            ['Páginas de servicios', ['canchas', 'parques', 'paisajismo']],
+          ] as [string, ServiceKey[]][]).map(([group, keys]) => (
+            <div key={group} className="flex flex-wrap items-center gap-2">
+              <span className="w-full text-[10px] font-black uppercase tracking-widest text-brand-gold sm:w-auto sm:min-w-[190px]">{group}</span>
+              {keys.map((key) => {
+                const isSelected = activeService === key;
+                const bannerIndex = BANNERS.findIndex((b) => b.key === key);
+                return (
+                  <button
+                    key={key}
+                    onClick={() => {
+                      if (isDirty && !window.confirm('Tiene cambios no guardados. ¿Desea cambiar de servicio sin guardar?')) {
+                        return;
+                      }
+                      setActiveService(key);
+                    }}
+                    className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all ${
+                      isSelected
+                        ? 'bg-brand-gold text-brand-dark shadow-md font-black'
+                        : 'bg-white/5 text-gray-300 hover:bg-white/10 hover:text-white'
+                    }`}
+                  >
+                    <span>{bannerIndex >= 0 ? `${bannerIndex + 1}.` : '📄'}</span>
+                    <span>{SERVICE_LABELS[key]}</span>
+                  </button>
+                );
+              })}
+            </div>
+          ))}
         </div>
 
         {/* Action Controls */}
