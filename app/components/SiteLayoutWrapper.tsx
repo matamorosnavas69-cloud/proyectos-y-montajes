@@ -3,6 +3,7 @@
 import { usePathname } from 'next/navigation';
 import Header from './Header';
 import Footer from './Footer';
+import SubscribePopup from './SubscribePopup';
 
 export default function SiteLayoutWrapper({
   children,
@@ -24,6 +25,7 @@ export default function SiteLayoutWrapper({
       <Header />
       <main className="min-h-screen">{children}</main>
       <Footer />
+      {pathname === '/' && <SubscribePopup />}
     </>
   );
 }
