@@ -65,10 +65,11 @@ const BASE_HERO_SLIDES: Record<Exclude<ServiceKey, 'landing-canchas' | 'landing-
     },
   ],
   'landing-padel': [
-    { src: '/images/padel/IMG_3346.PNG', alt: 'Pistas de pádel panorámico profesionales', title: 'Pistas de pádel profesionales', location: 'Complejos deportivos', tag: 'Pádel', focalX: 50, focalY: 50 },
-    { src: '/images/padel/IMG_3348.PNG', alt: 'Pista de pádel con cerramiento panorámico', title: 'Cerramiento panorámico', location: 'Sedes deportivas', tag: 'Pádel panorámico', focalX: 50, focalY: 50 },
-    { src: '/images/padel/IMG_3349.PNG', alt: 'Pista de pádel con grama sintética', title: 'Superficie de alto rendimiento', location: 'Colombia', tag: 'Rendimiento', focalX: 50, focalY: 50 },
-    { src: '/images/padel/7ad44112-8715-477f-a253-8cd0c796ba8b.jpg', alt: 'Pista de pádel profesional', title: 'Pistas listas para competir', location: 'Colombia', tag: 'Competición', focalX: 50, focalY: 50 },
+    { src: '/hero/padel.png', alt: 'Pistas de pádel panorámico profesionales', title: 'Pistas de pádel profesionales', location: 'Complejos deportivos', tag: 'Pádel', focalX: 50, focalY: 50 },
+    { src: '/hero/padel1.png', alt: 'Pista de pádel con cerramiento panorámico', title: 'Cerramiento panorámico', location: 'Sedes deportivas', tag: 'Pádel panorámico', focalX: 50, focalY: 50 },
+    { src: '/hero/padel3.png', alt: 'Pista de pádel con grama sintética', title: 'Superficie de alto rendimiento', location: 'Colombia', tag: 'Rendimiento', focalX: 50, focalY: 50 },
+    { src: '/hero/padel 4.png', alt: 'Pista de pádel profesional', title: 'Pistas listas para competir', location: 'Colombia', tag: 'Competición', focalX: 50, focalY: 50 },
+    { src: '/hero/padel5.png', alt: 'Pista de pádel iluminada', title: 'Juega de día y de noche', location: 'Colombia', tag: 'Pádel', focalX: 50, focalY: 50 },
   ],
   parques: [
     {
